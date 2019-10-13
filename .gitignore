@@ -1,2 +1,5 @@
 zsh/zprezto/runcoms/README.md
 **/*.swp
+
+# ignore zsh custom/env specific zsh settings
+/zsh/common/*zsh_custom
