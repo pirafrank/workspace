@@ -5,22 +5,20 @@ if [[ $(uname -s) != 'Linux' ]]; then
   exit 1
 fi
 
-# this is a folder in your HOME
-BASEPATH='Code'
-
 # install additional software
 sudo apt install -y vim rsync tmux
 
-# go home
+# this is a folder in your HOME
+BASEPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# go home and setup dotfiles symlink
 cd
+ln -s "$BASEPATH" $HOME/dotfiles
 
 # config git
-bash $BASEPATH/dotfiles/git/git_config.sh
+bash dotfiles/git/git_config.sh
 
 # setup symlinks
-ln -s $BASEPATH/notes notes
-ln -s $BASEPATH/dotfiles dotfiles
-
 ln -s dotfiles/bin bin
 ln -s dotfiles/.zshrc
 
