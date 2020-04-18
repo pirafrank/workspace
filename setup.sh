@@ -8,6 +8,11 @@ fi
 # install additional software
 sudo apt install -y vim rsync tmux
 
+# install tmux plugin manager
+if [[ ! -d ~/.tmux/plugins/tpm ]]; then
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
+
 # this is a folder in your HOME
 BASEPATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
