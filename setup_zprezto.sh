@@ -15,4 +15,7 @@ git clone --recurse-submodules https://github.com/belak/prezto-contrib contrib
 # setup user defined themes for zprezto
 ln -s "${ZDOTDIR:-$HOME}"/dotfiles/zsh/zprezto/zsh_user_themes "${ZDOTDIR:-$HOME}/.zsh_user_themes"
 
+# powerlevel10k, installation is done automatically by ~/.zpreztorc
+ln -s "${ZDOTDIR:-$HOME}"/dotfiles/zsh/common/.p10k.zsh "${ZDOTDIR:-$HOME}/.p10k.zsh"
+
 exit 0
