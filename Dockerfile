@@ -58,12 +58,7 @@ RUN set -x \
   && echo "installing neovim" \
   && apt-get install -y \
     neovim \
-  && pip3 install neovim \
-  && echo "make dirs" \
-  && mkdir bin2 \
-  && mkdir -p Code/Workspaces \
-  && echo "install tmux plugin manager" \
-  && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+  && pip3 install neovim
 
 ARG GITUSERNAME='Francesco Pira'
 ARG GITUSEREMAIL
@@ -73,6 +68,9 @@ ARG PYTHON3VERSION='3.7.7'
 COPY setup_zprezto.zsh setup_nvm.zsh setup_pyenv.zsh ./
 
 RUN set -x \
+  && echo "make dirs" \
+  && mkdir bin2 \
+  && mkdir -p Code/Workspaces \
   && echo "clone and setup my dotfiles" \
   && git clone https://github.com/pirafrank/dotfiles.git dotfiles \
   && echo "config git global" \
@@ -83,9 +81,16 @@ RUN set -x \
   && ln -s dotfiles/bin bin \
   && ln -s dotfiles/git/.gitignore_global .gitignore_global \
   && ln -s dotfiles/tmux/.tmux.conf .tmux.conf \
-  && ln -s dotfiles/vim/.vimrc .vimrc \
+  && ln -s dotfiles/vim/.vimrc .vimrc
+
+# zprezto has many submodules, going with a dedicated layer
+RUN set -x \
   && echo "install zprezto" \
-  && zsh setup_zprezto.zsh \
+  && zsh setup_zprezto.zsh
+
+RUN set -x \
+  && echo "install tmux plugin manager" \
+  && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
   && echo "install fzf" \
   && git clone --depth 1 https://github.com/junegunn/fzf.git .fzf \
   && cp -a dotfiles/fzf/.fzf* ./ \
@@ -94,7 +99,11 @@ RUN set -x \
   && echo "change default shell" \
   && chsh -s $(which zsh) \
   && echo "installing nvm and node" \
-  && zsh setup_nvm.zsh $NODEVERSION
+  && zsh setup_nvm.zsh $NODEVERSION \
+  && echo "install lazygit" \
+  && add-apt-repository ppa:lazygit-team/release \
+  && apt-get update \
+  && apt-get install lazygit
 
 # installing python3 via pyenv
 #RUN set -x \
@@ -114,4 +123,4 @@ VOLUME /root/secrets
 # set default terminal
 ENV TERM=xterm-256color
 
-CMD ["tmux"]
+CMD ["zsh"]
