@@ -11,6 +11,7 @@ ln -s "${ZDOTDIR:-$HOME}"/dotfiles/zsh/common/zsh_env "${ZDOTDIR:-$HOME}/.zsh_en
 # setup prezto-contrib (https://github.com/belak/prezto-contrib#usage)
 cd $ZPREZTODIR
 git clone --recurse-submodules https://github.com/belak/prezto-contrib contrib
+cd -
 
 # setup user defined themes for zprezto
 ln -s "${ZDOTDIR:-$HOME}"/dotfiles/zsh/zprezto/zsh_user_themes "${ZDOTDIR:-$HOME}/.zsh_user_themes"
