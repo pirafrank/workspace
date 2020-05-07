@@ -52,14 +52,16 @@ RUN set -x \
   && add-apt-repository ppa:git-core/ppa \
   && apt-get update \
   && apt-get install -y git \
-  && echo "installing python3" \
-  && apt-get install -y python3.7 \
+  && echo "installing python3 (focal ships with 3.8)" \
+  && apt-get install -y \
+    python3-pip \
+  && echo "installing neovim" \
+  && apt-get install -y \
+    neovim \
+  && pip3 install neovim \
   && echo "make dirs" \
   && mkdir bin2 \
   && mkdir -p Code/Workspaces \
-  && echo "install neovim" \
-  && wget https://github.com/neovim/neovim/releases/latest/download/nvim.appimage -O bin2/nvim \
-  && chmod +x bin2/nvim \
   && echo "install tmux plugin manager" \
   && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
@@ -87,6 +89,8 @@ RUN set -x \
   && echo "install fzf" \
   && git clone --depth 1 https://github.com/junegunn/fzf.git .fzf \
   && cp -a dotfiles/fzf/.fzf* ./ \
+  && sed -i s@home/francesco@root@g .fzf.bash \
+  && sed -i s@home/francesco@root@g .fzf.zsh \
   && echo "change default shell" \
   && chsh -s $(which zsh) \
   && echo "installing nvm and node" \
