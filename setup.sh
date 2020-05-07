@@ -27,7 +27,7 @@ bash dotfiles/git/git_config.sh
 ln -s dotfiles/bin bin
 
 # setup zprezto
-zsh setup_zprezto.sh
+zsh setup/setup_zprezto.sh
 
 # linking more config in dotfiles
 ln -s "${ZDOTDIR:-$HOME}"/dotfiles/git/.gitignore_global "${ZDOTDIR:-$HOME}/.gitignore_global"
