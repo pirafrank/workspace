@@ -1,5 +1,10 @@
 #!/bin/zsh
 
+if [[ -z "$1" ]]; then
+    echo "Please specify the image version to build."
+    exit 1
+fi
+
 PYTHON3VERSION="$1"
 
 # installing dependencies to compile python shims

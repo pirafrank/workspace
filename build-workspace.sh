@@ -7,10 +7,5 @@ fi
 
 PARAMS="$2"
 
-docker build $PARAMS \
---build-arg GITUSERNAME='Francesco Pira' \
---build-arg GITUSEREMAIL='dev@fpira.com' \
---build-arg NODEVERSION='12' \
--t pirafrank/workspace:"$1" -f Dockerfile .
-
+docker build $PARAMS -t pirafrank/workspace:"$1" -f Dockerfile .
 

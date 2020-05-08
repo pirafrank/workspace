@@ -62,7 +62,7 @@ RUN set -x \
   && pip3 install neovim
 
 ARG GITUSERNAME='Francesco Pira'
-ARG GITUSEREMAIL
+ARG GITUSEREMAIL='dev@fpira.com'
 ARG NODEVERSION=12
 ARG PYTHON3VERSION='3.7.7'
 
