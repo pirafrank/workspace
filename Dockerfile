@@ -39,6 +39,7 @@ RUN set -x \
     tmux \
     mosh \
     rsync \
+    less \
     mc \
     tree \
     jq \
