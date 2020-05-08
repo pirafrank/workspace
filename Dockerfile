@@ -65,8 +65,15 @@ ARG GITUSERNAME='Francesco Pira'
 ARG GITUSEREMAIL='dev@fpira.com'
 ARG NODEVERSION=12
 ARG PYTHON3VERSION='3.7.7'
+ARG RUBYVERSION='2.5'
+ARG UBUNTURELEASE='bionic'
 
-COPY setup_zprezto.zsh setup_nvm.zsh setup_pyenv.zsh ./
+COPY setup_zprezto.zsh \
+  setup_nvm.zsh \
+  setup_pyenv.zsh \
+  setup_rvm.zsh \
+  setup_rust.zsh \
+  setup_docker_cli.zsh ./
 
 RUN set -x \
   && echo "make dirs" \
@@ -99,20 +106,28 @@ RUN set -x \
   && sed -i s@home/francesco@root@g .fzf.zsh \
   && echo "change default shell" \
   && chsh -s $(which zsh) \
-  && echo "installing nvm and node" \
-  && zsh setup_nvm.zsh $NODEVERSION \
   && echo "install lazygit" \
   && add-apt-repository ppa:lazygit-team/release \
   && apt-get update \
   && apt-get install lazygit
 
-# installing python3 via pyenv
-#RUN set -x \
-#  && echo "installing pyenv and python" \
-#  && zsh setup_pyenv.zsh $PYTHON3VERSION || true
+RUN echo "installing nvm and node" \
+  && zsh setup_nvm.zsh $NODEVERSION
 
 # install rvm and jekyll
+# RUN set -x \
+#   && echo "install rvm and ruby" \
+#   && zsh setup_rvm.zsh $RUBYVERSION
 
+# install rust and cargo
+# RUN set -x \
+#   && echo "install rust and cargo" \
+#   && zsh setup_rust.zsh
+
+# install docker-cli (client only)
+# RUN set -x \
+#   && echo "install docker-cli (CLI client only)" \
+#   && zsh setup_docker_cli.zsh $UBUNTURELEASE
 
 # external mountpoints
 VOLUME /root/Code
