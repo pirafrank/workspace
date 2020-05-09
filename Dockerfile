@@ -62,7 +62,7 @@ RUN set -x \
   && pip3 install neovim
 
 ARG GITUSERNAME='Francesco Pira'
-ARG GITUSEREMAIL='dev@fpira.com'
+ARG GITUSEREMAIL='nospam@please.com'
 ARG NODEVERSION=12
 ARG PYTHON3VERSION='3.7.7'
 ARG RUBYVERSION='2.5'
@@ -84,7 +84,7 @@ RUN set -x \
   && echo "config git global" \
   && /bin/bash dotfiles/git/git_config.sh \
   && git config --global user.name $GITUSERNAME \
-  && git config --global user.email $GITUSEREMAIL \
+  && git config --global user.email $(echo ${GITUSEREMAIL} | sed -e 's/nospam/dev/g' -e 's/please/fpira/g') \
   && echo "creating symlinks to dotfiles" \
   && ln -s dotfiles/bin bin \
   && ln -s dotfiles/git/.gitignore_global .gitignore_global \
