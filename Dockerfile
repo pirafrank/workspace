@@ -61,8 +61,6 @@ RUN set -x \
     neovim \
   && pip3 install neovim
 
-ARG GITUSERNAME='Francesco Pira'
-ARG GITUSEREMAIL='nospam@please.com'
 ARG NODEVERSION=12
 ARG PYTHON3VERSION='3.7.7'
 ARG RUBYVERSION='2.5'
@@ -73,7 +71,8 @@ COPY setup_zprezto.zsh \
   setup_pyenv.zsh \
   setup_rvm.zsh \
   setup_rust.zsh \
-  setup_docker_cli.zsh ./
+  setup_docker_cli.zsh \
+  pre_start.zsh ./
 
 RUN set -x \
   && echo "make dirs" \
@@ -83,8 +82,6 @@ RUN set -x \
   && git clone https://github.com/pirafrank/dotfiles.git dotfiles \
   && echo "config git global" \
   && /bin/bash dotfiles/git/git_config.sh \
-  && git config --global user.name $GITUSERNAME \
-  && git config --global user.email $(echo ${GITUSEREMAIL} | sed -e 's/nospam/dev/g' -e 's/please/fpira/g') \
   && echo "creating symlinks to dotfiles" \
   && ln -s dotfiles/bin bin \
   && ln -s dotfiles/git/.gitignore_global .gitignore_global \
@@ -136,7 +133,12 @@ VOLUME /root/secrets
 # If any build steps change the data within the volume
 # AFTER it has been declared, those changes will be discarded.
 
+# optional gitglobal config
+# these are set at startup, if non-empty. you can set them with docker run
+ENV GITUSERNAME=''
+ENV GITUSEREMAIL=''
+
 # set default terminal
 ENV TERM=xterm-256color
 
-CMD ["zsh"]
+CMD ["sh", "-c", "zsh pre_start.zsh ; zsh"]
