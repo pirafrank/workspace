@@ -64,7 +64,7 @@ RUN set -x \
 ARG NODEVERSION=12
 ARG PYTHON3VERSION='3.7.7'
 ARG RUBYVERSION='2.5'
-ARG UBUNTURELEASE='bionic'
+ARG UBUNTURELEASE='focal'
 
 COPY setup_zprezto.zsh \
   setup_nvm.zsh \
