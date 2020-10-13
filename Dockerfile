@@ -49,6 +49,7 @@ RUN set -x \
     zip \
     xz-utils \
     zutils \
+    atop \
   && echo "getting newer git..." \
   && add-apt-repository ppa:git-core/ppa \
   && apt-get update \
