@@ -67,6 +67,7 @@ ARG PYTHON3VERSION='3.7.7'
 ARG RUBYVERSION='2.5'
 ARG UBUNTURELEASE='focal'
 
+# copy setup scripts for different envs
 COPY setup_zprezto.zsh \
   setup_nvm.zsh \
   setup_pyenv.zsh \
@@ -75,6 +76,7 @@ COPY setup_zprezto.zsh \
   setup_docker_cli.zsh \
   pre_start.zsh ./
 
+# clone dotfiles and setup more dirs in HOME
 RUN set -x \
   && echo "make dirs" \
   && mkdir bin2 \
@@ -94,6 +96,7 @@ RUN set -x \
   && echo "install zprezto" \
   && zsh setup_zprezto.zsh
 
+# install tmux
 RUN set -x \
   && echo "install tmux plugin manager" \
   && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
@@ -103,7 +106,10 @@ RUN set -x \
   && sed -i s@home/francesco@root@g .fzf.bash \
   && sed -i s@home/francesco@root@g .fzf.zsh \
   && echo "change default shell" \
-  && chsh -s $(which zsh) \
+  && chsh -s $(which zsh)
+
+# install lazygit
+RUN set -x \
   && echo "install lazygit" \
   && add-apt-repository ppa:lazygit-team/release \
   && apt-get update \
