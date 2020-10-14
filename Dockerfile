@@ -62,9 +62,6 @@ RUN set -x \
     neovim \
   && pip3 install neovim
 
-ARG NODEVERSION=12
-ARG PYTHON3VERSION='3.7.7'
-ARG RUBYVERSION='2.5'
 ARG UBUNTURELEASE='focal'
 
 # copy setup scripts for different envs
@@ -114,19 +111,6 @@ RUN set -x \
   && add-apt-repository ppa:lazygit-team/release \
   && apt-get update \
   && apt-get install lazygit
-
-RUN echo "installing nvm and node" \
-  && zsh setup_nvm.zsh $NODEVERSION
-
-# install rvm and jekyll
-# RUN set -x \
-#   && echo "install rvm and ruby" \
-#   && zsh setup_rvm.zsh $RUBYVERSION
-
-# install rust and cargo
-# RUN set -x \
-#   && echo "install rust and cargo" \
-#   && zsh setup_rust.zsh
 
 # install docker-cli (client only)
 # RUN set -x \
