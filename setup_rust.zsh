@@ -4,5 +4,8 @@
 
 curl --proto '=https' --tlsv1.2 -sSL https://sh.rustup.rs > rust-install
 sh rust-install -v -y --no-modify-path
-source $HOME/.zshrc
+# support dotfiles-less setup
+if [ -f $HOME/.zshrc ]; then
+  source $HOME/.zshrc
+fi
 rm rust-install

@@ -11,7 +11,11 @@ gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703
 curl -sSL https://get.rvm.io > rvmscript
 cat rvmscript | bash -s stable
 rm -f rvmscript
-source $HOME/.zshrc
-#source /usr/local/rvm/scripts/rvm
+# support dotfiles-less setup
+if [ -f $HOME/.zshrc ]; then
+  source $HOME/.zshrc
+else
+  source /usr/local/rvm/scripts/rvm
+fi
 rvm install $RUBYVERSION
 gem install bundler
