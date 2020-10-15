@@ -7,5 +7,8 @@ sh rust-install -v -y --no-modify-path
 # support dotfiles-less setup
 if [ -f $HOME/.zshrc ]; then
   source $HOME/.zshrc
+else
+  # assuming you got bash
+  source $HOME/.bashrc
 fi
 rm rust-install

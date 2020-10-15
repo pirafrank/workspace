@@ -20,6 +20,11 @@ fi
 # installing pyenv
 curl -sSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer > pyenv-installer.sh
 bash pyenv-installer.sh
-source $HOME/.zshrc
+if [ -f $HOME/.zshrc ]; then
+  source $HOME/.zshrc
+else
+  # assuming you got bash
+  source $HOME/.bashrc
+fi
 pyenv install $PYTHON3VERSION
 pyenv global $PYTHON3VERSION
