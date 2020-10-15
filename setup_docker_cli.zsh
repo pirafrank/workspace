@@ -13,5 +13,6 @@ cat key | apt-key add -
 apt-key fingerprint 0EBFCD88
 rm -f key
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $UBUNTURELEASE stable"
+apt-get clean
 apt-get update
 apt-get install -y --no-install-recommends docker-ce-cli
