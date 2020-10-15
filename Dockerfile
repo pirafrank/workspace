@@ -68,11 +68,11 @@ ARG UBUNTURELEASE='focal'
 
 # copy setup scripts for different envs
 COPY setup_zprezto.zsh \
-  setup_nvm.zsh \
-  setup_pyenv.zsh \
-  setup_rvm.zsh \
-  setup_rust.zsh \
-  setup_docker_cli.zsh \
+  workspaces/setup_nvm.zsh \
+  workspaces/setup_pyenv.zsh \
+  workspaces/setup_rvm.zsh \
+  workspaces/setup_rust.zsh \
+  workspaces/setup_docker_cli.zsh \
   pre_start.zsh ./
 
 # clone dotfiles and setup more dirs in HOME

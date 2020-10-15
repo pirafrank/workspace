@@ -97,19 +97,19 @@ echo "install tmux plugin manager" \
 
 # install pyenv and python
 echo "install pyenv and python" \
-  && zsh setup_pyenv.zsh $PYTHON3VERSION
+  && zsh workspaces/setup_pyenv.zsh $PYTHON3VERSION
 
 # install nvm and node
 echo "install nvm and node" \
-  && zsh setup_nvm.zsh $NODEVERSION
+  && zsh workspaces/setup_nvm.zsh $NODEVERSION
 
 # install rvm and jekyll
 echo "install rvm and ruby" \
-  && zsh setup_rvm.zsh $RUBYVERSION
+  && zsh workspaces/setup_rvm.zsh $RUBYVERSION
 
 # install rust and cargo
 echo "install rust and cargo" \
-  && zsh setup_rust.zsh
+  && zsh workspaces/setup_rust.zsh
 
 # install docker
 echo "install docker" \
