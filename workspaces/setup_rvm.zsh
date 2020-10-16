@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 if [[ -z "$1" ]]; then
-    echo "Please specify the image version to build."
+    echo "Please specify the ruby version."
     exit 1
 fi
 

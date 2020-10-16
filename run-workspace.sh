@@ -2,6 +2,8 @@
 
 if [[ -z "$1" ]]; then
     echo "Please specify an image version to run."
+    echo "You can optionally add parameters to 'docker run' as \$2."
+    echo "\$3 is to enable DOCKERCLI socket, optional. It can be anything, just not blank."
     exit 1
 fi
 
