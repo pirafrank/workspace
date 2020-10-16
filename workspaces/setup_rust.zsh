@@ -11,4 +11,4 @@ else
   # assuming you got bash
   source $HOME/.bashrc
 fi
-rm rust-install
+rm -f rust-install
