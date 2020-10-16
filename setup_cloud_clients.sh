@@ -1,21 +1,25 @@
 #!/bin/bash
 
-folder=bin2
+# this script installs various cloud tools
+# it can also be used to update them to their latest version.
+
+folder="${HOME}/bin2"
 
 echo "
 Running as : $(whoami)
 Home folder: $HOME
-Install dir: $HOME/$folder
+Install dir: $folder
 "
 
 # creating target dir if it doesn't exist
 # it should've been created in prev script
-if [ -d $HOME/$folder ]; then
-  mkdir -p $HOME/$folder
+if [ -d $folder ]; then
+  mkdir -p $folder
 fi
-cd $HOME/$folder
+cd $folder
 
 # packer
+if [ -f packer ]; then rm -f packer; fi
 latest_version=$(curl -sL https://releases.hashicorp.com/packer \
 | grep href | grep packer  | head -n1 | cut -d'/' -f3)
 url="https://releases.hashicorp.com/packer/${latest_version}/packer_${latest_version}_linux_amd64.zip"

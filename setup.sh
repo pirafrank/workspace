@@ -115,4 +115,7 @@ echo "install rust and cargo" \
 echo "install docker" \
   && bash setup_docker_full.sh
 
+# install packer
+echo "install packer" \
+  && bash setup_cloud_clients.sh
 
