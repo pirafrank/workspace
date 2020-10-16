@@ -9,6 +9,8 @@ WORKDIR /root
 
 ARG NODEVERSION=12
 
+COPY setup_nvm.zsh ./
+
 RUN echo "installing nvm and node" \
   && zsh setup_nvm.zsh $NODEVERSION
 

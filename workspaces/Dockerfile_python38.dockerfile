@@ -9,6 +9,8 @@ WORKDIR /root
 
 ARG PYTHON3VERSION='3.8.5'
 
+COPY setup_pyenv.zsh ./
+
 # install deps to compile python shims
 RUN set -x \
   && apt-get clean && apt-get update \

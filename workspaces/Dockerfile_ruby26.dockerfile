@@ -9,6 +9,8 @@ WORKDIR /root
 
 ARG RUBYVERSION='2.6'
 
+COPY setup_rvm.zsh ./
+
 # install rvm and jekyll
 RUN set -x \
   && echo "install rvm and ruby" \

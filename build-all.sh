@@ -7,22 +7,29 @@ function checkrun {
   fi
 }
 
-./build-workspace.sh latest Dockerfile
-checkrun $? 'Something went wrong...'
+PARAMS="$1"
 
-./build-workspace.sh node12 workspaces/Dockerfile_node12.dockerfile && \
-./build-workspace.sh python38 workspaces/Dockerfile_python38.dockerfile && \
-./build-workspace.sh ruby26 workspaces/Dockerfile_ruby26.dockerfile && \
-./build-workspace.sh rust workspaces/Dockerfile_rust_latest.dockerfile && \
-./build-workspace.sh java11 workspaces/Dockerfile_java11.dockerfile
+docker build $PARAMS -t pirafrank/workspace:latest -f Dockerfile .
 checkrun $? 'Something went wrong...'
 
 cd workspaces # bc of docker context
-../build-workspace.sh rust-slim Dockerfile_rust_latest_slim.dockerfile && \
-../build-workspace.sh ruby26-slim Dockerfile_ruby26_slim.dockerfile
+
+# workspaces
+docker build $PARAMS -t pirafrank/workspace:node12 -f Dockerfile_node12.dockerfile . && \
+docker build $PARAMS -t pirafrank/workspace:python38 -f Dockerfile_python38.dockerfile . && \
+docker build $PARAMS -t pirafrank/workspace:ruby26 -f Dockerfile_ruby26.dockerfile . && \
+docker build $PARAMS -t pirafrank/workspace:rust -f Dockerfile_rust_latest.dockerfile . && \
+docker build $PARAMS -t pirafrank/workspace:java11 -f Dockerfile_java11.dockerfile .
 checkrun $? 'Something went wrong...'
+
+# slim versions, no workspace
+docker build $PARAMS -t pirafrank/workspace:rust-slim -f Dockerfile_rust_latest_slim.dockerfile . && \
+docker build $PARAMS -t pirafrank/workspace:ruby26-slim -f Dockerfile_ruby26_slim.dockerfile .
+checkrun $? 'Something went wrong...'
+
 cd ..
 
+# list built images
 docker images | grep workspace
 
 

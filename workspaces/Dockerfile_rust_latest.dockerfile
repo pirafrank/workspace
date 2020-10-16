@@ -7,6 +7,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG="en_US.UTF-8" LC_ALL="en_US.UTF-8" LANGUAGE="en_US.UTF-8"
 WORKDIR /root
 
+COPY setup_rust.zsh ./
+
 # install rust and cargo
 RUN set -x \
   && echo "install rust and cargo" \

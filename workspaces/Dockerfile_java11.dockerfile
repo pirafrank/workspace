@@ -9,6 +9,8 @@ WORKDIR /root
 
 ARG JAVAVERSION=11
 
+COPY setup_java.zsh ./
+
 RUN echo "installing java" \
   && zsh setup_java.zsh $JAVAVERSION
 
