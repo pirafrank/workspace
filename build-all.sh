@@ -13,7 +13,8 @@ checkrun $? 'Something went wrong...'
 ./build-workspace.sh node12 workspaces/Dockerfile_node12.dockerfile && \
 ./build-workspace.sh python38 workspaces/Dockerfile_python38.dockerfile && \
 ./build-workspace.sh ruby26 workspaces/Dockerfile_ruby26.dockerfile && \
-./build-workspace.sh rust workspaces/Dockerfile_rust_latest.dockerfile
+./build-workspace.sh rust workspaces/Dockerfile_rust_latest.dockerfile && \
+./build-workspace.sh java11 workspaces/Dockerfile_java11.dockerfile
 checkrun $? 'Something went wrong...'
 
 cd workspaces # bc of docker context

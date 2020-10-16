@@ -73,6 +73,7 @@ COPY setup_zprezto.zsh \
   workspaces/setup_rvm.zsh \
   workspaces/setup_rust.zsh \
   workspaces/setup_docker_cli.zsh \
+  workspaces/setup_java.zsh \
   pre_start.zsh ./
 
 # clone dotfiles and setup more dirs in HOME
