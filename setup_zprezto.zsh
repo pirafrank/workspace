@@ -8,6 +8,8 @@ done
 ln -s "${ZDOTDIR:-$HOME}"/dotfiles/zsh/common/zsh_aliases "${ZDOTDIR:-$HOME}/.zsh_aliases"
 ln -s "${ZDOTDIR:-$HOME}"/dotfiles/zsh/common/zsh_env "${ZDOTDIR:-$HOME}/.zsh_env"
 
+# fixes "pmodload: no such module: contrib-prompt"
+export ZPREZTODIR="${ZDOTDIR:-$HOME}/.zprezto"
 # setup prezto-contrib (https://github.com/belak/prezto-contrib#usage)
 cd $ZPREZTODIR
 git clone --recurse-submodules https://github.com/belak/prezto-contrib contrib
