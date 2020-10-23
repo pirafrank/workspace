@@ -75,7 +75,7 @@ sudo apt-get install -y \
     zutils \
   && echo "getting newer git..." \
   && sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com A1715D88E1DF1F24 \
-  && sudo add-apt-repository ppa:git-core/ppa \
+  && sudo add-apt-repository ppa:git-core/ppa -y \
   && sudo apt-get update \
   && sudo apt-get install -y git \
   && echo "installing neovim" \
@@ -104,11 +104,11 @@ echo "install tmux plugin manager" \
   && git clone --depth 1 https://github.com/junegunn/fzf.git .fzf \
   && cp -a dotfiles/fzf/.fzf* ./ \
   && echo "change default shell" \
-  && chsh -s $(which zsh) \
+  && sudo chsh -s $(which zsh) $(whoami) \
   && echo "install lazygit" \
-  && add-apt-repository ppa:lazygit-team/release \
-  && apt-get update \
-  && apt-get install lazygit
+  && sudo add-apt-repository ppa:lazygit-team/release -y \
+  && sudo apt-get update \
+  && sudo apt-get install -y lazygit
 
 # enter dotfiles repo root
 cd dotfiles
