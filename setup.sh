@@ -14,20 +14,33 @@ PYTHON3VERSION='3.7.7'
 
 # notes:
 # create your user first
-# DO NOT run this script as sudo
+# then run as:
+# curl -sSL https://github.com/pirafrank/dotfiles/raw/master/setup.sh | sudo -H -u YOURUSERNAME bash
 
 if [[ $(uname -s) != 'Linux' ]]; then
   echo "Sorry, Linux only this time!"
   exit 1
 fi
 
-sudo apt-get update && sudo apt-get install -y locales
+if [[ $EUID -eq 0 ]]; then
+   echo "DO NOT run this script as root!"
+   echo "And more... Have you created the user you want to run it from?"
+   exit 1
+fi
+
+# explicitly moving to home dir
+cd
+
+# upgrade all the things
+sudo apt-get update && sudo apt-get upgrade -y
+
+# install locales
+sudo apt-get install -y locales
 LANG="en_US.UTF-8"
 LC_ALL="en_US.UTF-8"
 LANGUAGE="en_US.UTF-8"
 
-sudo apt-get update \
-  && sudo apt-get install -y --no-install-recommends apt-utils \
+sudo apt-get install -y --no-install-recommends apt-utils \
   && sudo apt-get install -y \
     build-essential \
     apt-transport-https \
@@ -61,6 +74,7 @@ sudo apt-get install -y \
     xz-utils \
     zutils \
   && echo "getting newer git..." \
+  && sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com A1715D88E1DF1F24 \
   && sudo add-apt-repository ppa:git-core/ppa \
   && sudo apt-get update \
   && sudo apt-get install -y git \
@@ -68,10 +82,11 @@ sudo apt-get install -y \
   && sudo apt-get install -y neovim
 
 echo "make dirs" \
-  && mkdir bin2 \
+  && mkdir -p bin2 \
   && mkdir -p Code/Workspaces \
   && echo "clone and setup my dotfiles" \
-  && git clone https://github.com/pirafrank/dotfiles.git dotfiles \
+  && git clone https://github.com/pirafrank/dotfiles.git Code/dotfiles \
+  && ln -s $HOME/Code/dotfiles $HOME/dotfiles \
   && echo "config git global" \
   && /bin/bash dotfiles/git/git_config.sh \
   && echo "creating symlinks to dotfiles" \
@@ -81,7 +96,7 @@ echo "make dirs" \
   && ln -s dotfiles/vim/.vimrc .vimrc
 
 echo "install zprezto" \
-  && zsh setup_zprezto.zsh
+  && zsh dotfiles/setup_zprezto.zsh
 
 echo "install tmux plugin manager" \
   && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
@@ -94,6 +109,9 @@ echo "install tmux plugin manager" \
   && add-apt-repository ppa:lazygit-team/release \
   && apt-get update \
   && apt-get install lazygit
+
+# enter dotfiles repo root
+cd dotfiles
 
 # install pyenv and python
 echo "install pyenv and python" \
@@ -113,9 +131,12 @@ echo "install rust and cargo" \
 
 # install docker
 echo "install docker" \
-  && bash setup_docker_full.sh
+  && sudo bash setup_docker_full.sh \
+  && sudo usermod -aG docker $(whoami)
 
 # install packer
-echo "install packer" \
+echo "install cloud clients" \
   && bash setup_cloud_clients.sh
 
+# back home
+cd
