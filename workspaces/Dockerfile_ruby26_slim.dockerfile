@@ -9,7 +9,7 @@ WORKDIR /root
 RUN set -x \
   && apt-get clean && apt-get update \
   && apt-get install -y locales
-ENV LANG="en_US.UTF-8" LC_ALL="en_US.UTF-8" LANGUAGE="en_US.UTF-8"
+ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 
 # set debug mode and install dev and essentials packages
 RUN set -x \

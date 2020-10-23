@@ -4,7 +4,7 @@ FROM pirafrank/workspace:latest
 ENV DEBIAN_FRONTEND=noninteractive
 
 # explicitly set lang and workdir
-ENV LANG="en_US.UTF-8" LC_ALL="en_US.UTF-8" LANGUAGE="en_US.UTF-8"
+ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 WORKDIR /home/work
 
 COPY setup_rust.zsh ./
