@@ -5,11 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # explicitly set lang and workdir
 ENV LANG="en_US.UTF-8" LC_ALL="en_US.UTF-8" LANGUAGE="en_US.UTF-8"
-WORKDIR /root
 
-ARG PYTHON3VERSION='3.8.5'
-
-COPY setup_pyenv.zsh ./
+USER root
 
 # install deps to compile python shims
 RUN set -x \
@@ -18,14 +15,21 @@ RUN set -x \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
 
+USER work
+WORKDIR /home/work
+
+ARG PYTHON3VERSION='3.8.5'
+
+COPY setup_pyenv.zsh ./
+
 # install pyenv and python
 RUN set -x \
   && echo "install pyenv and python" \
   && zsh setup_pyenv.zsh $PYTHON3VERSION
 
 # external mountpoints
-VOLUME /root/Code
-VOLUME /root/secrets
+VOLUME /home/work/Code
+VOLUME /home/work/secrets
 # Warning from the docs:
 # If any build steps change the data within the volume
 # AFTER it has been declared, those changes will be discarded.

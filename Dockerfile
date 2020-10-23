@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
 
-WORKDIR /root
+ARG UBUNTURELEASE='focal'
 
 # setting locales
 RUN set -x \
@@ -64,7 +64,26 @@ RUN set -x \
     neovim \
   && pip3 install neovim
 
-ARG UBUNTURELEASE='focal'
+# add user and change default shell
+RUN set -x \
+  && useradd -Um -d /home/work -G sudo -s /bin/bash work \
+  && echo "change default shell" \
+  && chsh -s $(which zsh) work
+
+# install lazygit
+RUN set -x \
+  && echo "install lazygit" \
+  && add-apt-repository ppa:lazygit-team/release \
+  && apt-get update \
+  && apt-get install lazygit
+
+# install docker-cli (client only)
+# RUN set -x \
+#   && echo "install docker-cli (CLI client only)" \
+#   && zsh setup_docker_cli.zsh $UBUNTURELEASE
+
+USER work
+WORKDIR /home/work
 
 # copy setup scripts for different envs
 COPY setup_zprezto.zsh \
@@ -80,7 +99,7 @@ COPY setup_zprezto.zsh \
 # clone dotfiles and setup more dirs in HOME
 RUN set -x \
   && echo "make dirs" \
-  && mkdir bin2 \
+  && mkdir -p bin2 \
   && mkdir -p Code/Workspaces \
   && echo "clone and setup my dotfiles" \
   && git clone https://github.com/pirafrank/dotfiles.git dotfiles \
@@ -102,25 +121,11 @@ RUN set -x \
   && echo "install tmux plugin manager" \
   && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
   && echo "install fzf" \
-  && zsh setup_fzf.sh \
-  && echo "change default shell" \
-  && chsh -s $(which zsh)
-
-# install lazygit
-RUN set -x \
-  && echo "install lazygit" \
-  && add-apt-repository ppa:lazygit-team/release \
-  && apt-get update \
-  && apt-get install lazygit
-
-# install docker-cli (client only)
-# RUN set -x \
-#   && echo "install docker-cli (CLI client only)" \
-#   && zsh setup_docker_cli.zsh $UBUNTURELEASE
+  && zsh setup_fzf.sh
 
 # external mountpoints
-VOLUME /root/Code
-VOLUME /root/secrets
+VOLUME /home/work/Code
+VOLUME /home/work/secrets
 # Warning from the docs:
 # If any build steps change the data within the volume
 # AFTER it has been declared, those changes will be discarded.
