@@ -68,6 +68,7 @@ ARG UBUNTURELEASE='focal'
 
 # copy setup scripts for different envs
 COPY setup_zprezto.zsh \
+  setup_fzf.sh \
   workspaces/setup_nvm.zsh \
   workspaces/setup_pyenv.zsh \
   workspaces/setup_rvm.zsh \
@@ -101,10 +102,7 @@ RUN set -x \
   && echo "install tmux plugin manager" \
   && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
   && echo "install fzf" \
-  && git clone --depth 1 https://github.com/junegunn/fzf.git .fzf \
-  && cp -a dotfiles/fzf/.fzf* ./ \
-  && sed -i s@home/francesco@root@g .fzf.bash \
-  && sed -i s@home/francesco@root@g .fzf.zsh \
+  && zsh setup_fzf.sh \
   && echo "change default shell" \
   && chsh -s $(which zsh)
 

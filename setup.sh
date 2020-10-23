@@ -101,8 +101,7 @@ echo "install zprezto" \
 echo "install tmux plugin manager" \
   && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
   && echo "install fzf" \
-  && git clone --depth 1 https://github.com/junegunn/fzf.git .fzf \
-  && cp -a dotfiles/fzf/.fzf* ./ \
+  && zsh setup_fzf.sh \
   && echo "change default shell" \
   && sudo chsh -s $(which zsh) $(whoami) \
   && echo "install lazygit" \
@@ -134,7 +133,7 @@ echo "install docker" \
   && sudo bash setup_docker_full.sh \
   && sudo usermod -aG docker $(whoami)
 
-# install packer
+# install cloud clients
 echo "install cloud clients" \
   && bash setup_cloud_clients.sh
 
