@@ -15,7 +15,7 @@ PYTHON3VERSION='3.7.7'
 # notes:
 # create your user first
 # then run as:
-# curl -sSL https://github.com/pirafrank/dotfiles/raw/master/setup.sh | sudo -H -u YOURUSERNAME bash
+# curl -sSL https://github.com/pirafrank/dotfiles/raw/main/setup.sh | sudo -H -u YOURUSERNAME bash
 
 if [[ $(uname -s) != 'Linux' ]]; then
   echo "Sorry, Linux only this time!"
