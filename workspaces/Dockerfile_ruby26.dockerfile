@@ -5,6 +5,17 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # explicitly set lang and workdir
 ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
+
+USER root
+
+# install deps to compile rubies
+RUN set -x \
+  && apt-get clean && apt-get update \
+  && apt-get install -y build-essential gawk autoconf automake bison \
+    libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool \
+    libyaml-dev pkg-config sqlite3 libgmp-dev libreadline-dev libssl-dev
+
+USER work
 WORKDIR /home/work
 
 ARG RUBYVERSION='2.6'
