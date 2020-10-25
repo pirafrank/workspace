@@ -7,7 +7,7 @@ if [[ -z "$1" ]]; then
 fi
 
 JAVAVERSION="$1"
-folder="${HOME}/bin3"
+folder="${HOME}/bin2"
 
 case $JAVAVERSION in
 9)
