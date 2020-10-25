@@ -18,14 +18,16 @@ RUN set -x \
 USER work
 WORKDIR /home/work
 
-ARG PYTHON3VERSION='3.8.6'
+ARG PYTHON3VERSION='3.8'
 
 COPY setup_pyenv.zsh ./
 
 # install pyenv and python
 RUN set -x \
   && echo "install pyenv and python" \
-  && zsh setup_pyenv.zsh $PYTHON3VERSION
+  && choice=$(curl -sSL https://api.github.com/repos/pyenv/pyenv/contents/plugins/python-build/share/python-build | \
+  grep name | cut -d'"' -f4 | grep -v '-' | tail -n +2 | grep "$PYTHON3VERSION" | tail -1) \
+  && zsh setup_pyenv.zsh $choice
 
 # external mountpoints
 VOLUME /home/work/Code
