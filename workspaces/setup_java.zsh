@@ -17,7 +17,7 @@ case $JAVAVERSION in
   url='https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz'
   ;;
 11)
-  url='https://download.oracle.com/otn-pub/java/jdk/11.0.8%2B10/dc5cf74f97104e8eac863698146a7ac3/jdk-11.0.8_linux-x64_bin.tar.gz'
+  url='https://download.oracle.com/otn-pub/java/jdk/11.0.9%2B7/eec35ebefb3f4133bd045b891f05db94/jdk-11.0.9_linux-x64_bin.tar.gz'
   ;;
 12)
   url='https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz'
@@ -46,6 +46,11 @@ cd $folder
 # download java version
 echo "Downloading Java ${JAVAVERSION}..."
 wget -c --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" -O jdk.tar.gz $url
+# sometimes url may be broken
+if [ $? -ne 0 ]; then
+  echo "Something has gone wrong..."
+  exit 1
+fi
 
 # installing
 echo "Installing Java ${JAVAVERSION}..."
