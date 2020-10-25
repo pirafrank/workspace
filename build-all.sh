@@ -22,11 +22,6 @@ docker build $PARAMS -t pirafrank/workspace:rust -f Dockerfile_rust_latest.docke
 docker build $PARAMS -t pirafrank/workspace:java11 -f Dockerfile_java11.dockerfile .
 checkrun $? 'Something went wrong...'
 
-# slim versions, no workspace
-docker build $PARAMS -t pirafrank/workspace:rust-slim -f Dockerfile_rust_latest_slim.dockerfile . && \
-docker build $PARAMS -t pirafrank/workspace:ruby26-slim -f Dockerfile_ruby26_slim.dockerfile .
-checkrun $? 'Something went wrong...'
-
 cd ..
 
 # list built images
