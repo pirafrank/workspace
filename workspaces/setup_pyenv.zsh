@@ -10,7 +10,7 @@ PYTHON3VERSION="$1"
 # installing dependencies to compile python shims
 # (only if run as standard user, assume interactive install.
 # These deps are installed via Dockerfile during Docker image build)
-if [[ $EUID -ne 0 ]]; then
+if [[ $EUID -ne 0 && $(command -v sudo) ]]; then
   sudo apt-get clean && sudo apt-get update && \
   sudo apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev \
   libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
