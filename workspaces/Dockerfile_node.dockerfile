@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 WORKDIR /home/work
 
-ARG NODEVERSION=12
+ARG NODEVERSION
 
 COPY setup_nvm.zsh ./
 

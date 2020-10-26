@@ -19,12 +19,20 @@ checkrun $? 'Something went wrong...'
 
 cd workspaces # bc of docker context
 
+# get versions to build
+source workspace_versions.sh
+
 # workspaces
-docker build $PARAMS -t pirafrank/workspace:node12 -f Dockerfile_node.dockerfile . && \
-docker build $PARAMS -t pirafrank/workspace:python38 -f Dockerfile_python3.dockerfile . && \
-docker build $PARAMS -t pirafrank/workspace:ruby26 -f Dockerfile_ruby.dockerfile . && \
-docker build $PARAMS -t pirafrank/workspace:rust -f Dockerfile_rust.dockerfile . && \
-docker build $PARAMS -t pirafrank/workspace:java11 -f Dockerfile_java.dockerfile .
+docker build $PARAMS --build-arg JAVAVERSION=${JAVAVERSION} \
+  -t pirafrank/workspace:java${JAVAVERSION} -f Dockerfile_java.dockerfile . && \
+docker build $PARAMS --build-arg NODEVERSION=${NODEVERSION} \
+  -t pirafrank/workspace:node${NODEVERSION} -f Dockerfile_node.dockerfile . && \
+docker build $PARAMS --build-arg PYTHON3VERSION=${PYTHON3VERSION} \
+  -t pirafrank/workspace:python${PYTHON3VERSION} -f Dockerfile_python3.dockerfile . && \
+docker build $PARAMS --build-arg RUBYVERSION=${RUBYVERSION} \
+  -t pirafrank/workspace:ruby${RUBYVERSION} -f Dockerfile_ruby.dockerfile . && \
+docker build $PARAMS \
+  -t pirafrank/workspace:rust -f Dockerfile_rust.dockerfile .
 checkrun $? 'Something went wrong...'
 
 cd ..

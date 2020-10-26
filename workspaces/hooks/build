@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# get version to build from docker tag set in Docker Hub build settings
+JAVAVERSION=$(printf $DOCKER_TAG | grep java | tr -d -c 0-9.)
+NODEVERSION=$(printf $DOCKER_TAG | grep node | tr -d -c 0-9.)
+PYTHON3VERSION=$(printf $DOCKER_TAG | grep python | tr -d -c 0-9.)
+RUBYVERSION=$(printf $DOCKER_TAG | grep ruby | tr -d -c 0-9.)
+
+echo "DOCKER_TAG $DOCKER_TAG"
+echo "JAVAVERSION $JAVAVERSION"
+echo "NODEVERSION $NODEVERSION"
+echo "PYTHON3VERSION $PYTHON3VERSION"
+echo "RUBYVERSION $RUBYVERSION"
+
+docker build \
+--build-arg JAVAVERSION=${JAVAVERSION} \
+--build-arg NODEVERSION=${NODEVERSION} \
+--build-arg PYTHON3VERSION=${PYTHON3VERSION} \
+--build-arg RUBYVERSION=${RUBYVERSION} \
+-f $DOCKERFILE_PATH -t $IMAGE_NAME .

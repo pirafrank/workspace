@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 WORKDIR /home/work
 
-ARG JAVAVERSION=11
+ARG JAVAVERSION
 
 COPY setup_java.zsh ./
 

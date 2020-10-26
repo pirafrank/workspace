@@ -18,7 +18,7 @@ RUN set -x \
 USER work
 WORKDIR /home/work
 
-ARG RUBYVERSION='2.6'
+ARG RUBYVERSION
 
 COPY setup_rvm.zsh ./
 

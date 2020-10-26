@@ -18,7 +18,7 @@ RUN set -x \
 USER work
 WORKDIR /home/work
 
-ARG PYTHON3VERSION='3.8'
+ARG PYTHON3VERSION
 
 COPY setup_pyenv.zsh ./
 
