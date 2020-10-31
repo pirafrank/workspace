@@ -2,7 +2,7 @@
 
 if [[ -z "$1" ]]; then
     echo "Please specify the Java version."
-    echo "Supported version are from 9 to 15."
+    echo "Supported versions are from 8 to 15."
     exit 1
 fi
 
@@ -10,6 +10,9 @@ JAVAVERSION="$1"
 folder="${HOME}/bin2"
 
 case $JAVAVERSION in
+8)
+  url='https://api.adoptopenjdk.net/v3/binary/latest/8/ga/linux/x64/jdk/hotspot/normal/openjdk?project=jdk'
+  ;;
 9)
   url='https://download.java.net/java/GA/jdk9/9.0.4/binaries/openjdk-9.0.4_linux-x64_bin.tar.gz'
   ;;
