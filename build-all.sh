@@ -23,7 +23,7 @@ cd workspaces # bc of docker context
 source workspace_versions.sh
 
 # workspaces
-docker build $PARAMS --build-arg JAVAVERSION=${JAVAVERSION} \
+docker build $PARAMS --build-arg JAVAVERSION=${JAVAVERSION} --build-arg JAVAVENDOR=${JAVAVENDOR} \
   -t pirafrank/workspace:java${JAVAVERSION} -f Dockerfile_java.dockerfile . && \
 docker build $PARAMS --build-arg NODEVERSION=${NODEVERSION} \
   -t pirafrank/workspace:node${NODEVERSION} -f Dockerfile_node.dockerfile . && \

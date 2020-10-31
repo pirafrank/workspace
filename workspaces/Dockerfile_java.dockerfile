@@ -8,11 +8,12 @@ ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 WORKDIR /home/work
 
 ARG JAVAVERSION
+ARG JAVAVENDOR
 
 COPY setup_java.zsh ./
 
 RUN echo "installing java" \
-  && zsh setup_java.zsh $JAVAVERSION
+  && zsh setup_java.zsh $JAVAVERSION $JAVAVENDOR
 
 # external mountpoints
 VOLUME /home/work/Code

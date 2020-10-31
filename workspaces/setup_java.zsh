@@ -1,43 +1,65 @@
 #!/bin/zsh
 
 if [[ -z "$1" ]]; then
-    echo "Please specify the Java version."
-    echo "Supported versions are from 8 to 15."
+    echo "
+Please specify the Java version and JDK vendor.
+Supported versions are from 8 to 15.
+"
     exit 1
+fi
+
+VENDOR="$2"
+if [[ -z "$VENDOR" ]]; then
+    echo "
+You may also specify vendor. Use 'openjdk' (default) or 'adoptopenjdk'.
+"
+    VENDOR=openjdk
 fi
 
 JAVAVERSION="$1"
 folder="${HOME}/bin2"
 
-case $JAVAVERSION in
-8)
-  url='https://api.adoptopenjdk.net/v3/binary/latest/8/ga/linux/x64/jdk/hotspot/normal/openjdk?project=jdk'
+case $VENDOR in
+openjdk)
+  case $JAVAVERSION in
+  8)
+    url='https://api.adoptopenjdk.net/v3/binary/latest/8/ga/linux/x64/jdk/hotspot/normal/openjdk?project=jdk'
+    ;;
+  9)
+    url='https://download.java.net/java/GA/jdk9/9.0.4/binaries/openjdk-9.0.4_linux-x64_bin.tar.gz'
+    ;;
+  10)
+    url='https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz'
+    ;;
+  11)
+    url='https://api.adoptopenjdk.net/v3/binary/latest/11/ga/linux/x64/jdk/hotspot/normal/openjdk?project=jdk'
+    ;;
+  12)
+    url='https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz'
+    ;;
+  13)
+    url='https://download.java.net/java/GA/jdk13.0.2/d4173c853231432d94f001e99d882ca7/8/GPL/openjdk-13.0.2_linux-x64_bin.tar.gz'
+    ;;
+  14)
+    url='https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_linux-x64_bin.tar.gz'
+    ;;
+  15)
+    url='https://download.java.net/java/GA/jdk15.0.1/51f4f36ad4ef43e39d0dfdbaf6549e32/9/GPL/openjdk-15.0.1_linux-x64_bin.tar.gz'
+    ;;
+  *)
+    echo "Unsupported version. Exiting..."
+    exit 1
+  esac
   ;;
-9)
-  url='https://download.java.net/java/GA/jdk9/9.0.4/binaries/openjdk-9.0.4_linux-x64_bin.tar.gz'
-  ;;
-10)
-  url='https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz'
-  ;;
-11)
-  url='https://api.adoptopenjdk.net/v3/binary/latest/11/ga/linux/x64/jdk/hotspot/normal/openjdk?project=jdk'
-  ;;
-12)
-  url='https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz'
-  ;;
-13)
-  url='https://download.java.net/java/GA/jdk13.0.2/d4173c853231432d94f001e99d882ca7/8/GPL/openjdk-13.0.2_linux-x64_bin.tar.gz'
-  ;;
-14)
-  url='https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_linux-x64_bin.tar.gz'
-  ;;
-15)
-  url='https://download.java.net/java/GA/jdk15.0.1/51f4f36ad4ef43e39d0dfdbaf6549e32/9/GPL/openjdk-15.0.1_linux-x64_bin.tar.gz'
+adoptopenjdk)
+  url="https://api.adoptopenjdk.net/v3/binary/latest/${JAVAVERSION}/ga/linux/x64/jdk/hotspot/normal/adoptopenjdk?project=jdk"
   ;;
 *)
-  echo "Unsupported version. Exiting..."
+  echo "Unsupported vendor. Exiting..."
   exit 1
 esac
+
+
 
 # creating target dir if it doesn't exist
 # it should've been created in prev script
@@ -47,8 +69,10 @@ fi
 cd $folder
 
 # download java version
-echo "Downloading Java ${JAVAVERSION}
-from $url"
+echo "
+Downloading Java ${JAVAVERSION} by ${VENDOR}
+from $url
+"
 wget -c -O jdk.tar.gz $url
 # sometimes url may be broken
 if [ $? -ne 0 ]; then
