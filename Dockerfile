@@ -3,6 +3,7 @@ FROM ubuntu:20.04
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
 
+ARG WORKSPACE_VERSION
 ARG UBUNTURELEASE='focal'
 
 # setting locales
@@ -122,6 +123,13 @@ RUN set -x \
   && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
   && echo "install fzf" \
   && zsh setup_fzf.sh
+
+# last but not least, write current version inside image
+RUN set -x \
+  && echo '#!/bin/bash' > bin2/workspace_version \
+  && echo "echo Current version: ${WORKSPACE_VERSION}" >> bin2/workspace_version \
+  && echo "echo Build on       : $(date '+%Y/%m/%d %H:%M:%S')" >> bin2/workspace_version \
+  && chmod +x bin2/workspace_version
 
 # external mountpoints
 VOLUME /home/work/Code

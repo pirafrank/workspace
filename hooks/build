@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# get version from docker tag set in Docker Hub build settings
+echo "Building version: $DOCKER_TAG"
+
+docker build \
+--build-arg WORKSPACE_VERSION=${DOCKER_TAG} \
+-f $DOCKERFILE_PATH -t $IMAGE_NAME .
