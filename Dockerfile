@@ -95,6 +95,7 @@ COPY setup_zprezto.zsh \
   workspaces/setup_rust.zsh \
   workspaces/setup_docker_cli.zsh \
   workspaces/setup_java.zsh \
+  workspaces/setup_golang.zsh \
   pre_start.zsh ./
 
 # clone dotfiles and setup more dirs in HOME

@@ -6,6 +6,7 @@ JAVAVENDOR=$(printf $DOCKER_TAG | grep java | grep '-' |  cut -d'-' -f2)
 NODEVERSION=$(printf $DOCKER_TAG | grep node | tr -d -c 0-9.)
 PYTHON3VERSION=$(printf $DOCKER_TAG | grep python | tr -d -c 0-9.)
 RUBYVERSION=$(printf $DOCKER_TAG | grep ruby | tr -d -c 0-9.)
+GOLANGVERSION=$(printf $DOCKER_TAG | grep go | tr -d -c 0-9.)
 
 echo "DOCKER_TAG $DOCKER_TAG"
 echo "JAVAVERSION $JAVAVERSION"
@@ -13,6 +14,7 @@ echo "JAVAVENDOR $JAVAVENDOR"
 echo "NODEVERSION $NODEVERSION"
 echo "PYTHON3VERSION $PYTHON3VERSION"
 echo "RUBYVERSION $RUBYVERSION"
+echo "GOLANGVERSION=$GOLANGVERSION"
 
 docker build \
 --build-arg JAVAVERSION=${JAVAVERSION} \
@@ -20,4 +22,5 @@ docker build \
 --build-arg NODEVERSION=${NODEVERSION} \
 --build-arg PYTHON3VERSION=${PYTHON3VERSION} \
 --build-arg RUBYVERSION=${RUBYVERSION} \
+--build-arg GOLANGVERSION=${GOLANGVERSION} \
 -f $DOCKERFILE_PATH -t $IMAGE_NAME .
