@@ -1,13 +1,5 @@
 #!/bin/zsh
 
-function calculate_url {
-  curl -sSL $baseurl | \
-    grep 'linux-x64_bin.tar.gz' | head -n1 | \
-    grep -E "data-file[=0-9a-zA-Z'//\.%-_]*" -o | \
-    cut -d"'" -f2 | cut -d'/' -f3- | \
-    sed s@/otn/@/otn-pub/@g | sed s@^@https://@g
-}
-
 if [[ -z "$1" ]]; then
     echo "Please specify the Java version."
     echo "Supported version are from 9 to 15."
@@ -25,8 +17,7 @@ case $JAVAVERSION in
   url='https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz'
   ;;
 11)
-  baseurl='https://www.oracle.com/java/technologies/javase-jdk11-downloads.html'
-  url=$(calculate_url $baseurl)
+  url='https://api.adoptopenjdk.net/v3/binary/latest/11/ga/linux/x64/jdk/hotspot/normal/openjdk?project=jdk'
   ;;
 12)
   url='https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz'
@@ -38,8 +29,7 @@ case $JAVAVERSION in
   url='https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_linux-x64_bin.tar.gz'
   ;;
 15)
-  baseurl='https://www.oracle.com/java/technologies/javase-jdk15-downloads.html'
-  url=$(calculate_url $baseurl)
+  url='https://download.java.net/java/GA/jdk15.0.1/51f4f36ad4ef43e39d0dfdbaf6549e32/9/GPL/openjdk-15.0.1_linux-x64_bin.tar.gz'
   ;;
 *)
   echo "Unsupported version. Exiting..."
@@ -56,8 +46,7 @@ cd $folder
 # download java version
 echo "Downloading Java ${JAVAVERSION}
 from $url"
-wget -c --no-cookies --no-check-certificate \
-  --header "Cookie: oraclelicense=accept-securebackup-cookie" -O jdk.tar.gz $url
+wget -c -O jdk.tar.gz $url
 # sometimes url may be broken
 if [ $? -ne 0 ]; then
   echo "Something has gone wrong..."
