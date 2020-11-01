@@ -7,6 +7,7 @@
 NODEVERSION=12
 RUBYVERSION='2.6'
 PYTHON3VERSION='3.7.7'
+JAVAVERSION=11
 
 #
 # script
@@ -127,6 +128,14 @@ echo "install rvm and ruby" \
 # install rust and cargo
 echo "install rust and cargo" \
   && zsh workspaces/setup_rust.zsh
+
+# install java
+echo "install Java $JAVAVERSION" \
+  && zsh workspaces/java.zsh $JAVAVERSION openjdk
+
+# install golang
+echo "install Go" \
+  && zsh workspaces/setup_golang.zsh
 
 # install docker
 echo "install docker" \
