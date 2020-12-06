@@ -148,3 +148,7 @@ echo "install cloud clients" \
 
 # back home
 cd
+
+# download latest version of Secure ShellFish shell integration
+wget https://gist.github.com/palmin/46c2d0f069d0ba6b009f9295d90e171a/raw/.shellfishrc -O $HOME/.shellfishrc
+
