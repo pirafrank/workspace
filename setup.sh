@@ -94,7 +94,9 @@ echo "make dirs" \
   && ln -s dotfiles/bin bin \
   && ln -s dotfiles/git/.gitignore_global .gitignore_global \
   && ln -s dotfiles/tmux/.tmux.conf .tmux.conf \
-  && ln -s dotfiles/vim/.vimrc .vimrc
+  && ln -s dotfiles/vim/.vimrc .vimrc \
+  && mkdir -p ~/.vim \
+  && ln -s dotfiles/vim/colors ~/.vim/colors
 
 echo "install zprezto" \
   && zsh dotfiles/setup_zprezto.zsh
