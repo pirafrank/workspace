@@ -133,7 +133,8 @@ echo "install rust and cargo" \
 
 # install java
 echo "install Java $JAVAVERSION" \
-  && zsh workspaces/java.zsh $JAVAVERSION openjdk
+  && zsh workspaces/java.zsh $JAVAVERSION openjdk \
+  && zsh workspaces/setup_mvn.sh
 
 # install golang
 echo "install Go" \
