@@ -86,10 +86,16 @@ tar -xzf jdk.tar.gz
 JAVA_DOWNLOADED=$(tar --exclude='./*/*' -ztvf jdk.tar.gz | awk '{print $6}' | cut -d'/' -f1 | uniq | head)
 rm -f jdk.tar.gz
 
-# updating symlink
+# updating symlinks
+JAVA_ALIAS=$(printf "jdk${JAVAVERSION}" | cut -d'.' -f1)
+
+if [ -L "$(pwd)/${JAVA_ALIAS}" ]; then rm -f "$(pwd)/${JAVA_ALIAS}"; fi
+ln -s "$(pwd)/${JAVA_DOWNLOADED}" "$(pwd)/${JAVA_ALIAS}"
+
 if [ -L "$(pwd)/jdk" ]; then rm -f "$(pwd)/jdk"; fi
-ln -s "$(pwd)/${JAVA_DOWNLOADED}" "$(pwd)/jdk"
+ln -s "$(pwd)/${JAVA_ALIAS}" "$(pwd)/jdk"
 
 # adding to env
+if [ ! -f "$HOME/.zsh_custom" ]; then touch "$HOME/.zsh_custom"; fi
 echo "export PATH=$(pwd)/jdk/bin:\$PATH" >> "$HOME/.zsh_custom"
 echo "export JAVA_HOME=$(pwd)/jdk" >> "$HOME/.zsh_custom"
