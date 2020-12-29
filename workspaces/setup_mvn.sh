@@ -34,8 +34,8 @@ fi
 ln -s "$(pwd)/${MVN_DOWNLOADED}" "$(pwd)/maven"
 
 # adding to env
-if [ ! -f "$HOME/.zsh_custom" ]; then touch "$HOME/.zsh_custom"; fi
-echo "export PATH=$(pwd)/maven/bin:\$PATH" >> "$HOME/.zsh_custom"
+touch "$HOME/.bashrc"
+echo "export PATH=$(pwd)/maven/bin:\$PATH" >> "$HOME/.bashrc"
 
 echo "$MVN_DOWNLOADED has been installed.
 Remember to source your env."

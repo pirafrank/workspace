@@ -49,6 +49,8 @@ tar -xzf go_setup.tar.gz
 rm -f go_setup.tar.gz
 
 # adding to env
-echo "export PATH=$(pwd)/go/bin:\$PATH" >> "$HOME/.zsh_custom"
-echo "export GOPATH=\$HOME/.golang" >> "$HOME/.zsh_custom"
-echo "export PATH=\$HOME/.golang/bin:\$PATH" >> "$HOME/.zsh_custom"
+touch "$HOME/.bashrc"
+echo "export PATH=$(pwd)/go/bin:\$PATH" >> "$HOME/.bashrc"
+echo "export GOPATH=\$HOME/.golang" >> "$HOME/.bashrc"
+echo "export PATH=\$HOME/.golang/bin:\$PATH" >> "$HOME/.bashrc"
+
