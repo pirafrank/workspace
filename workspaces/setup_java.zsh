@@ -96,6 +96,7 @@ if [ -L "$(pwd)/jdk" ]; then rm -f "$(pwd)/jdk"; fi
 ln -s "$(pwd)/${JAVA_ALIAS}" "$(pwd)/jdk"
 
 # adding to env
-if [ ! -f "$HOME/.zsh_custom" ]; then touch "$HOME/.zsh_custom"; fi
-echo "export PATH=$(pwd)/jdk/bin:\$PATH" >> "$HOME/.zsh_custom"
-echo "export JAVA_HOME=$(pwd)/jdk" >> "$HOME/.zsh_custom"
+touch "$HOME/.bashrc"
+echo "export PATH=$(pwd)/jdk/bin:\$PATH" >> "$HOME/.bashrc"
+echo "export JAVA_HOME=$(pwd)/jdk" >> "$HOME/.bashrc"
+
