@@ -53,6 +53,8 @@ RUN set -x \
     xz-utils \
     zutils \
     atop \
+    bat \
+    fd-find \
   && echo "getting newer git..." \
   && add-apt-repository ppa:git-core/ppa \
   && apt-get update \

@@ -74,6 +74,10 @@ sudo apt-get install -y \
     zip \
     xz-utils \
     zutils \
+    atop \
+    htop \
+    bat \
+    fd-find \
   && echo "getting newer git..." \
   && sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com A1715D88E1DF1F24 \
   && sudo add-apt-repository ppa:git-core/ppa -y \
