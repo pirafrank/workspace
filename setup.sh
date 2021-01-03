@@ -18,8 +18,8 @@ JAVAVERSION=11
 # then run as:
 # curl -sSL https://github.com/pirafrank/dotfiles/raw/main/setup.sh | sudo -H -u YOURUSERNAME bash
 
-if [[ $(uname -s) != 'Linux' ]]; then
-  echo "Sorry, Linux only this time!"
+if [[ $(uname -s) != 'Linux' ]] || [[ ! -f /etc/debian_version ]]; then
+  echo "Sorry, only Debian-based Linux distros are supported!"
   exit 1
 fi
 
