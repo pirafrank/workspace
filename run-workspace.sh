@@ -9,13 +9,18 @@ fi
 
 PARAMS="$2"
 
+# add a default name if none provided
+if [[ $PARAMS != *"--name "* ]]; then
+  PARAMS="--name workspace $PARAMS"
+fi
+
 # if $3 is present, add value to DOCKERCLI
 DOCKERCLI="" && [[ $3 != "" ]] && DOCKERCLI="-v /var/run/docker.sock:/var/run/docker.sock"
 
 mkdir -p $HOME/work_temp/Code
 mkdir -p $HOME/work_temp/secrets
 
-docker run -it --name workspace $PARAMS $DOCKERCLI \
+docker run -it $PARAMS $DOCKERCLI \
 -v $HOME/work_temp/Code:/home/work/Code \
 -v $HOME/work_temp/secrets:/home/work/secrets \
 -p 8100:8080 \
