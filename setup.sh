@@ -103,12 +103,12 @@ echo "make dirs" \
   && ln -s dotfiles/vim/colors ~/.vim/colors
 
 echo "install zprezto" \
-  && zsh dotfiles/setup_zprezto.zsh
+  && zsh dotfiles/setups/setup_zprezto.zsh
 
 echo "install tmux plugin manager" \
   && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
   && echo "install fzf" \
-  && zsh setup_fzf.sh \
+  && zsh setups/setup_fzf.sh \
   && echo "change default shell" \
   && sudo chsh -s $(which zsh) $(whoami) \
   && echo "install lazygit" \
@@ -146,12 +146,12 @@ echo "install Go" \
 
 # install docker
 echo "install docker" \
-  && sudo bash setup_docker_full.sh \
+  && sudo bash setups/setup_docker_full.sh \
   && sudo usermod -aG docker $(whoami)
 
 # install cloud clients
 echo "install cloud clients" \
-  && bash setup_cloud_clients.sh
+  && bash setups/setup_cloud_clients.sh
 
 # back home
 cd

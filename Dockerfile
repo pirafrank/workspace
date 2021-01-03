@@ -89,8 +89,9 @@ USER work
 WORKDIR /home/work
 
 # copy setup scripts for different envs
-COPY setup_zprezto.zsh \
-  setup_fzf.sh \
+# into WORKDIR
+COPY setups/setup_zprezto.zsh \
+  setups/setup_fzf.sh \
   workspaces/setup_nvm.zsh \
   workspaces/setup_pyenv.zsh \
   workspaces/setup_rvm.zsh \
