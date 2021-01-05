@@ -1,6 +1,10 @@
 #!/bin/bash
 
 # this installer works for docker engine supported versions of ubuntu and debian
+if [ ! -f /etc/debian_version ]; then
+  echo "Unsupported OS"
+  exit 1
+fi
 
 # going script mode...
 DEBIAN_FRONTEND=noninteractive
