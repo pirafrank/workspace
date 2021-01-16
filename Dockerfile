@@ -26,18 +26,17 @@ RUN set -x \
     tzdata
 
 # Set up timezone (tzdata required)
-ENV TZ 'Europe/Rome'
-RUN echo $TZ > /etc/timezone && \
-  rm /etc/localtime && \
-  ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
-  dpkg-reconfigure -f noninteractive tzdata
+ENV TZ=Europe/Rome
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # install dev software and dotfiles
 # comments are more for Dockerfile maintenance
 RUN set -x \
-  && apt-get install -y \
+  && apt-get remove vim vim-runtime gvim vim-tiny \
+    vim-common vim-gui-common gvim \
+  && apt-get update && apt-get install -y \
     wget \
-    vim \
+    vim-nox \
     zsh \
     tmux \
     mosh \
@@ -60,25 +59,17 @@ RUN set -x \
   && apt-get update \
   && apt-get install -y git \
   && echo "installing python3 (focal ships with 3.8)" \
-  && apt-get install -y \
-    python3-pip \
-  && echo "installing neovim" \
-  && apt-get install -y \
-    neovim \
-  && pip3 install neovim
+  && apt-get install -y python3-pip \
+  && echo "install lazygit" \
+  && add-apt-repository ppa:lazygit-team/release -y \
+  && apt-get update \
+  && apt-get install -y lazygit
 
 # add user and change default shell
 RUN set -x \
   && useradd -Um -d /home/work -G sudo -s /bin/bash work \
   && echo "change default shell" \
   && chsh -s $(which zsh) work
-
-# install lazygit
-RUN set -x \
-  && echo "install lazygit" \
-  && add-apt-repository ppa:lazygit-team/release \
-  && apt-get update \
-  && apt-get install lazygit
 
 # install docker-cli (client only)
 # RUN set -x \
@@ -90,8 +81,9 @@ WORKDIR /home/work
 
 # copy setup scripts for different envs
 # into WORKDIR
-COPY setups/setup_zprezto.zsh \
+COPY install_dotfiles.zsh \
   setups/setup_fzf.sh \
+  setups/setup_zprezto.zsh \
   workspaces/setup_nvm.zsh \
   workspaces/setup_pyenv.zsh \
   workspaces/setup_rvm.zsh \
@@ -101,32 +93,21 @@ COPY setups/setup_zprezto.zsh \
   workspaces/setup_golang.zsh \
   pre_start.zsh ./
 
-# clone dotfiles and setup more dirs in HOME
+# install fzf
 RUN set -x \
-  && echo "make dirs" \
-  && mkdir -p bin2 \
-  && mkdir -p Code/Workspaces \
-  && echo "clone and setup my dotfiles" \
-  && git clone https://github.com/pirafrank/dotfiles.git dotfiles \
-  && echo "config git global" \
-  && /bin/bash dotfiles/git/git_config.sh \
-  && echo "creating symlinks to dotfiles" \
-  && ln -s dotfiles/bin bin \
-  && ln -s dotfiles/git/.gitignore_global .gitignore_global \
-  && ln -s dotfiles/tmux/.tmux.conf .tmux.conf \
-  && ln -s dotfiles/vim/.vimrc .vimrc
+  && echo "install fzf" \
+  && zsh setup_fzf.sh
 
 # zprezto has many submodules, going with a dedicated layer
 RUN set -x \
   && echo "install zprezto" \
   && zsh setup_zprezto.zsh
 
-# install tmux
+# clone dotfiles
 RUN set -x \
-  && echo "install tmux plugin manager" \
-  && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
-  && echo "install fzf" \
-  && zsh setup_fzf.sh
+  && echo "installing dotfiles" \
+  && git clone https://github.com/pirafrank/dotfiles.git ${HOME}/dotfiles \
+  && zsh install_dotfiles.zsh all
 
 # last but not least, write current version inside image
 RUN set -x \

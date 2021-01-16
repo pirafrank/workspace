@@ -59,7 +59,6 @@ echo $TZ | sudo tee /etc/timezone && \
 
 sudo apt-get install -y \
     wget \
-    vim \
     zsh \
     tmux \
     mosh \
@@ -83,38 +82,24 @@ sudo apt-get install -y \
   && sudo add-apt-repository ppa:git-core/ppa -y \
   && sudo apt-get update \
   && sudo apt-get install -y git \
-  && echo "installing neovim" \
-  && sudo apt-get install -y neovim
-
-echo "make dirs" \
-  && mkdir -p bin2 \
-  && mkdir -p Code/Workspaces \
-  && echo "clone and setup my dotfiles" \
-  && git clone https://github.com/pirafrank/dotfiles.git Code/dotfiles \
-  && ln -s $HOME/Code/dotfiles $HOME/dotfiles \
-  && echo "config git global" \
-  && /bin/bash dotfiles/git/git_config.sh \
-  && echo "creating symlinks to dotfiles" \
-  && ln -s dotfiles/bin bin \
-  && ln -s dotfiles/git/.gitignore_global .gitignore_global \
-  && ln -s dotfiles/tmux/.tmux.conf .tmux.conf \
-  && ln -s dotfiles/vim/.vimrc .vimrc \
-  && mkdir -p ~/.vim \
-  && ln -s dotfiles/vim/colors ~/.vim/colors
-
-echo "install zprezto" \
-  && zsh dotfiles/setups/setup_zprezto.zsh
-
-echo "install tmux plugin manager" \
-  && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
-  && echo "install fzf" \
-  && zsh setups/setup_fzf.sh \
-  && echo "change default shell" \
-  && sudo chsh -s $(which zsh) $(whoami) \
   && echo "install lazygit" \
   && sudo add-apt-repository ppa:lazygit-team/release -y \
   && sudo apt-get update \
-  && sudo apt-get install -y lazygit
+  && sudo apt-get install -y lazygit \
+  && echo "change default shell" \
+  && sudo chsh -s $(which zsh) $(whoami)
+
+echo "install fzf" \
+  && zsh setups/setup_fzf.sh \
+  && echo "install zprezto" \
+  && zsh setups/setup_zprezto.zsh
+
+# dotfiles
+echo "installing dotfiles" \
+  && git clone https://github.com/pirafrank/dotfiles.git ${HOME}/dotfiles \
+  && cd ${HOME}/dotfiles \
+  && zsh install_dotfiles.zsh all
+
 
 # enter dotfiles repo root
 cd dotfiles
@@ -155,7 +140,3 @@ echo "install cloud clients" \
 
 # back home
 cd
-
-# download latest version of Secure ShellFish shell integration
-wget https://gist.github.com/palmin/46c2d0f069d0ba6b009f9295d90e171a/raw/.shellfishrc -O $HOME/.shellfishrc
-
