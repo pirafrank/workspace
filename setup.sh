@@ -89,20 +89,19 @@ sudo apt-get install -y \
   && echo "change default shell" \
   && sudo chsh -s $(which zsh) $(whoami)
 
+# dotfiles install
+echo "cloning dotfiles" \
+  && git clone https://github.com/pirafrank/dotfiles.git ${HOME}/dotfiles \
+  && cd ${HOME}/dotfiles
+
 echo "install fzf" \
   && zsh setups/setup_fzf.sh \
   && echo "install zprezto" \
   && zsh setups/setup_zprezto.zsh
 
-# dotfiles
+# dotfiles setup
 echo "installing dotfiles" \
-  && git clone https://github.com/pirafrank/dotfiles.git ${HOME}/dotfiles \
-  && cd ${HOME}/dotfiles \
   && zsh install_dotfiles.zsh all
-
-
-# enter dotfiles repo root
-cd dotfiles
 
 # install pyenv and python
 echo "install pyenv and python" \
