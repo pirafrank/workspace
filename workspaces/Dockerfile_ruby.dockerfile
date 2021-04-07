@@ -15,6 +15,9 @@ RUN set -x \
     libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool \
     libyaml-dev pkg-config sqlite3 libgmp-dev libreadline-dev libssl-dev
 
+# removed system ruby to avoid conflicts
+RUN apt-get remove -y ruby
+
 USER work
 WORKDIR /home/work
 

@@ -18,13 +18,12 @@ if [[ $EUID -ne 0 && $(command -v sudo) ]]; then
 fi
 
 # installing pyenv
-curl -sSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer > pyenv-installer.sh
-bash pyenv-installer.sh
-if [ -f $HOME/.zshrc ]; then
-  source $HOME/.zshrc
-else
-  # assuming you got bash
-  source $HOME/.bashrc
-fi
+curl -sSL https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+
+# load pyenv in current session
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
 pyenv install $PYTHON3VERSION
 pyenv global $PYTHON3VERSION
