@@ -5,7 +5,7 @@ git clone --depth 1 https://github.com/junegunn/fzf.git "${HOME}/.fzf"
 
 cd
 # get latest release version
-if [ "$(uname -m)" == 'x86_64' ]; then
+if [ "$(uname -m)" = 'x86_64' ]; then
   url=$(curl -sL https://api.github.com/repos/junegunn/fzf-bin/releases/latest \
     | grep http | grep -i "$(uname -s)" | grep amd64 | cut -d':' -f 2,3 | cut -d'"' -f2)
 fi
