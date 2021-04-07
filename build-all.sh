@@ -13,14 +13,14 @@ Tip: You can pass 'docker build' params as first argument.
 "
 PARAMS="$1"
 
+# get versions to build
+source workspace_versions.sh
+
 # build base image
 docker build $PARAMS -t pirafrank/workspace:latest -f Dockerfile .
 checkrun $? 'Something went wrong...'
 
 cd workspaces # bc of docker context
-
-# get versions to build
-source workspace_versions.sh
 
 # workspaces
 docker build $PARAMS --build-arg JAVAVERSION=${JAVAVERSION} --build-arg JAVAVENDOR=${JAVAVENDOR} \

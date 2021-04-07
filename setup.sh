@@ -4,10 +4,7 @@
 # env
 #
 
-NODEVERSION=12
-RUBYVERSION='2.6'
-PYTHON3VERSION='3.7.7'
-JAVAVERSION=11
+source workspace_versions.sh
 
 #
 # script
