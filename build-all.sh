@@ -34,7 +34,16 @@ docker build $PARAMS --build-arg RUBYVERSION=${RUBYVERSION} \
 docker build $PARAMS \
   -t pirafrank/workspace:rust -f Dockerfile_rust.dockerfile . && \
 docker build $PARAMS --build-arg GOLANGVERSION=${GOLANGVERSION} \
-  -t pirafrank/workspace:go${GOLANGVERSION} -f Dockerfile_golang.dockerfile .
+  -t pirafrank/workspace:go${GOLANGVERSION} -f Dockerfile_golang.dockerfile . && \
+docker build $PARAMS \
+  --build-arg JAVAVERSION=${JAVAVERSION} \
+  --build-arg JAVAVENDOR=${JAVAVENDOR} \
+  --build-arg NODEVERSION=${NODEVERSION} \
+  --build-arg GOLANGVERSION=${GOLANGVERSION} \
+  --build-arg PYTHON3VERSION=${PYTHON3VERSION} \
+  --build-arg RUBYVERSION=${RUBYVERSION} \
+  -t pirafrank/workspace:bundle \
+  -f Dockerfile_bundle.dockerfile .
 checkrun $? 'Something went wrong...'
 
 cd ..
