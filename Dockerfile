@@ -82,13 +82,13 @@ WORKDIR /home/work
 # copy setup scripts for different envs
 # into WORKDIR
 COPY install_dotfiles.zsh \
+  setups/setup_docker_cli.zsh \
   setups/setup_fzf.sh \
   setups/setup_zprezto.zsh \
   workspaces/setup_nvm.zsh \
   workspaces/setup_pyenv.zsh \
   workspaces/setup_rvm.zsh \
   workspaces/setup_rust.zsh \
-  workspaces/setup_docker_cli.zsh \
   workspaces/setup_java.zsh \
   workspaces/setup_golang.zsh \
   pre_start.zsh ./
