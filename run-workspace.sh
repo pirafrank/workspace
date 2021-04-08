@@ -23,8 +23,9 @@ mkdir -p $HOME/work_temp/secrets
 docker run -it $PARAMS $DOCKERCLI \
 -v $HOME/work_temp/Code:/home/work/Code \
 -v $HOME/work_temp/secrets:/home/work/secrets \
--p 8100:8080 \
--p 3100:3000 \
+-p "8380-8390:8080-8090" \
+-p "4300-4310:4000-4010" \
+-p "3300-3310:3000-3010" \
 pirafrank/workspace:"$1"
 
 
