@@ -60,6 +60,7 @@ COPY setup_java.zsh \
   setup_golang.zsh \
   setup_pyenv.zsh \
   setup_rvm.zsh \
+  setup_jekyll.sh \
   setup_rust.zsh ./
 
 # installing java and mvn
@@ -86,6 +87,10 @@ RUN set -x \
 RUN set -x \
   && echo "install rvm and ruby" \
   && zsh setup_rvm.zsh $RUBYVERSION
+
+# install jekyll
+RUN set -x \
+  && zsh setup_jekyll.sh '4.2.0'
 
 # install rust and cargo
 RUN set -x \

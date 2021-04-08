@@ -15,7 +15,7 @@ RUN set -x \
     libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool \
     libyaml-dev pkg-config sqlite3 libgmp-dev libreadline-dev libssl-dev
 
-# removed system ruby to avoid conflicts
+# remove system ruby to avoid conflicts
 RUN apt-get remove -y ruby
 
 USER work
@@ -23,12 +23,17 @@ WORKDIR /home/work
 
 ARG RUBYVERSION
 
-COPY setup_rvm.zsh ./
+COPY setup_rvm.zsh \
+  setup_jekyll.sh ./
 
-# install rvm and jekyll
+# install rvm
 RUN set -x \
   && echo "install rvm and ruby" \
   && zsh setup_rvm.zsh $RUBYVERSION
+
+# install jekyll
+RUN set -x \
+  && zsh setup_jekyll.sh '4.2.0'
 
 # external mountpoints
 VOLUME /home/work/Code
