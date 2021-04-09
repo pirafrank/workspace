@@ -27,3 +27,6 @@ eval "$(pyenv virtualenv-init -)"
 
 pyenv install $PYTHON3VERSION
 pyenv global $PYTHON3VERSION
+
+python3 -m pip install --upgrade pip
+

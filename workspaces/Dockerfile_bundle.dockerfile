@@ -83,6 +83,12 @@ RUN set -x \
   grep name | cut -d'"' -f4 | grep -v '-' | tail -n +2 | grep "$PYTHON3VERSION" | tail -1) \
   && zsh setup_pyenv.zsh $choice
 
+# install deoplete python deps
+RUN set -x \
+  && export PATH="$HOME/.pyenv/bin:$PATH" \
+  && eval "$(pyenv init -)" \
+  && python3 -m pip install --user pynvim
+
 # install rvm
 RUN set -x \
   && echo "install rvm and ruby" \
