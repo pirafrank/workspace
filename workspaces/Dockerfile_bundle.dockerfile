@@ -8,6 +8,9 @@ ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 
 USER root
 
+# remove system ruby to avoid conflicts
+RUN apt-get remove -y ruby
+
 # install deps to compile python shims and rubies
 RUN set -x \
   && apt-get clean && apt-get update \
@@ -39,9 +42,6 @@ RUN set -x \
     wget \
     xz-utils \
     zlib1g-dev
-
-# remove system ruby to avoid conflicts
-RUN apt-get remove -y ruby
 
 # switch to user
 USER work

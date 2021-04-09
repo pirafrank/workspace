@@ -32,11 +32,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # install dev software and dotfiles
 # comments are more for Dockerfile maintenance
 RUN set -x \
-  && apt-get remove vim vim-runtime gvim vim-tiny \
-    vim-common vim-gui-common gvim \
+  && apt-get remove vim-runtime gvim vim-tiny \
+    vim-common vim-gui-common \
   && apt-get update && apt-get install -y \
     wget \
-    vim-nox \
+    vim \
     zsh \
     tmux \
     mosh \
