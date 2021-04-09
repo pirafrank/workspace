@@ -99,12 +99,22 @@ RUN set -x \
 
 # add workspace versions to file
 RUN set -x \
+  && echo "echo '*** Build args ***'" >> bin2/workspace_version \
   && echo "echo JAVAVERSION: ${JAVAVERSION}" >> bin2/workspace_version \
   && echo "echo JAVAVENDOR: ${JAVAVENDOR}" >> bin2/workspace_version \
   && echo "echo NODEVERSION: ${NODEVERSION}" >> bin2/workspace_version \
   && echo "echo PYTHON3VERSION: ${PYTHON3VERSION}" >> bin2/workspace_version \
   && echo "echo RUBYVERSION: ${RUBYVERSION}" >> bin2/workspace_version \
-  && echo "echo GOLANGVERSION: ${GOLANGVERSION}" >> bin2/workspace_version
+  && echo "echo GOLANGVERSION: ${GOLANGVERSION}" >> bin2/workspace_version \
+  && echo "echo '*** Software versions ***'" >> bin2/workspace_version \
+  && echo "java -version" >> bin2/workspace_version \
+  && echo "mvn -version" >> bin2/workspace_version \
+  && echo "node --version" >> bin2/workspace_version \
+  && echo "python --version" >> bin2/workspace_version \
+  && echo "ruby --version" >> bin2/workspace_version \
+  && echo "rvm --version" >> bin2/workspace_version \
+  && echo "go version" >> bin2/workspace_version \
+  && echo "rustc --version" >> bin2/workspace_version
 
 # external mountpoints
 VOLUME /home/work/Code
