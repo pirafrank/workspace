@@ -136,5 +136,8 @@ echo "install docker" \
 echo "install cloud clients" \
   && bash setups/setup_cloud_clients.sh
 
+echo "install additional utilities" \
+  && bash setups/setup_utils.sh
+
 # back home
 cd

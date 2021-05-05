@@ -85,6 +85,7 @@ COPY install_dotfiles.zsh \
   setups/setup_docker_cli.zsh \
   setups/setup_fzf.sh \
   setups/setup_zprezto.zsh \
+  setups/setup_utils.sh \
   workspaces/setup_nvm.zsh \
   workspaces/setup_pyenv.zsh \
   workspaces/setup_rvm.zsh \
@@ -108,6 +109,11 @@ RUN set -x \
   && echo "installing dotfiles" \
   && git clone https://github.com/pirafrank/dotfiles.git ${HOME}/dotfiles \
   && zsh install_dotfiles.zsh all
+
+# installing additional utils
+RUN set -x \
+  && echo "installing additional utilities" \
+  && zsh setup_utils.sh
 
 # last but not least, write current version inside image
 RUN set -x \
