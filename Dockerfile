@@ -59,11 +59,7 @@ RUN set -x \
   && apt-get update \
   && apt-get install -y git \
   && echo "installing python3 (focal ships with 3.8)" \
-  && apt-get install -y python3-pip \
-  && echo "install lazygit" \
-  && add-apt-repository ppa:lazygit-team/release -y \
-  && apt-get update \
-  && apt-get install -y lazygit
+  && apt-get install -y python3-pip
 
 # add user and change default shell
 RUN set -x \

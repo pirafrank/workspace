@@ -81,10 +81,6 @@ sudo apt-get install -y \
   && sudo add-apt-repository ppa:git-core/ppa -y \
   && sudo apt-get update \
   && sudo apt-get install -y git \
-  && echo "install lazygit" \
-  && sudo add-apt-repository ppa:lazygit-team/release -y \
-  && sudo apt-get update \
-  && sudo apt-get install -y lazygit \
   && echo "change default shell" \
   && sudo chsh -s $(which zsh) $(whoami)
 
