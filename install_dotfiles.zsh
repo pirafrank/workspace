@@ -1,5 +1,22 @@
 #!/bin/zsh
 
+### init
+
+# setup user config path for current operating system
+platform="$(uname -s | tr '[:upper:]' '[:lower:]')"
+case $platform in
+  linux)
+    USERCONFIG="$HOME/.config"
+    ;;
+  darwin)
+    USERCONFIG="$HOME/Library/Application\ Support"
+    ;;
+  *)
+    echo "Unknown platform, cannot default user config folder for current OS. Exiting..."
+    exit 2
+    ;;
+esac
+
 ### functions
 
 function usage {
@@ -7,7 +24,7 @@ function usage {
 }
 
 function makedirs {
-    mkdir -p ${HOME}/.config/jesseduffield/lazygit
+    mkdir -p ${USERCONFIG}/lazygit
     mkdir -p ${HOME}/.config/htop
     mkdir -p ${HOME}/.gnupg
     ln -s ${HOME}/dotfiles/bin ${HOME}/bin
@@ -50,7 +67,7 @@ function htoprcinstall {
 }
 
 function lazygitinstall {
-    ln -s ${HOME}/dotfiles/lazygit/config.yml ${HOME}/.config/jesseduffield/lazygit/config.yml
+    ln -s ${HOME}/dotfiles/lazygit/config.yml ${USERCONFIG}/lazygit/config.yml
 }
 
 function tmuxinstall {
