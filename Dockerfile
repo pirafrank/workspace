@@ -81,6 +81,7 @@ COPY install_dotfiles.zsh \
   setups/setup_docker_cli.zsh \
   setups/setup_fzf.sh \
   setups/setup_zprezto.zsh \
+  setups/setup_env.sh \
   setups/setup_utils.sh \
   workspaces/setup_nvm.zsh \
   workspaces/setup_pyenv.zsh \
