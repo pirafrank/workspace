@@ -65,23 +65,23 @@ COPY setup_java.zsh \
 
 # installing java and mvn
 RUN echo "installing java" \
-  && zsh setup_java.zsh $JAVAVERSION $JAVAVENDOR \
+  && zsh setup_java.zsh ${JAVAVERSION} ${JAVAVENDOR} \
   && zsh setup_mvn.sh
 
 # installing nvm and node
 RUN echo "installing nvm and node" \
-  && zsh setup_nvm.zsh $NODEVERSION
+  && zsh setup_nvm.zsh ${NODEVERSION}
 
 # installing golang
 RUN echo "installing Go" \
-  && zsh setup_golang.zsh $GOLANGVERSION
+  && zsh setup_golang.zsh ${GOLANGVERSION}
 
 # install pyenv and python
 RUN set -x \
   && echo "install pyenv and python" \
   && choice=$(curl -sSL https://api.github.com/repos/pyenv/pyenv/contents/plugins/python-build/share/python-build | \
-  grep name | cut -d'"' -f4 | grep -v '-' | tail -n +2 | grep "$PYTHON3VERSION" | tail -1) \
-  && zsh setup_pyenv.zsh $choice
+  grep name | cut -d'"' -f4 | grep -v '-' | tail -n +2 | grep "${PYTHON3VERSION}" | tail -1) \
+  && zsh setup_pyenv.zsh ${choice}
 
 # install deoplete python deps
 RUN set -x \
@@ -92,7 +92,7 @@ RUN set -x \
 # install rvm
 RUN set -x \
   && echo "install rvm and ruby" \
-  && zsh setup_rvm.zsh $RUBYVERSION
+  && zsh setup_rvm.zsh ${RUBYVERSION}
 
 # install jekyll
 RUN set -x \
