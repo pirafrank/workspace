@@ -54,3 +54,11 @@ url=$(curl -sL https://api.github.com/repos/jesseduffield/lazygit/releases/lates
   | grep http | grep -i "$platform" | cut -d':' -f 2,3 | cut -d'"' -f2 | grep 'tar.gz' | grep $arch)
 curl -L $url | tar xz
 chmod +x lazygit
+
+# ipinfo cli
+del ipinfo
+url=$(curl -sL https://api.github.com/repos/ipinfo/cli/releases/latest \
+  | grep http | grep -i "$platform" | cut -d':' -f 2,3 | cut -d'"' -f2 | grep 'tar.gz' | grep 'amd64')
+curl -L $url | tar xz
+mv ipinfo*amd64 ipinfo
+chmod +x ipinfo
