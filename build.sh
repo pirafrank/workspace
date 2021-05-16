@@ -69,7 +69,7 @@ case $STEP in
     -f Dockerfile_bundle.dockerfile .
     checkrun $? 'Something went wrong...'
     cd ..
-    ;;&
+    ;;
 
   *) 
     usage
