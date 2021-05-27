@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20210325
+FROM ubuntu:groovy-20210416
 
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
