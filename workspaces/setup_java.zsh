@@ -3,7 +3,7 @@
 if [[ -z "$1" ]]; then
     echo "
 Please specify the Java version and JDK vendor.
-Supported versions are from 8 to 15.
+Supported versions are from 8 to 16.
 "
     exit 1
 fi
@@ -47,7 +47,7 @@ openjdk)
     url='https://download.java.net/java/GA/jdk15.0.1/51f4f36ad4ef43e39d0dfdbaf6549e32/9/GPL/openjdk-15.0.1_linux-x64_bin.tar.gz'
     ;;
   16)
-    url='https://download.java.net/java/GA/jdk16/7863447f0ab643c585b9bdebf67c69db/36/GPL/openjdk-16_linux-x64_bin.tar.gz'
+    url='https://download.java.net/java/GA/jdk16.0.1/7147401fd7354114ac51ef3e1328291f/9/GPL/openjdk-16.0.1_linux-x64_bin.tar.gz'
     ;;
   *)
     echo "Unsupported version. Exiting..."
