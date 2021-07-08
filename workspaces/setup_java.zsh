@@ -1,13 +1,38 @@
 #!/bin/zsh
 
+# check mandatory argument
 if [[ -z "$1" ]]; then
     echo "
-Please specify the Java version and JDK vendor.
-Supported versions are from 8 to 16.
+Please specify the Java version and JDK vendor [ openjdk|adoptopenjdk|azul ].
+Supported OpenJDK versions are from 8 to 16, Linux on x86_64 only.
+macOS on aarch64 is supported only by azul as vendor.
 "
     exit 1
 fi
 
+# load platform details
+PLATFORM="$(uname -s | tr '[:upper:]' '[:lower:]')"
+ARCH=$(uname -m)
+# setting platform pairs
+case $PLATFORM in
+  linux)  PLATFORM_ALT="linux" ; PLATFORM_ALT2="linux" ;;
+  darwin) PLATFORM_ALT="mac"   ; PLATFORM_ALT2="macos" ;;
+  *) echo "Unsupported platform" ; exit 3 ;;
+esac
+case $ARCH in
+  arm32)   ARCH_ALT="arm32"   ; ARCH_ALT2="arm"; HW_BITS="32" ;;
+  aarch64) ARCH_ALT="aarch64" ; ARCH_ALT2="arm"; HW_BITS="64" ;;
+  x86_64)  ARCH_ALT="x64"     ; ARCH_ALT2="x86"; HW_BITS="64" ;;
+  *) echo "Unsupported arch"; exit 4 ;;
+esac
+
+# only azul supports aarch64 on macos
+if [ $PLATFORM = 'darwin' ] && [ $ARCH = 'aarch64' ]; then
+  printf "\n\nYou're running macOS on Apple Silicon, selecting 'azul' as vendor\n\n\n"
+  VENDOR=azul;
+fi
+
+# check optional argument
 VENDOR="$2"
 if [[ -z "$VENDOR" ]]; then
     echo "
@@ -32,7 +57,7 @@ openjdk)
     url='https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz'
     ;;
   11)
-    url='https://api.adoptopenjdk.net/v3/binary/latest/11/ga/linux/x64/jdk/hotspot/normal/openjdk?project=jdk'
+    url='https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz'
     ;;
   12)
     url='https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz'
@@ -55,7 +80,15 @@ openjdk)
   esac
   ;;
 adoptopenjdk)
-  url="https://api.adoptopenjdk.net/v3/binary/latest/${JAVAVERSION}/ga/linux/x64/jdk/hotspot/normal/adoptopenjdk?project=jdk"
+  # API supported platforms: linux|mac
+  # API supported arch: x64|aarch64
+  url="https://api.adoptopenjdk.net/v3/binary/latest/${JAVAVERSION}/ga/${PLATFORM_ALT}/${ARCH_ALT}/jdk/hotspot/normal/adoptopenjdk?project=jdk"
+  ;;
+azul)
+  # supported platforms by API: linux|macos
+  # API supported arch: x86|arm
+  metaurl="https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?java_version=${JAVAVERSION}&os=${PLATFORM_ALT2}&arch=${ARCH_ALT2}&hw_bitness=${HW_BITS}&ext=tar.gz&bundle_type=jdk"
+  url=$(curl -sSL "$metaurl" | jq -r '.url')
   ;;
 *)
   echo "Unsupported vendor. Exiting..."
