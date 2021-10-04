@@ -55,9 +55,10 @@ RUN set -x \
     bat \
     fd-find \
   && echo "getting newer git..." \
-  && add-apt-repository ppa:git-core/ppa \
+  && add-apt-repository ppa:git-core/ppa -y \
+  && add-apt-repository ppa:aacebedo/fasd -y \
   && apt-get update \
-  && apt-get install -y git \
+  && apt-get install -y git fasd \
   && echo "installing python3 (focal ships with 3.8)" \
   && apt-get install -y python3-pip
 

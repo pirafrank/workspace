@@ -76,11 +76,12 @@ sudo apt-get install -y \
     fd-find \
     python3 \
     python3-pip \
-  && echo "getting newer git..." \
+  && echo "getting newer git and clvv/fasd..." \
   && sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com A1715D88E1DF1F24 \
   && sudo add-apt-repository ppa:git-core/ppa -y \
+  && sudo add-apt-repository ppa:aacebedo/fasd -y \
   && sudo apt-get update \
-  && sudo apt-get install -y git \
+  && sudo apt-get install -y git fasd \
   && echo "change default shell" \
   && sudo chsh -s $(which zsh) $(whoami)
 
