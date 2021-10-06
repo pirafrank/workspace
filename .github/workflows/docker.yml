@@ -1,0 +1,71 @@
+name: 'build_images'
+
+on:
+  push:
+    branches:
+      - main
+      - feature/action
+    paths:
+      - build.sh
+      - Dockerfile
+      - install_dotfiles.zsh
+      - pre_start.zsh
+      - workspace_versions.sh
+      - setups/*.sh
+      - workspaces/*.dockerfile
+      - workspaces/*.sh
+      - workspaces/*.zsh
+  workflow_dispatch:
+    inputs:
+      build_target:
+        description: 'Build what? [base|bundle]'
+        required: true
+        default: 'base'
+
+jobs:
+  docker:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Print workdir
+      run: pwd
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch_name
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build and push base image
+      if: ${{ github.event.inputs.build_target == 'base' }}
+      id: docker_build_base_image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: Dockerfile
+        platforms: linux/amd64 #,linux/arm64
+        push: false
+        tags: pirafrank/workspace:latest
+    - name: Build and push bundle image
+      if: ${{ github.event.inputs.build_target == 'bundle' }}
+      id: docker_build_bundle_image
+      uses: docker/build-push-action@v2
+      with:
+        context: ./workspaces
+        file: workspaces/Dockerfile_bundle.dockerfile
+        platforms: linux/amd64
+        push: false
+        tags: pirafrank/workspace:bundle
+    - name: Send Push Notification
+      uses: fjogeleit/http-request-action@master
+      if: always()
+      with:
+        url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
+        method: 'POST'
+        data: '{ "value1": "[GitHub] pirafrank/dotfiles", "value2": "Build of branch ${{ steps.extract_branch_name.outputs.branch }} with target ${{ github.event.inputs.build_target }} finished with status ${{job.status}}" }'
