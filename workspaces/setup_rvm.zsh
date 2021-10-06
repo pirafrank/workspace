@@ -17,7 +17,9 @@ if [[ $EUID -ne 0 && $(command -v sudo) ]]; then
     libyaml-dev pkg-config sqlite3 libgmp-dev libreadline-dev libssl-dev
 fi
 
-gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+#gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -
 curl -sSL https://get.rvm.io | bash -s stable --autolibs=read-fail
 
 # load rvm in current session
