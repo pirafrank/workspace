@@ -40,6 +40,12 @@ url=$(curl -sL https://api.github.com/repos/jesseduffield/lazygit/releases/lates
   | grep http | grep -i "$PLATFORM" | cut -d':' -f 2,3 | cut -d'"' -f2 | grep 'tar.gz' | grep $ARCH)
 downloadAndInstall $url lazygit
 
+# delta
+printf "\n\nInstalling dandavison/delta...\n"
+url=$(curl -sL https://api.github.com/repos/dandavison/delta/releases/latest \
+    | grep http | grep -i "$PLATFORM" | cut -d':' -f 2,3 | cut -d'"' -f2 | grep 'tar.gz' | grep $ARCH | head -n1)
+downloadAndInstall $url delta
+
 # ipinfo cli
 printf "\n\nInstalling ipinfo cli...\n"
 del ipinfo
