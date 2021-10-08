@@ -144,4 +144,4 @@ jobs:
       with:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
-        data: '{ "value1": "[GitHub] pirafrank/dotfiles", "value2": "Build of branch ${{ steps.extract_branch_name.outputs.branch }} with target ${{ github.event.inputs.build_target }} finished with status ${{job.status}}".\n\nDetails:\n${{ env.RUN_INFO }}" }'
+        data: '{ "value1": "[GitHub] pirafrank/dotfiles", "value2": "Build of branch ${{ steps.extract_branch_name.outputs.branch }} with target ${{ github.event.inputs.build_target }} finished with status ${{job.status}}.", "value3": "<br>Details:<br>${{ env.RUN_INFO }}" }'
