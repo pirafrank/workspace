@@ -45,11 +45,29 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-20.04
+    env:
+      RUN_INFO: ''
     steps:
     - uses: actions/checkout@v2
     - name: Print workdir
       run: pwd
-    - name: Get date of today
+    - name: Set run info
+      id: set_run_info
+      shell: bash
+      run: |
+        RUN_INFO=$(cat << EOF
+        Triggered by $GITHUB_EVENT_NAME
+        Action run on $RUNNER_OS by $RUNNER_NAME
+        Commit $GITHUB_SHA on $GITHUB_REF
+        EOF
+        )
+        echo "RUN_INFO<<EOF" >> $GITHUB_ENV
+        echo "$RUN_INFO" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+    - name: Show run info
+      run: |
+        echo "${{ env.RUN_INFO }}"
+    - name: Set date of today
       id: today
       shell: bash
       run: echo "::set-output name=today::$(date '+%Y%m%d')"
@@ -61,6 +79,7 @@ jobs:
       id: 'docker_build_args_setup'
       shell: bash
       run: |
+        cat workspace_versions.sh
         source workspace_versions.sh
         WORKSPACE_VERSION="$(echo ${{ steps.today.outputs.today }}.${{ steps.extract_branch_name.outputs.branch }})"
         # check GH Action inputs
@@ -78,6 +97,8 @@ jobs:
           PYTHON3VERSION="${{ github.event.inputs.python3version }}"; fi
         if [ ! -z "${{ github.event.inputs.rubyversion }}" ]; then
           RUBYVERSION="${{ github.event.inputs.rubyversion }}"; fi
+        # print versions set
+        set | grep -E 'VERSION|VENDOR'
         # set values in GH Action env. context
         echo "WORKSPACE_VERSION=$WORKSPACE_VERSION" >> $GITHUB_ENV
         echo "JAVAVERSION=$JAVAVERSION" >> $GITHUB_ENV
@@ -123,4 +144,4 @@ jobs:
       with:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
-        data: '{ "value1": "[GitHub] pirafrank/dotfiles", "value2": "Build of branch ${{ steps.extract_branch_name.outputs.branch }} with target ${{ github.event.inputs.build_target }} finished with status ${{job.status}}" }'
+        data: '{ "value1": "[GitHub] pirafrank/dotfiles", "value2": "Build of branch ${{ steps.extract_branch_name.outputs.branch }} with target ${{ github.event.inputs.build_target }} finished with status ${{job.status}}".\n\nDetails:\n${{ env.RUN_INFO }}" }'
