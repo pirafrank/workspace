@@ -55,15 +55,7 @@ jobs:
       id: set_run_info
       shell: bash
       run: |
-        RUN_INFO=$(cat << EOF
-        Triggered by $GITHUB_EVENT_NAME
-        Action run on $RUNNER_OS by $RUNNER_NAME
-        Commit $GITHUB_SHA on $GITHUB_REF
-        EOF
-        )
-        echo "RUN_INFO<<EOF" >> $GITHUB_ENV
-        echo "$RUN_INFO" >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
+        echo "RUN_INFO=Triggered by $GITHUB_EVENT_NAME. Action run on $RUNNER_OS by $RUNNER_NAME. Commit $GITHUB_SHA on $GITHUB_REF." >> $GITHUB_ENV
     - name: Show run info
       run: |
         echo "${{ env.RUN_INFO }}"
@@ -137,7 +129,13 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: pirafrank/workspace:bundle,pirafrank/workspace:bundle-${{ steps.today.outputs.today }}
-        build-args: JAVAVERSION=${{ env.JAVAVERSION }},JAVAVENDOR=${{ env.JAVAVENDOR }},NODEVERSION=${{ env.NODEVERSION }},GOLANGVERSION=${{ env.GOLANGVERSION }},PYTHON3VERSION=${{ env.PYTHON3VERSION }},RUBYVERSION=${{ env.RUBYVERSION }}
+        build-args:
+          JAVAVERSION=${{ env.JAVAVERSION }}
+          JAVAVENDOR=${{ env.JAVAVENDOR }}
+          NODEVERSION=${{ env.NODEVERSION }}
+          GOLANGVERSION=${{ env.GOLANGVERSION }}
+          PYTHON3VERSION=${{ env.PYTHON3VERSION }}
+          RUBYVERSION=${{ env.RUBYVERSION }}
     - name: Send Push Notification
       uses: fjogeleit/http-request-action@master
       if: always()
