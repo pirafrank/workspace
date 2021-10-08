@@ -55,7 +55,15 @@ jobs:
       id: set_run_info
       shell: bash
       run: |
-        echo "RUN_INFO=Triggered by $GITHUB_EVENT_NAME. Action run on $RUNNER_OS by $RUNNER_NAME. Commit $GITHUB_SHA on $GITHUB_REF." >> $GITHUB_ENV
+        RUN_INFO=$(cat << EOF
+        Triggered by $GITHUB_EVENT_NAME
+        Action run on $RUNNER_OS by $RUNNER_NAME
+        Commit $GITHUB_SHA on $GITHUB_REF
+        EOF
+        )
+        echo "RUN_INFO<<EOF" >> $GITHUB_ENV
+        echo "$RUN_INFO" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
     - name: Show run info
       run: |
         echo "${{ env.RUN_INFO }}"
@@ -142,4 +150,6 @@ jobs:
       with:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
-        data: '{ "value1": "[GitHub] pirafrank/dotfiles", "value2": "Build of branch ${{ steps.extract_branch_name.outputs.branch }} with target ${{ github.event.inputs.build_target }} finished with status ${{job.status}}.", "value3": "<br>Details:<br>${{ env.RUN_INFO }}" }'
+        data: '{ "value1": "[GitHub] pirafrank/dotfiles", "value2": "Build of branch ${{ steps.extract_branch_name.outputs.branch }} with target ${{ github.event.inputs.build_target }} finished with status ${{job.status}}.", "value3": "<br>Triggered by ${{ github.event_name }}. Action run on ${{ runner.os }} by ${{ runner.name }}. Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/pirafrank/dotfiles/runs/${{ github.run_id }}" }'
+
+
