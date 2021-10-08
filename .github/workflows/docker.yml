@@ -109,7 +109,7 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Build and push base image
-      if: ${{ (github.event.inputs.build_target == 'base') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+      #if: ${{ (github.event.inputs.build_target == 'base') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
       id: docker_build_base_image
       uses: docker/build-push-action@v2
       with:
@@ -120,7 +120,7 @@ jobs:
         tags: pirafrank/workspace:latest
         build-args: WORKSPACE_VERSION=${{ env.WORKSPACE_VERSION }}
     - name: Build and push bundle image
-      if: ${{ (github.event.inputs.build_target == 'bundle') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+      if: ${{ (github.event.inputs.build_target != 'base') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
       id: docker_build_bundle_image
       uses: docker/build-push-action@v2
       with:
