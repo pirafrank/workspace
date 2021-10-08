@@ -129,7 +129,7 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: pirafrank/workspace:bundle,pirafrank/workspace:bundle-${{ steps.today.outputs.today }}
-        build-args:
+        build-args: |
           JAVAVERSION=${{ env.JAVAVERSION }}
           JAVAVENDOR=${{ env.JAVAVENDOR }}
           NODEVERSION=${{ env.NODEVERSION }}
