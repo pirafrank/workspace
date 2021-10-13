@@ -11,6 +11,7 @@ on:
       - pre_start.zsh
       - workspace_versions.sh
       - setups/*.sh
+      - setups/*.zsh
       - workspaces/*.dockerfile
       - workspaces/*.sh
       - workspaces/*.zsh
