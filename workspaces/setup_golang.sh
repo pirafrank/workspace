@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 GOLANGVERSION="$1"
 if [[ -z "$GOLANGVERSION" ]]; then

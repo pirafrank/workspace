@@ -10,10 +10,10 @@ WORKDIR /home/work
 
 ARG GOLANGVERSION
 
-COPY setup_golang.zsh ./
+COPY setup_golang.sh ./
 
 RUN echo "installing Go" \
-  && zsh setup_golang.zsh $GOLANGVERSION
+  && zsh setup_golang.sh $GOLANGVERSION
 
 # external mountpoints
 VOLUME /home/work/Code

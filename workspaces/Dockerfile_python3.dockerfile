@@ -20,14 +20,14 @@ WORKDIR /home/work
 
 ARG PYTHON3VERSION
 
-COPY setup_pyenv.zsh ./
+COPY setup_pyenv.sh ./
 
 # install pyenv and python
 RUN set -x \
   && echo "install pyenv and python" \
   && choice=$(curl -sSL https://api.github.com/repos/pyenv/pyenv/contents/plugins/python-build/share/python-build | \
   grep name | cut -d'"' -f4 | grep -v '-' | tail -n +2 | grep "$PYTHON3VERSION" | tail -1) \
-  && zsh setup_pyenv.zsh $choice
+  && zsh setup_pyenv.sh $choice
 
 # install deoplete python deps
 RUN set -x \

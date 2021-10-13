@@ -23,13 +23,13 @@ WORKDIR /home/work
 
 ARG RUBYVERSION
 
-COPY setup_rvm.zsh \
+COPY setup_rvm.sh \
   setup_jekyll.sh ./
 
 # install rvm
 RUN set -x \
   && echo "install rvm and ruby" \
-  && zsh setup_rvm.zsh $RUBYVERSION
+  && zsh setup_rvm.sh $RUBYVERSION
 
 # install jekyll
 RUN set -x \

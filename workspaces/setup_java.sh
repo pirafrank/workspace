@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 # check mandatory argument
 if [[ -z "$1" ]]; then

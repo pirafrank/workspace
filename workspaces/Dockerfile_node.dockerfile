@@ -10,10 +10,10 @@ WORKDIR /home/work
 
 ARG NODEVERSION
 
-COPY setup_nvm.zsh ./
+COPY setup_nvm.sh ./
 
 RUN echo "installing nvm and node" \
-  && zsh setup_nvm.zsh $NODEVERSION
+  && zsh setup_nvm.sh $NODEVERSION
 
 # external mountpoints
 VOLUME /home/work/Code

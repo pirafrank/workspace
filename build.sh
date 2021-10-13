@@ -18,7 +18,7 @@ function usage {
 
 echo "
 $0
-Tip: You can pass 'docker build' params as first argument.
+Tip: You can pass 'docker build' params as second argument.
 "
 
 if [ $# -lt 1 ]; then usage; fi
@@ -29,7 +29,7 @@ PARAMS="$2"
 # get versions to build
 source workspace_versions.sh
 
-# nb. ;;& operator requires bash 4 
+# nb. ;;& operator requires bash 4
 case $STEP in
   base|all)
     # build base image
@@ -54,7 +54,7 @@ case $STEP in
       -t pirafrank/workspace:go${GOLANGVERSION} -f Dockerfile_golang.dockerfile .
     checkrun $? 'Something went wrong...'
     cd ..
-    ;;&  
+    ;;&
 
   bundle|all)
     cd workspaces
@@ -71,7 +71,7 @@ case $STEP in
     cd ..
     ;;
 
-  *) 
+  *)
     usage
     ;;
 esac

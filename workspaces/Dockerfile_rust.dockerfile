@@ -8,12 +8,12 @@ ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 USER work
 WORKDIR /home/work
 
-COPY setup_rust.zsh ./
+COPY setup_rust.sh ./
 
 # install rust and cargo
 RUN set -x \
   && echo "install rust and cargo" \
-  && zsh setup_rust.zsh
+  && zsh setup_rust.sh
 
 # external mountpoints
 VOLUME /home/work/Code

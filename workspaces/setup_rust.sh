@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 # headless install of the latest available version of rust and cargo
 

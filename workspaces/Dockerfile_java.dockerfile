@@ -11,11 +11,11 @@ WORKDIR /home/work
 ARG JAVAVERSION
 ARG JAVAVENDOR
 
-COPY setup_java.zsh ./
+COPY setup_java.sh ./
 COPY setup_mvn.sh ./
 
 RUN echo "installing java" \
-  && zsh setup_java.zsh $JAVAVERSION $JAVAVENDOR \
+  && zsh setup_java.sh $JAVAVERSION $JAVAVENDOR \
   && zsh setup_mvn.sh
 
 # external mountpoints
