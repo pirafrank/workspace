@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 ### init
 
@@ -20,7 +20,7 @@ esac
 ### functions
 
 function usage {
-  echo "./$0 [all|custom]"
+  echo "./$0 [all|FEATURE_NAME|custom]"
 }
 
 function makedirs {
@@ -88,6 +88,9 @@ function viminstall {
     ln -s ${HOME}/dotfiles/vim/.vimrc ${HOME}/.vimrc
     mkdir -p ${HOME}/.vim
     ln -s ${HOME}/dotfiles/vim/.vim/colors ${HOME}/.vim/colors
+}
+
+function vimplugininstall {
     python3 -m pip install --upgrade pynvim
     vim -E -s -u "$HOME/.vimrc" +PlugInstall +qall
 }
@@ -115,6 +118,27 @@ function shellfishinstall {
 }
 
 ### actual script
+
+echo "
+Note: This script can be run in bash (no args) or in zsh (with args).
+Bash run is designed to be performed by GitHub Codespaces.
+Check the code to know more.
+"
+
+# if no args are given, default to bash shell and
+# fewer customizations to provide compatibility with GitHub Codespaces.
+if [ $# -eq 0 ]; then
+  makedirs
+  bashinstall
+  gitinstall
+  gpginstall
+  editorconfiginstall
+  inputrcinstall
+  htoprcinstall
+  viminstall
+  shellfishinstall
+  exit 0;
+fi
 
 if [ $# -ne 1 ]; then
     usage
@@ -155,6 +179,10 @@ case "$1" in
         ;;
     vim)
         viminstall
+        vimplugininstall
+        ;;
+    vim-noplugins)
+        viminstall
         ;;
     zsh)
         zpreztoinstall
@@ -170,4 +198,3 @@ case "$1" in
         usage
         exit 1
 esac
-cd -

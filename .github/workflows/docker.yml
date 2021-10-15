@@ -7,7 +7,7 @@ on:
     paths:
       - build.sh
       - Dockerfile
-      - install_dotfiles.zsh
+      - install.sh
       - pre_start.zsh
       - workspace_versions.sh
       - setups/*.sh

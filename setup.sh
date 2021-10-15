@@ -97,7 +97,7 @@ echo "install fzf" \
 
 # dotfiles setup
 echo "installing dotfiles" \
-  && zsh install_dotfiles.zsh all
+  && zsh install.sh all
 
 # install pyenv and python
 echo "install pyenv and python" \
