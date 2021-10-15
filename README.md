@@ -1,18 +1,26 @@
-# dotfiles & workspace
+# Workspace
 
 [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/pirafrank.svg?style=social&label=Follow%20%40pirafrank)](https://twitter.com/pirafrank)
-[![build_images](https://github.com/pirafrank/dotfiles/actions/workflows/docker.yml/badge.svg)](https://github.com/pirafrank/dotfiles/actions/workflows/docker.yml)
+[![build_images](https://github.com/pirafrank/workspace/actions/workflows/docker.yml/badge.svg)](https://github.com/pirafrank/dotfiles/actions/workflows/docker.yml)
 [![docker_pulls](https://img.shields.io/docker/pulls/pirafrank/workspace.svg)](https://hub.docker.com/repository/docker/pirafrank/workspace)
-[![GitHub tag](https://img.shields.io/github/tag/pirafrank/dotfiles?include_prereleases=&sort=semver&color=blue)](https://github.com/pirafrank/dotfiles/releases/)
+[![GitHub tag](https://img.shields.io/github/tag/pirafrank/workspace?include_prereleases=&sort=semver&color=blue)](https://github.com/pirafrank/dotfiles/releases/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/pirafrank/dotfiles/blob/main/LICENSE.md)
 
-My dotfiles and workspace-in-a-container project.
+A workspace-in-a-container project.
 
 `workspace` is a portable environment in a Docker container, powered by my work and personal dotfiles setup. You can test it straight away:
 
 ```sh
 docker run -it --name=workspace pirafrank/workspace:bundle
 ```
+
+## Before we start
+
+**Important : Renamed repository!**
+
+This repository is was previously named `dotfiles` and has been renamed to `workspace`. Dotfiles that once were part of this repo have moved [to their own](https://github.com/pirafrank/dotfiles). Now they are here as a submodule.
+
+I went this way to have the chance to further evolve the workspace project away from dotfiles, keeping both consistent commit history and releases made until today. On the other hand, the `dotfiles` repo has a rewritten commit history.
 
 ## What's included
 
@@ -38,10 +46,9 @@ Choose one of the options below:
 
 - run the containerized workspace (Docker required)
 - run the full `setup.sh` script on a vanilla environment (e.g. a new VPS install)
-- setup specific features (Java+mvn, node.js, etc.) running the scripts in `setups` and `workspaces` dirs. Those scripts are also used to build the workspace Docker images (read below)
-- just symlink dotfiles
+- setup specific features (Java+mvn, node.js, etc.) using the scripts in `setups` and `workspaces` dirs. Those scripts are also used to build the workspace Docker images.
 
-### Get a docker image
+### Docker images
 
 The aim is to create a disposable development environment taking advantage of Docker. Images are publicly available on [Docker Hub](https://hub.docker.com/r/pirafrank/workspace) in various flavors. They are:
 
@@ -66,28 +73,20 @@ All workspaces setups are in userspace.
 A full setup involves programs installation of programs, their dependencies, download of dotfiles and creation of symlinks. It is meant to setup a vanilla environment. I keep `setup.sh` aligned with the `Dockerfile` used to build the Docker workspace baseimage. The setup comes in two flavors, with and without user creation:
 
 ```sh
-curl -sSL https://github.com/pirafrank/dotfiles/raw/main/setup.sh
+curl -sSL https://github.com/pirafrank/workspace/raw/main/setup.sh
 # OR
-curl -sSL https://github.com/pirafrank/dotfiles/raw/main/setup_w_user.sh
+curl -sSL https://github.com/pirafrank/workspace/raw/main/setup_w_user.sh
 ```
 
 Run the one that best fits your needs. Remember to always check the content of scripts you're about to execute before running them!
 
 ### Partial setup
 
-Setup scripts in `setups` and `workspaces` dirs are meant to be executed manually on Linux or macOS, or to build Docker Image workspaces (read below). They assume `~/dotfiles` exists. If you clone to another dir, please symlink it to `~/dotfiles`.
+Setup scripts in `setups` and `workspaces` dirs are meant to be executed manually on Linux or macOS, or to build Docker Image workspaces (read below). They assume `~/dotfiles` exists. If you have dotfiles in another dir, please symlink it to `~/dotfiles`.
 
 Core setup uses zsh and zprezto. Files for oh-my-zsh config are available, but I don't use/update them anymore.
 
-### dotfiles-only
-
-First clone the repo to your $HOME.
-
-```sh
-cd && git clone https://github.com/pirafrank/dotfiles.git
-```
-
-Then symlink config you want to use or install them all running `zsh install_dotfiles.zsh`.
+### Further notes
 
 `~/.zsh_custom` is automatically sourced if it exists, and `~/bin2` is automatically added to `$PATH`. Both are not part of the repo and can be used to add your-own or machine-specific customizations and other executables.
 
@@ -98,12 +97,6 @@ That's all, there is no real how-to actually. For more info just look at the cod
 While almost all files in this repo will also work on non-Debian distros, setup scripts in root are designed for the Debian-based ones. That said, the only differences shoud rely only on a few package and binary names.
 
 Some setup scripts may also work on macOS + macports.
-
-My daily drivers currently are:
-
-- Ubuntu 20.04 WSL on Windows 10 (20H2)
-- Ubuntu 20.04 desktop
-- Debian 10 server accessed via mosh connection on ipad
 
 ## Use cases
 
@@ -165,24 +158,7 @@ For example:
 ./run-workspace.sh java11 '--name somename --rm'
 ```
 
-## Credits
-
-### Scripts
-
-I wrote most of the scripts in the `bin` folder, with some of them already publicly available as [gists](https://gist.github.com/pirafrank). But others come or contain pieces from the web (twitter? google? stackoverflow?). Honestly I can't remember where I got them from, but you should find the original authors in the comments.
-
-### Themes
-
-Those without *pirafrank* in their name come from the web, credits go to their creators. I keep them here for the sake of simplicity. I'll try to keep this readme updated to keep them all.
-
-- vim themes
-  - [*noctu*](https://github.com/noahfrederick/vim-noctu)
-  - [*dim*](https://github.com/jeffkreeftmeijer/vim-dim)
-- *themerdev*-prefixed themes come from [themer.dev](https://themer.dev/).
-
 ## License
-
-Many of the files and scripts in the `bin` folder come from some other repos of mine and here are gathered. Although those repositories are publicly available on GitHub, I am going to only maintain them in this repo.
 
 Code in this repo is given away for free, as-is and with NO WARRANTY as per the MIT license.
 

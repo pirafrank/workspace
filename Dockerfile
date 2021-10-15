@@ -106,7 +106,7 @@ RUN set -x \
   && echo "installing dotfiles" \
   && git clone https://github.com/pirafrank/dotfiles.git ${HOME}/dotfiles \
   && cd ${HOME}/dotfiles \
-  && zsh install_dotfiles.zsh all
+  && zsh install.sh all
 
 # installing additional utils
 RUN set -x \

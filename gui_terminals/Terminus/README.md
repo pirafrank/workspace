@@ -1,3 +1,0 @@
-## note
-
-Windows-only atm!

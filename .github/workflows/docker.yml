@@ -7,7 +7,7 @@ on:
     paths:
       - build.sh
       - Dockerfile
-      - install_dotfiles.zsh
+      - install.sh
       - pre_start.zsh
       - workspace_versions.sh
       - setups/*.sh
@@ -151,6 +151,6 @@ jobs:
       with:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
-        data: '{ "value1": "[GitHub] pirafrank/dotfiles", "value2": "Build of branch ${{ steps.extract_branch_name.outputs.branch }} with target ${{ github.event.inputs.build_target }} finished with status ${{job.status}}.", "value3": "<br>Triggered by ${{ github.event_name }}. Action run on ${{ runner.os }} by ${{ runner.name }}. Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/pirafrank/dotfiles/runs/${{ github.run_id }}" }'
+        data: '{ "value1": "[GitHub] pirafrank/workspace", "value2": "Build of branch ${{ steps.extract_branch_name.outputs.branch }} with target ${{ github.event.inputs.build_target }} finished with status ${{job.status}}.", "value3": "<br>Triggered by ${{ github.event_name }}. Action run on ${{ runner.os }} by ${{ runner.name }}. Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/pirafrank/workspace/runs/${{ github.run_id }}" }'
 
 
