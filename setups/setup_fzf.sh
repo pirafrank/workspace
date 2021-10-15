@@ -19,11 +19,3 @@ curl -o fzf.tar.gz -L $url
 tar -xzf fzf.tar.gz
 rm -f fzf.tar.gz
 mv fzf $HOME/.fzf/bin/
-
-# copy config from dotfiles
-cp -a ${HOME}/dotfiles/fzf/.fzf* ${HOME}/
-
-# you may not have my username...
-sed -i='' "s@/home/francesco@$HOME@g" ${HOME}/.fzf.bash
-sed -i='' "s@/home/francesco@$HOME@g" ${HOME}/.fzf.zsh
-cd -

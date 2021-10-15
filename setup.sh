@@ -13,7 +13,7 @@ source workspace_versions.sh
 # notes:
 # create your user first
 # then run as:
-# curl -sSL https://github.com/pirafrank/dotfiles/raw/main/setup.sh | sudo -H -u YOURUSERNAME bash
+# curl -sSL https://github.com/pirafrank/workspace/raw/main/setup.sh | sudo -H -u YOURUSERNAME bash
 
 if [[ $(uname -s) != 'Linux' ]] || [[ ! -f /etc/debian_version ]]; then
   echo "Sorry, only Debian-based Linux distros are supported!"
@@ -85,19 +85,24 @@ sudo apt-get install -y \
   && echo "change default shell" \
   && sudo chsh -s $(which zsh) $(whoami)
 
-# dotfiles install
-echo "cloning dotfiles" \
-  && git clone https://github.com/pirafrank/dotfiles.git ${HOME}/dotfiles \
-  && cd ${HOME}/dotfiles
+# clone repo
+echo "cloning repository" \
+  && git clone --recursive https://github.com/pirafrank/workspace.git ${HOME}/workspace
 
 echo "install fzf" \
+  && cd ${HOME}/workspace \
   && zsh setups/setup_fzf.sh \
   && echo "install zprezto" \
   && zsh setups/setup_zprezto.zsh
 
 # dotfiles setup
 echo "installing dotfiles" \
+  && ln -s ${HOME}/workspace/dotfiles ${HOME}/dotfiles \
+  && cd ${HOME}/dotfiles \
   && zsh install.sh all
+
+# back to workspace dir
+cd ${HOME}/workspace
 
 # install pyenv and python
 echo "install pyenv and python" \

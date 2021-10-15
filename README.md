@@ -73,28 +73,20 @@ All workspaces setups are in userspace.
 A full setup involves programs installation of programs, their dependencies, download of dotfiles and creation of symlinks. It is meant to setup a vanilla environment. I keep `setup.sh` aligned with the `Dockerfile` used to build the Docker workspace baseimage. The setup comes in two flavors, with and without user creation:
 
 ```sh
-curl -sSL https://github.com/pirafrank/dotfiles/raw/main/setup.sh
+curl -sSL https://github.com/pirafrank/workspace/raw/main/setup.sh
 # OR
-curl -sSL https://github.com/pirafrank/dotfiles/raw/main/setup_w_user.sh
+curl -sSL https://github.com/pirafrank/workspace/raw/main/setup_w_user.sh
 ```
 
 Run the one that best fits your needs. Remember to always check the content of scripts you're about to execute before running them!
 
 ### Partial setup
 
-Setup scripts in `setups` and `workspaces` dirs are meant to be executed manually on Linux or macOS, or to build Docker Image workspaces (read below). They assume `~/dotfiles` exists. If you clone to another dir, please symlink it to `~/dotfiles`.
+Setup scripts in `setups` and `workspaces` dirs are meant to be executed manually on Linux or macOS, or to build Docker Image workspaces (read below). They assume `~/dotfiles` exists. If you have dotfiles in another dir, please symlink it to `~/dotfiles`.
 
 Core setup uses zsh and zprezto. Files for oh-my-zsh config are available, but I don't use/update them anymore.
 
-### dotfiles-only
-
-First clone the repo to your $HOME.
-
-```sh
-cd && git clone https://github.com/pirafrank/dotfiles.git
-```
-
-Then symlink config you want to use or install them all running `zsh install.sh all`. You can also symlink a specific set of dotfiles by running `zsh install.sh SET_NAME`. Check the script content to know more.
+### Further notes
 
 `~/.zsh_custom` is automatically sourced if it exists, and `~/bin2` is automatically added to `$PATH`. Both are not part of the repo and can be used to add your-own or machine-specific customizations and other executables.
 
