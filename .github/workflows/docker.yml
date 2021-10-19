@@ -44,7 +44,7 @@ on:
         required: false
 
 jobs:
-  docker:
+  dockerImagesBuild:
     name: Docker Images build
     runs-on: ubuntu-20.04
     env:
@@ -152,6 +152,6 @@ jobs:
       with:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
-        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "${{ github.job }} on branch ${{ steps.extract_branch_name.outputs.branch }} with target &quot;${{ github.event.inputs.build_target }}&quot; finished with status ${{job.status}}.", "value3": "<br>Workflow &quot;${{ github.workflow }}&quot; triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
+        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Build of Docker images on branch ${{ steps.extract_branch_name.outputs.branch }} with target &quot;${{ github.event.inputs.build_target }}&quot; finished with status ${{job.status}}.", "value3": "<br>Workflow &quot;${{ github.workflow }}&quot; triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
 
 
