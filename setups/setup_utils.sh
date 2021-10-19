@@ -44,7 +44,10 @@ downloadAndInstall $url lazygit
 printf "\n\nInstalling dandavison/delta...\n"
 url=$(curl -sL https://api.github.com/repos/dandavison/delta/releases/latest \
     | grep http | grep -i "$PLATFORM" | cut -d':' -f 2,3 | cut -d'"' -f2 | grep 'tar.gz' | grep $ARCH | head -n1)
-downloadAndInstall $url delta
+del delta
+curl -L $url | tar xz
+find $folder -type f -iname delta -exec mv {} $folder/delta \;
+chmod +x $folder/delta
 
 # ipinfo cli
 printf "\n\nInstalling ipinfo cli...\n"
