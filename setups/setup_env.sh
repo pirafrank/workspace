@@ -2,7 +2,12 @@
 
 ### variables ###
 
-folder="${HOME}/bin2"
+if [ -z $BIN2_PATH ]; then
+  # env var not set, go default position
+  folder="${HOME}/bin2"
+else
+  folder="$BIN2_PATH"
+fi
 
 
 ### functions ###
