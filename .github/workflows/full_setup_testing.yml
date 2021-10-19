@@ -1,0 +1,34 @@
+name: 'full_setup_testing'
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - setup.sh
+  workflow_dispatch:
+
+jobs:
+  testing:
+    name: full setup testing
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: "script.sh test"
+      id: 'scriptsh_tests'
+      shell: bash
+      # 'The Linux and macOS virtual machines both run using passwordless sudo'
+      # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
+      run: |
+        cat workspace_versions.sh
+        source workspace_versions.sh
+        export BIN2_PATH=$(pwd)/bin2
+        export DEBIAN_FRONTEND=noninteractive
+        bash setup.sh
+    - name: Send Push Notification
+      uses: fjogeleit/http-request-action@master
+      if: always()
+      with:
+        url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
+        method: 'POST'
+        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Job &quot;${{ github.job }}&quot; of workflow &quot;${{ github.workflow }}&quot; on branch ${{ github.ref }} finished with status ${{job.status}}.", "value3": "<br>Workflow triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
