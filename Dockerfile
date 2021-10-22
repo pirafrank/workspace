@@ -30,9 +30,10 @@ RUN set -x \
 ENV TZ=Europe/Rome
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# install dev software and dotfiles
+# restore man command, install dev software and deps.
 # comments are more for Dockerfile maintenance
 RUN set -x \
+  && yes | unminimize 2>&1 \
   && apt-get remove vim-runtime gvim vim-tiny \
     vim-common vim-gui-common \
   && apt-get update && apt-get install -y \
