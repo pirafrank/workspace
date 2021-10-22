@@ -3,6 +3,7 @@ FROM ubuntu:focal-20210325
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
 
+ARG USER_UID=1000
 ARG WORKSPACE_VERSION
 ARG UBUNTURELEASE='focal'
 
@@ -64,7 +65,7 @@ RUN set -x \
 
 # add user and change default shell
 RUN set -x \
-  && useradd -Um -d /home/work -G sudo -s /bin/bash work \
+  && useradd -Um -d /home/work -G sudo -s /bin/bash --uid $USER_UID work \
   && echo "change default shell" \
   && chsh -s $(which zsh) work
 
