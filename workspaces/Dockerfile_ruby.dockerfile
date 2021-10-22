@@ -10,13 +10,13 @@ USER root
 
 # install deps to compile rubies
 RUN set -x \
-  && apt-get clean && apt-get update \
+  && apt-get update \
   && apt-get install -y build-essential gawk autoconf automake bison \
     libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool \
     libyaml-dev pkg-config sqlite3 libgmp-dev libreadline-dev libssl-dev
 
 # remove system ruby to avoid conflicts
-RUN apt-get remove -y ruby
+RUN apt-get remove -y ruby && apt-get autoremove -y && apt-get clean -y
 
 USER work
 WORKDIR /home/work

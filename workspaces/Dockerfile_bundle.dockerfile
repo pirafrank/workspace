@@ -13,7 +13,7 @@ RUN apt-get remove -y ruby
 
 # install deps to compile python shims and rubies
 RUN set -x \
-  && apt-get clean && apt-get update \
+  && apt-get update \
   && apt-get install -y \
     autoconf \
     automake \
@@ -41,7 +41,8 @@ RUN set -x \
     tk-dev \
     wget \
     xz-utils \
-    zlib1g-dev
+    zlib1g-dev \
+  && apt-get autoremove -y && apt-get clean -y
 
 # switch to user
 USER work

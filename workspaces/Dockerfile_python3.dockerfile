@@ -10,10 +10,11 @@ USER root
 
 # install deps to compile python shims
 RUN set -x \
-  && apt-get clean && apt-get update \
+  && apt-get update \
   && apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl git \
+  && apt-get autoremove -y && apt-get clean -y
 
 USER work
 WORKDIR /home/work

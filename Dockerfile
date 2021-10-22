@@ -9,7 +9,7 @@ ARG UBUNTURELEASE='focal'
 
 # setting locales
 RUN set -x \
-  && apt-get clean && apt-get update \
+  && apt-get update \
   && apt-get install -y locales
 ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 
@@ -63,7 +63,8 @@ RUN set -x \
   && apt-get update \
   && apt-get install -y git fasd \
   && echo "installing python3 (focal ships with 3.8)" \
-  && apt-get install -y python3-pip
+  && apt-get install -y python3-pip \
+  && apt-get autoremove -y && apt-get clean -y
 
 # add user and change default shell
 RUN set -x \
