@@ -7,83 +7,34 @@ ARG USER_UID=1000
 ARG WORKSPACE_VERSION
 ARG UBUNTURELEASE='focal'
 
-# setting locales
-RUN set -x \
-  && apt-get update \
-  && apt-get install -y locales
-ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
+# copy base setup scripts
+COPY base/setup_fzf.sh \
+  base/setup_zprezto.zsh \
+  base/setup_base.sh /tmp/
 
 # set debug mode and install dev and essentials packages
 RUN set -x \
-  && apt-get update \
-  && apt-get install -y --no-install-recommends apt-utils \
-  && apt-get install -y \
-    build-essential \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg-agent \
-    software-properties-common \
-    tzdata
-
-# Set up timezone (tzdata required)
-ENV TZ=Europe/Rome
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-# restore man command, install dev software and deps.
-# comments are more for Dockerfile maintenance
-RUN set -x \
+  && chmod +rx /tmp/setup_*sh \
+  && bash /tmp/setup_base.sh \
+  && echo 'restore man command' \
   && yes | unminimize 2>&1 \
-  && apt-get remove vim-runtime gvim vim-tiny \
-    vim-common vim-gui-common \
-  && apt-get update && apt-get install -y \
-    sudo \
-    wget \
-    vim \
-    zsh \
-    tmux \
-    mosh \
-    rsync \
-    less \
-    mc \
-    tree \
-    jq \
-    postgresql-client \
-    zlib1g-dev \
-    unzip \
-    zip \
-    xz-utils \
-    zutils \
-    atop \
-    bat \
-    fd-find \
-  && echo "getting newer git..." \
-  && add-apt-repository ppa:git-core/ppa -y \
-  && add-apt-repository ppa:aacebedo/fasd -y \
-  && apt-get update \
-  && apt-get install -y git fasd \
-  && echo "installing python3 (focal ships with 3.8)" \
-  && apt-get install -y python3-pip \
-  && apt-get autoremove -y && apt-get clean -y
-
-# add user and change default shell
-RUN set -x \
+  && echo "cleaning up" \
+  && apt-get autoremove -y && apt-get clean -y \
+  && rm -f /tmp/setup_base.sh \
+  && echo 'add user and change default shell' \
   && useradd -Um -d /home/work -G sudo -s /bin/bash --uid $USER_UID work \
-  && echo "change default shell" \
   && chsh -s $(which zsh) work \
   && echo work ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/work
 
-# install docker-cli (client only)
-# RUN set -x \
-#   && echo "install docker-cli (CLI client only)" \
-#   && zsh setup_docker_cli.zsh $UBUNTURELEASE
+# setting locale
+ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
+
+# Set up timezone (tzdata required)
+ENV TZ=Europe/Rome
 
 USER work
 WORKDIR /home/work
 
-# copy base setup scripts
-COPY base/setup_fzf.sh \
-  base/setup_zprezto.zsh /tmp/
 # copy setup scripts for different envs
 # into WORKDIR
 COPY setups/setup_docker_cli.sh \

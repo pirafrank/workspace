@@ -73,9 +73,10 @@ All workspaces setups are in userspace.
 A full setup involves programs installation of programs, their dependencies, download of dotfiles and creation of symlinks. It is meant to setup a vanilla environment. I keep `setup.sh` aligned with the `Dockerfile` used to build the Docker workspace baseimage. The setup comes in two flavors, with and without user creation:
 
 ```sh
-curl -sSL https://github.com/pirafrank/workspace/raw/main/setup.sh
-# OR
-curl -sSL https://github.com/pirafrank/workspace/raw/main/setup_w_user.sh
+curl -sSL https://github.com/pirafrank/workspace/raw/main/create_user.sh -o create_user.sh && chmod +x create_user.sh
+curl -sSL https://github.com/pirafrank/workspace/raw/main/setup.sh -o setup.sh && chmod +x setup.sh
+./create_user.sh
+./setup.sh
 ```
 
 Run the one that best fits your needs. Remember to always check the content of scripts you're about to execute before running them!

@@ -10,10 +10,8 @@ source workspace_versions.sh
 # script
 #
 
-# notes:
-# create your user first
-# then run as:
-# curl -sSL https://github.com/pirafrank/workspace/raw/main/setup.sh | sudo -H -u YOURUSERNAME bash
+# NB: this script is meant to be run interactively.
+# if needed, create your user first.
 
 if [[ $(uname -s) != 'Linux' ]] || [[ ! -f /etc/debian_version ]]; then
   echo "Sorry, only Debian-based Linux distros are supported!"
@@ -21,68 +19,21 @@ if [[ $(uname -s) != 'Linux' ]] || [[ ! -f /etc/debian_version ]]; then
 fi
 
 if [[ $EUID -eq 0 ]]; then
-   echo "DO NOT run this script as root!"
+   echo "DO NOT run this script as root! Run as standard user with sudo power."
    echo "And more... Have you created the user you want to run it from?"
-   exit 1
+   exit 2
 fi
 
 # explicitly moving to home dir
 cd
 
-# upgrade all the things
-sudo apt-get update && sudo apt-get upgrade -y
+# base install
+sudo bash base/setup_base.sh
 
-# install locales
-sudo apt-get install -y locales
-LANG="en_US.UTF-8"
-LC_ALL="en_US.UTF-8"
-LANGUAGE="en_US.UTF-8"
+echo "cleaning up" \
+  && sudo apt-get autoremove -y && sudo apt-get clean -y
 
-sudo apt-get install -y --no-install-recommends apt-utils \
-  && sudo apt-get install -y \
-    build-essential \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg-agent \
-    software-properties-common \
-    tzdata
-
-TZ='Europe/Rome'
-echo $TZ | sudo tee /etc/timezone && \
-  sudo rm /etc/localtime && \
-  sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
-  sudo dpkg-reconfigure -f noninteractive tzdata
-
-sudo apt-get install -y \
-    wget \
-    zsh \
-    tmux \
-    mosh \
-    rsync \
-    less \
-    mc \
-    tree \
-    jq \
-    postgresql-client \
-    zlib1g-dev \
-    unzip \
-    zip \
-    xz-utils \
-    zutils \
-    atop \
-    htop \
-    bat \
-    fd-find \
-    python3 \
-    python3-pip \
-  && echo "getting newer git and clvv/fasd..." \
-  && sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com A1715D88E1DF1F24 \
-  && sudo add-apt-repository ppa:git-core/ppa -y \
-  && sudo add-apt-repository ppa:aacebedo/fasd -y \
-  && sudo apt-get update \
-  && sudo apt-get install -y git fasd \
-  && echo "change default shell" \
+echo "change default shell" \
   && sudo chsh -s $(which zsh) $(whoami)
 
 # clone repo
@@ -140,6 +91,3 @@ echo "install cloud clients" \
 
 echo "install additional utilities" \
   && bash setups/setup_utils.sh
-
-# back home
-cd
