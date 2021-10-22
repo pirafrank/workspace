@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - setup.sh
       - base/setup_base.sh
       - base/setup_fzf.sh
       - base/setup_zprezto.zsh
