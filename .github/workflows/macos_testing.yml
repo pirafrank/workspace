@@ -3,7 +3,7 @@ name: 'macos_testing'
 on:
   push:
     branches:
-      - develop
+      - main
     paths:
       - base/setup_fzf.sh
       - base/setup_zprezto.zsh
@@ -11,6 +11,9 @@ on:
       - setups/setup_env.sh
       - setups/setup_cloud_clients.sh
       - setups/setup_utils.sh
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
