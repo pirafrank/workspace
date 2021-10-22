@@ -8,10 +8,10 @@ fi
 RUBYVERSION="$1"
 
 # installing dependencies to compile rubies
-# (only if run as standard user, assume interactive install.
+# (only if run as standard user, interactively.
 # These deps are installed via Dockerfile during Docker image build)
-if [[ $EUID -ne 0 && $(command -v sudo) ]]; then
-  sudo apt-get clean && apt-get update  && \
+if [ "$PS1" ] && [ $EUID -ne 0 ] && [ $(command -v sudo) ]; then
+  sudo apt-get clean && sudo apt-get update && \
   sudo apt-get install -y build-essential gawk autoconf automake bison \
     libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool \
     libyaml-dev pkg-config sqlite3 libgmp-dev libreadline-dev libssl-dev

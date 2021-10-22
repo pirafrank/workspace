@@ -37,6 +37,7 @@ RUN set -x \
   && apt-get remove vim-runtime gvim vim-tiny \
     vim-common vim-gui-common \
   && apt-get update && apt-get install -y \
+    sudo \
     wget \
     vim \
     zsh \
@@ -68,7 +69,8 @@ RUN set -x \
 RUN set -x \
   && useradd -Um -d /home/work -G sudo -s /bin/bash --uid $USER_UID work \
   && echo "change default shell" \
-  && chsh -s $(which zsh) work
+  && chsh -s $(which zsh) work \
+  && echo work ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/work
 
 # install docker-cli (client only)
 # RUN set -x \
