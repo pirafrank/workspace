@@ -85,9 +85,10 @@ echo "install docker" \
   && sudo bash setups/setup_docker_full.sh \
   && sudo usermod -aG docker $(whoami)
 
+# install additonal utils
+echo "install additional utilities" \
+  && bash setups/setup_utils.sh
+
 # install cloud clients
 echo "install cloud clients" \
   && bash setups/setup_cloud_clients.sh
-
-echo "install additional utilities" \
-  && bash setups/setup_utils.sh
