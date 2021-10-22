@@ -146,6 +146,12 @@ jobs:
           GOLANGVERSION=${{ env.GOLANGVERSION }}
           PYTHON3VERSION=${{ env.PYTHON3VERSION }}
           RUBYVERSION=${{ env.RUBYVERSION }}
+  sendNotification:
+    name: Send Notification
+    runs-on: ubuntu-20.04
+    if: ${{ always() }}
+    needs: [dockerImagesBuild]
+    steps:
     - name: Send Push Notification
       uses: fjogeleit/http-request-action@master
       if: always()
