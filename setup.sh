@@ -91,9 +91,9 @@ echo "cloning repository" \
 
 echo "install fzf" \
   && cd ${HOME}/workspace \
-  && zsh setups/setup_fzf.sh \
+  && zsh base/setup_fzf.sh \
   && echo "install zprezto" \
-  && zsh setups/setup_zprezto.zsh
+  && zsh base/setup_zprezto.zsh
 
 # dotfiles setup
 echo "installing dotfiles" \

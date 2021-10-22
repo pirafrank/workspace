@@ -76,11 +76,12 @@ RUN set -x \
 USER work
 WORKDIR /home/work
 
+# copy base setup scripts
+COPY base/setup_fzf.sh \
+  base/setup_zprezto.zsh /tmp/
 # copy setup scripts for different envs
 # into WORKDIR
 COPY setups/setup_docker_cli.sh \
-  setups/setup_fzf.sh \
-  setups/setup_zprezto.zsh \
   setups/setup_env.sh \
   setups/setup_utils.sh \
   workspaces/setup_nvm.sh \
@@ -94,12 +95,12 @@ COPY setups/setup_docker_cli.sh \
 # install fzf
 RUN set -x \
   && echo "install fzf" \
-  && zsh setup_fzf.sh
+  && zsh /tmp/setup_fzf.sh
 
 # zprezto has many submodules, going with a dedicated layer
 RUN set -x \
   && echo "install zprezto" \
-  && zsh setup_zprezto.zsh
+  && zsh /tmp/setup_zprezto.zsh
 
 # clone dotfiles
 RUN set -x \
