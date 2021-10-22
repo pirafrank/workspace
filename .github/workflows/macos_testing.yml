@@ -3,7 +3,7 @@ name: 'macos_testing'
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - base/setup_fzf.sh
       - base/setup_zprezto.zsh

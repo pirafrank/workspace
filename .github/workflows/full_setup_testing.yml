@@ -3,7 +3,7 @@ name: 'full_setup_testing'
 on:
   push:
     branches:
-      - main
+      - develop
     paths:
       - setup.sh
       - base/setup_base.sh
