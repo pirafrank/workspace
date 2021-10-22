@@ -31,7 +31,7 @@ jobs:
         bash setup_golang.sh ${GOLANGVERSION}
         echo "install pyenv and python"
         choice=$(curl -sSL https://api.github.com/repos/pyenv/pyenv/contents/plugins/python-build/share/python-build | grep name | cut -d'"' -f4 | grep -v '-' | tail -n +2 | grep "${PYTHON3VERSION}" | tail -1)
-        zsh setup_pyenv.sh ${choice}
+        bash setup_pyenv.sh ${choice}
         echo "install rvm and ruby"
         bash setup_rvm.sh ${RUBYVERSION}
         echo "install rust and cargo"
@@ -57,7 +57,7 @@ jobs:
         bash setup_golang.sh ${GOLANGVERSION}
         echo "install pyenv and python"
         choice=$(curl -sSL https://api.github.com/repos/pyenv/pyenv/contents/plugins/python-build/share/python-build | grep name | cut -d'"' -f4 | grep -v '-' | tail -n +2 | grep "${PYTHON3VERSION}" | tail -1)
-        zsh setup_pyenv.sh ${choice}
+        bash setup_pyenv.sh ${choice}
         echo "install rvm and ruby"
         bash setup_rvm.sh ${RUBYVERSION}
         echo "install rust and cargo"
@@ -83,7 +83,7 @@ jobs:
         bash setup_golang.sh ${GOLANGVERSION}
         echo "install pyenv and python"
         choice=$(curl -sSL https://api.github.com/repos/pyenv/pyenv/contents/plugins/python-build/share/python-build | grep name | cut -d'"' -f4 | grep -v '-' | tail -n +2 | grep "${PYTHON3VERSION}" | tail -1)
-        zsh setup_pyenv.sh ${choice}
+        bash setup_pyenv.sh ${choice}
         echo "install rvm and ruby"
         bash setup_rvm.sh ${RUBYVERSION}
         echo "install rust and cargo"

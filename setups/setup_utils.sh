@@ -7,12 +7,12 @@
 ### variables ###
 
 folder="${HOME}/bin2"
-
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 ### script body ###
 
 # init environment
-source setup_env.sh
+source "$SCRIPT_DIR/setup_env.sh"
 setArchAndPlatform
 welcome
 createDir "$folder"

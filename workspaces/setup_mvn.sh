@@ -4,7 +4,7 @@ folder="${HOME}/bin2"
 
 # creating target dir if it doesn't exist
 # it should've been created in prev script
-if [ -d $folder ]; then
+if [ ! -d $folder ]; then
   mkdir -p $folder
 fi
 cd $folder
