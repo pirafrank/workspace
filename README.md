@@ -1,7 +1,9 @@
 # Workspace
 
 [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/pirafrank.svg?style=social&label=Follow%20%40pirafrank)](https://twitter.com/pirafrank)
-[![build_images](https://github.com/pirafrank/workspace/actions/workflows/docker.yml/badge.svg)](https://github.com/pirafrank/workspace/actions/workflows/docker.yml)
+[![Docker build](https://github.com/pirafrank/workspace/actions/workflows/docker.yml/badge.svg)](https://github.com/pirafrank/workspace/actions/workflows/docker.yml)
+[![Linux](https://github.com/pirafrank/workspace/actions/workflows/full_setup_testing.yml/badge.svg)](https://github.com/pirafrank/workspace/actions/workflows/full_setup_testing.yml)
+[![macOS](https://github.com/pirafrank/workspace/actions/workflows/macos_testing.yml/badge.svg)](https://github.com/pirafrank/workspace/actions/workflows/macos_testing.yml)
 [![docker_pulls](https://img.shields.io/docker/pulls/pirafrank/workspace.svg)](https://hub.docker.com/repository/docker/pirafrank/workspace)
 [![GitHub tag](https://img.shields.io/github/tag/pirafrank/workspace?include_prereleases=&sort=semver&color=blue)](https://github.com/pirafrank/workspace/releases/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/pirafrank/workspace/blob/main/LICENSE.md)
