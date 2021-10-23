@@ -36,6 +36,11 @@ jobs:
         export BIN2_PATH=$(pwd)/bin2
         export DEBIAN_FRONTEND=noninteractive
         bash setup.sh
+    - name: "Testing"
+      id: 'scriptsh_testing'
+      shell: bash
+      run: |
+        bash tests/workspaces.sh
   sendNotification:
     name: Send Notification
     runs-on: ubuntu-20.04

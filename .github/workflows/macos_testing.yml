@@ -50,6 +50,11 @@ jobs:
         cd setups
         bash setup_utils.sh
         bash setup_cloud_clients.sh
+    - name: "Testing"
+      id: 'testing_macos1015'
+      shell: bash
+      run: |
+        bash tests/workspaces.sh
   testingMacOS11:
     name: scripts on macOS 11 Big Sur
     runs-on: macos-11
@@ -83,6 +88,11 @@ jobs:
         cd setups
         bash setup_utils.sh
         bash setup_cloud_clients.sh
+    - name: "Testing"
+      id: 'testing_macos11'
+      shell: bash
+      run: |
+        bash tests/workspaces.sh
   sendNotification:
     name: Send Notification
     runs-on: ubuntu-20.04
