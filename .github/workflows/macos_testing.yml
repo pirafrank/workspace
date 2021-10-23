@@ -18,12 +18,12 @@ on:
 
 jobs:
   testingMacOS1015:
-    name: scripts testing on macOS 10.15 Catalina
+    name: scripts on macOS 10.15 Catalina
     runs-on: macos-10.15
     steps:
     - uses: actions/checkout@v2
-    - name: "workspaces scripts testing"
-      id: 'workspaces_scripts_testing_macos1015'
+    - name: "workspaces install"
+      id: 'workspaces_scripts_install_macos1015'
       shell: bash
       run: |
         cat workspace_versions.sh
@@ -43,20 +43,20 @@ jobs:
         bash setup_rvm.sh ${RUBYVERSION}
         echo "install rust and cargo"
         bash setup_rust.sh
-    - name: "cloud clients and utils scripts"
-      id: 'cloud_clients_and_utils_scripts_macos1015'
+    - name: "cloud clients and utils install"
+      id: 'cloud_clients_and_utils_install_macos1015'
       shell: bash
       run: |
         cd setups
         bash setup_utils.sh
         bash setup_cloud_clients.sh
   testingMacOS11:
-    name: scripts testing on macOS 11 Big Sur
+    name: scripts on macOS 11 Big Sur
     runs-on: macos-11
     steps:
     - uses: actions/checkout@v2
-    - name: "workspaces scripts testing"
-      id: 'workspaces_scripts_testing_macos11'
+    - name: "workspaces install"
+      id: 'workspaces_scripts_install_macos11'
       shell: bash
       run: |
         cat workspace_versions.sh
@@ -76,8 +76,8 @@ jobs:
         bash setup_rvm.sh ${RUBYVERSION}
         echo "install rust and cargo"
         bash setup_rust.sh
-    - name: "cloud clients and utils scripts"
-      id: 'cloud_clients_and_utils_scripts_macos11'
+    - name: "cloud clients and utils install"
+      id: 'cloud_clients_and_utils_install_macos11'
       shell: bash
       run: |
         cd setups
@@ -95,4 +95,4 @@ jobs:
       with:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
-        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Workflow &quot;${{ github.workflow }}&quot; on branch ${{ github.ref }} finished.<br>testingMacOS1015: ${{ needs.testingMacOS1015.result }}<br>testingMacOS11: ${{ needs.testingMacOS11.result }}.", "value3": "<br>Commit ${{ github.sha }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
+        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Workflow &quot;${{ github.workflow }}&quot; on branch ${{ github.ref }} finished.<br>tests on macOS 10.15: ${{ needs.testingMacOS1015.result }}<br>tests on macOS 11: ${{ needs.testingMacOS11.result }}.", "value3": "<br>Triggered by &quot;${{ github.event_name }}&quot;.<br>Commit ${{ github.sha }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'

@@ -21,12 +21,12 @@ on:
 
 jobs:
   testing:
-    name: full setup testing
+    name: Full setup testing on Ubuntu
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
     - name: "script.sh test"
-      id: 'scriptsh_tests'
+      id: 'scriptsh_install'
       shell: bash
       # 'The Linux and macOS virtual machines both run using passwordless sudo'
       # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
@@ -48,4 +48,4 @@ jobs:
       with:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
-        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Job &quot;${{ github.job }}&quot; of workflow &quot;${{ github.workflow }}&quot; on branch ${{ github.ref }} finished with status ${{job.status}}.", "value3": "<br>Workflow triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
+        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Workflow &quot;${{ github.workflow }}&quot; on branch ${{ github.ref }} finished with status ${{ needs.testing.result }}.", "value3": "<br>Triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
