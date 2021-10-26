@@ -13,7 +13,7 @@ echo ' 🧪🧪🧪 Testing Time! 🧪🧪🧪 '
 set -e
 
 checks=(curl gpg sudo wget vim zsh tmux mosh rsync less mc tree jq unzip zip atop htop bat fdfind)
-for check in $checks; do
+for check in "${checks[@]}"; do
   echo "Checking $check"
-  [[ $( command -v $check ) ]] && echo "✅ Test passed" || echo "❌ Test failed." 1>&2
+  [[ $( command -v $check ) ]] && echo "✅ Test passed" || { echo "❌ Test failed." 1>&2 ; exit 1 ; }
 done
