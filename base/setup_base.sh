@@ -53,6 +53,7 @@ echo "installing apt-utils" \
     atop \
     htop \
     bat \
+    ncdu \
     fd-find
 
 echo "getting newer git and clvv/fasd..." \
