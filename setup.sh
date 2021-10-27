@@ -4,7 +4,7 @@
 # env
 #
 
-source workspace_versions.sh
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 #
 # script
@@ -12,6 +12,8 @@ source workspace_versions.sh
 
 # NB: this script is meant to be run interactively.
 # if needed, create your user first.
+
+# pre-run checks start
 
 if [[ $(uname -s) != 'Linux' ]] || [[ ! -f /etc/debian_version ]]; then
   echo "Sorry, only Debian-based Linux distros are supported!"
@@ -24,17 +26,32 @@ if [[ $EUID -eq 0 ]]; then
    exit 2
 fi
 
+# pre-run checks end
+
+echo "
+*************************
+    setup.sh starting
+*************************
+"
+
+echo "
+cat workspace_versions.sh
+-------------------------
+" && \
+  cat workspace_versions.sh && \
+  source workspace_versions.sh
+
 # explicitly moving to home dir
 cd
 
 # base install
-sudo bash base/setup_base.sh
+sudo bash "$SCRIPT_DIR/base/setup_base.sh"
 
 echo "cleaning up" \
   && sudo apt-get autoremove -y && sudo apt-get clean -y
 
 echo "change default shell" \
-  && sudo chsh -s $(which zsh) $(whoami)
+  && sudo usermod -s $(which zsh) $(whoami)
 
 # clone repo
 echo "cloning repository" \
@@ -82,7 +99,7 @@ echo "install Go" \
 
 # install docker
 echo "install docker" \
-  && sudo bash setups/setup_docker_full.sh \
+  && sudo bash "$SCRIPT_DIR/setups/setup_docker_full.sh" \
   && sudo usermod -aG docker $(whoami)
 
 # install additonal utils
@@ -92,3 +109,10 @@ echo "install additional utilities" \
 # install cloud clients
 echo "install cloud clients" \
   && bash setups/setup_cloud_clients.sh
+
+# all done!
+echo "
+*************************
+    setup.sh starting
+*************************
+"

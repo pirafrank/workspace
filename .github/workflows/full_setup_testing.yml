@@ -31,8 +31,7 @@ jobs:
       # 'The Linux and macOS virtual machines both run using passwordless sudo'
       # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
       run: |
-        cat workspace_versions.sh
-        source workspace_versions.sh
+        echo "Set BIN2_PATH to $(pwd)/bin2 and DEBIAN_FRONTEND to noninteractive"
         export BIN2_PATH=$(pwd)/bin2
         export DEBIAN_FRONTEND=noninteractive
         bash setup.sh
@@ -42,9 +41,9 @@ jobs:
       run: |
         cd tests
         bash packages.sh
-        bash workspaces.sh
-        bash utils.sh
-        bash cloud_clients.sh
+        zsh -i -c ./workspaces.sh
+        zsh -i -c ./utils.sh
+        zsh -i -c ./cloud_clients.sh
   sendNotification:
     name: Send Notification
     runs-on: ubuntu-20.04
