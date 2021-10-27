@@ -54,6 +54,7 @@ echo "installing apt-utils" \
     htop \
     bat \
     ncdu \
+    libxml2-utils \
     fd-find
 
 echo "getting newer git and clvv/fasd..." \
