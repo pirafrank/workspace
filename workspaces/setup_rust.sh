@@ -20,4 +20,4 @@ source $HOME/.cargo/env
 rustup component add rustfmt clippy 2>&1
 
 # uncomment below to install rust language server deps
-#rustup component add rls rust-analysis rust-src 2>&1
+rustup component add rls rust-analysis rust-src 2>&1
