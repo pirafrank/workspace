@@ -3,3 +3,7 @@ zsh/zprezto/runcoms/README.md
 
 # ignore zsh custom/env specific zsh settings
 /zsh/common/*zsh_custom
+
+# vscode workspace files
+/**/*.code-workspace
+
