@@ -41,9 +41,9 @@ jobs:
       run: |
         cd tests
         bash packages.sh
-        zsh -i -c ./workspaces.sh
-        zsh -i -c ./utils.sh
-        zsh -i -c ./cloud_clients.sh
+        script -e -c 'zsh -i -c ./workspaces.sh'
+        script -e -c 'zsh -i -c ./utils.sh'
+        script -e -c 'zsh -i -c ./cloud_clients.sh'
   sendNotification:
     name: Send Notification
     runs-on: ubuntu-20.04
