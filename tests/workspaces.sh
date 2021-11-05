@@ -13,10 +13,3 @@ for check in "${checks[@]}"; do
   echo "Checking $check"
   [[ ! -z $( which $check | grep $HOME ) ]] && echo "✅ Test passed" || fail_test
 done
-
-# the ones below are functions, using a different method
-checks=(nvm pyenv rvm)
-for check in "${checks[@]}"; do
-  echo "Checking $check"
-  [[ ! -z $( command -v $check ) ]] && echo "✅ Test passed" || fail_test
-done
