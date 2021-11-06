@@ -40,9 +40,6 @@ jobs:
         export BIN2_PATH=$(pwd)/bin2
         export DEBIAN_FRONTEND=noninteractive
         bash setup.sh
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
     - name: "Testing"
       id: 'scriptsh_testing'
       shell: bash
@@ -53,12 +50,6 @@ jobs:
         script -e -c 'zsh -i -c ./workspaces.sh'
         script -e -c 'zsh -i -c ./utils.sh'
         script -e -c 'zsh -i -c ./cloud_clients.sh'
-  sendNotification:
-    name: Send Notification
-    runs-on: ubuntu-20.04
-    if: ${{ always() }}
-    needs: [testing]
-    steps:
     - name: Send Push Notification
       uses: fjogeleit/http-request-action@master
       if: always()
@@ -66,3 +57,10 @@ jobs:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
         data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Workflow &quot;${{ github.workflow }}&quot; on branch ${{ github.ref }} finished with status ${{ needs.testing.result }}.", "value3": "<br>Triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled != 'false') || failure() }}
+      #timeout-minutes: 30
+      with:
+        sudo: false
+        limit-access-to-actor: true
