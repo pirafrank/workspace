@@ -53,24 +53,31 @@ echo "cleaning up" \
 echo "change default shell" \
   && sudo usermod -s $(which zsh) $(whoami)
 
-# clone repo
-echo "cloning repository" \
-  && git clone --recursive https://github.com/pirafrank/workspace.git ${HOME}/workspace
+if [ "$1" = "--skip-clone" ]; then
+  # skip it
+  echo "Skipping repo cloning"
+  WORKSPACE_DIR=${SCRIPT_DIR}
+else
+  # clone repo
+  echo "cloning repository"
+  git clone --recursive https://github.com/pirafrank/workspace.git ${HOME}/workspace
+  WORKSPACE_DIR="${HOME}/workspace"
+fi
 
 echo "install fzf" \
-  && cd ${HOME}/workspace \
+  && cd ${WORKSPACE_DIR} \
   && zsh base/setup_fzf.sh \
   && echo "install zprezto" \
   && zsh base/setup_zprezto.zsh
 
 # dotfiles setup
 echo "installing dotfiles" \
-  && ln -s ${HOME}/workspace/dotfiles ${HOME}/dotfiles \
-  && cd ${HOME}/dotfiles \
+  && ln -s ${WORKSPACE_DIR}/dotfiles ${HOME}/dotfiles \
+  && cd ${WORKSPACE_DIR}/dotfiles \
   && zsh install.sh all
 
 # back to workspace dir
-cd ${HOME}/workspace
+cd ${WORKSPACE_DIR}
 
 # install pyenv and python
 echo "install pyenv and python" \
