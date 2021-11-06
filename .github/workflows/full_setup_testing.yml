@@ -41,6 +41,7 @@ jobs:
       run: |
         cd tests
         bash packages.sh
+        script -e -c 'zsh -i -c "compaudit | xargs sudo chmod -R 755"'
         script -e -c 'zsh -i -c ./workspaces.sh'
         script -e -c 'zsh -i -c ./utils.sh'
         script -e -c 'zsh -i -c ./cloud_clients.sh'
