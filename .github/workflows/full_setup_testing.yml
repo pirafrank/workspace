@@ -45,8 +45,12 @@ jobs:
       shell: bash
       run: |
         cd tests
+        echo "Checking installed packages"
         bash packages.sh
-        script -e -c 'zsh -i -c "compaudit | xargs sudo chmod -R 755"'
+        echo "Preventing compinit to fail due to bad zsh dir permissions"
+        sudo chmod 755 /usr/share/zsh
+        sudo chmod 755 /usr/share/zsh/vendor-completions
+        echo "Running test scripts involving zsh shell"
         script -e -c 'zsh -i -c ./workspaces.sh'
         script -e -c 'zsh -i -c ./utils.sh'
         script -e -c 'zsh -i -c ./cloud_clients.sh'
