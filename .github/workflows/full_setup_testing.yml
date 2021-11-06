@@ -18,6 +18,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: 'false'
 
 jobs:
   testing:
@@ -35,6 +40,9 @@ jobs:
         export BIN2_PATH=$(pwd)/bin2
         export DEBIAN_FRONTEND=noninteractive
         bash setup.sh
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
     - name: "Testing"
       id: 'scriptsh_testing'
       shell: bash
