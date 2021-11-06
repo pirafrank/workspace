@@ -66,5 +66,5 @@ jobs:
       if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled != 'false') || failure() }}
       #timeout-minutes: 30
       with:
-        sudo: false
-        limit-access-to-actor: true
+        sudo: true  # default
+        limit-access-to-actor: true  # allow ssh access to keys loaded in GitHub
