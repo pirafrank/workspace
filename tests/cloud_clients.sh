@@ -16,4 +16,5 @@ done
 
 # checking krew
 # krew is installed as a kubectl subcommand
+echo "Checking krew"
 [[ $( kubectl krew --help | head -n1 | grep kubectl ) ]] && echo "✅ Test passed" || fail_test
