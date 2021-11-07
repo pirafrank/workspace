@@ -76,6 +76,38 @@ echo "installing dotfiles" \
   && cd ${WORKSPACE_DIR}/dotfiles \
   && zsh install.sh all
 
+# install deps to compile python shims and rubies
+echo "installing dependencies to compile python shims and rubies" \
+  && sudo apt-get install -y \
+    autoconf \
+    automake \
+    bison \
+    build-essential \
+    curl \
+    gawk \
+    git \
+    libbz2-dev \
+    libffi-dev \
+    libgdbm-dev \
+    libgmp-dev \
+    liblzma-dev \
+    libncurses5-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libtool \
+    libyaml-dev \
+    llvm \
+    pkg-config \
+    python-openssl \
+    sqlite3 \
+    tk-dev \
+    wget \
+    xz-utils \
+    zlib1g-dev \
+  && sudo apt-get autoremove -y && sudo apt-get clean -y
+
 # back to workspace dir
 cd ${WORKSPACE_DIR}
 
