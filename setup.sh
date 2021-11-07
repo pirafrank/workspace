@@ -81,28 +81,28 @@ cd ${WORKSPACE_DIR}
 
 # install pyenv and python
 echo "install pyenv and python" \
-  && zsh workspaces/setup_pyenv.zsh $PYTHON3VERSION
+  && zsh workspaces/setup_pyenv.sh $PYTHON3VERSION
 
 # install nvm and node
 echo "install nvm and node" \
-  && zsh workspaces/setup_nvm.zsh $NODEVERSION
+  && zsh workspaces/setup_nvm.sh $NODEVERSION
 
 # install rvm and jekyll
 echo "install rvm and ruby" \
-  && zsh workspaces/setup_rvm.zsh $RUBYVERSION
+  && zsh workspaces/setup_rvm.sh $RUBYVERSION
 
 # install rust and cargo
 echo "install rust and cargo" \
-  && zsh workspaces/setup_rust.zsh
+  && zsh workspaces/setup_rust.sh
 
 # install java
 echo "install Java $JAVAVERSION" \
-  && zsh workspaces/setup_java.zsh $JAVAVERSION openjdk \
+  && zsh workspaces/setup_java.sh $JAVAVERSION openjdk \
   && zsh workspaces/setup_mvn.sh
 
 # install golang
 echo "install Go" \
-  && zsh workspaces/setup_golang.zsh
+  && zsh workspaces/setup_golang.sh
 
 # install docker
 echo "install docker" \
