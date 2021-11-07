@@ -38,8 +38,7 @@ jobs:
       # 'The Linux and macOS virtual machines both run using passwordless sudo'
       # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
       run: |
-        echo "Set BIN2_PATH to $(pwd)/bin2 and DEBIAN_FRONTEND to noninteractive"
-        export BIN2_PATH=$(pwd)/bin2
+        echo "Set DEBIAN_FRONTEND to noninteractive"
         export DEBIAN_FRONTEND=noninteractive
         bash setup.sh --skip-clone
     - name: "Testing"

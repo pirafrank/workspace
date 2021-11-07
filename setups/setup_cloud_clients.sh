@@ -6,17 +6,17 @@
 
 ### variables ###
 
-folder="${HOME}/bin2"
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 ### script body ###
 
 # init environment
 source "$SCRIPT_DIR/setup_env.sh"
+echo "BIN2_PATH=${BIN2_PATH}"
 setArchAndPlatform
 welcome
-createDir "$folder"
-cd $folder
+createDir "$BIN2_PATH"
+cd "$BIN2_PATH"
 
 # packer
 printf "\n\nInstalling packer...\n"
@@ -68,7 +68,7 @@ printf "\n\nInstalling krew...\n"
 # helm
 printf "\n\nInstalling helm...\n"
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-HELM_INSTALL_DIR="$HOME/bin2" bash ./get_helm.sh --no-sudo
+HELM_INSTALL_DIR="$BIN2_PATH" bash ./get_helm.sh --no-sudo
 rm -f get_helm.sh
 
 # kubectx + kubens

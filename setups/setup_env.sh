@@ -5,6 +5,7 @@
 if [ -z $BIN2_PATH ]; then
   # env var not set, go default position
   folder="${HOME}/bin2"
+  export BIN2_PATH="$folder"
 else
   folder="$BIN2_PATH"
 fi

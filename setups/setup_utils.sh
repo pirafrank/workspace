@@ -6,17 +6,17 @@
 
 ### variables ###
 
-folder="${HOME}/bin2"
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 ### script body ###
 
 # init environment
 source "$SCRIPT_DIR/setup_env.sh"
+echo "BIN2_PATH=${BIN2_PATH}"
 setArchAndPlatform
 welcome
-createDir "$folder"
-cd $folder
+createDir "$BIN2_PATH"
+cd "$BIN2_PATH"
 
 # yq
 printf "Installing yq...\n"
