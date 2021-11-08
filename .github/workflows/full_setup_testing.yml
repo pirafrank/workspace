@@ -44,6 +44,8 @@ jobs:
     - name: "Testing"
       id: 'scriptsh_testing'
       shell: bash
+      # use 'script -e -c' to fix issues with non-interactive shell in
+      # GitHub Actions. Source: https://github.com/actions/runner/issues/241
       run: |
         cd tests
         echo "Checking installed packages"
@@ -61,7 +63,7 @@ jobs:
       with:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
-        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Workflow &quot;${{ github.workflow }}&quot; on branch ${{ github.ref }} finished with status ${{ needs.testing.result }}.", "value3": "<br>Triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
+        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Workflow &quot;${{ github.workflow }}&quot; on branch ${{ github.ref }} finished with status ${{ job.status }}.", "value3": "<br>Triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
       if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled != 'false') || failure() }}
