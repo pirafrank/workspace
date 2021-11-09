@@ -1,7 +1,7 @@
 name: 'Linux'
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
@@ -14,10 +14,12 @@ on:
       - setups/setup_env.sh
       - setups/setup_cloud_clients.sh
       - setups/setup_utils.sh
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: 'false'
 
 jobs:
   testing:
@@ -25,36 +27,44 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - name: "script.sh install"
       id: 'scriptsh_install'
       shell: bash
       # 'The Linux and macOS virtual machines both run using passwordless sudo'
       # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
       run: |
-        cat workspace_versions.sh
-        source workspace_versions.sh
-        export BIN2_PATH=$(pwd)/bin2
+        echo "Set DEBIAN_FRONTEND to noninteractive"
         export DEBIAN_FRONTEND=noninteractive
-        bash setup.sh
+        bash setup.sh --skip-clone
     - name: "Testing"
       id: 'scriptsh_testing'
       shell: bash
+      # use 'script -e -c' to fix issues with non-interactive shell in
+      # GitHub Actions. Source: https://github.com/actions/runner/issues/241
       run: |
         cd tests
+        echo "Checking installed packages"
         bash packages.sh
-        bash workspaces.sh
-        bash utils.sh
-        bash cloud_clients.sh
-  sendNotification:
-    name: Send Notification
-    runs-on: ubuntu-20.04
-    if: ${{ always() }}
-    needs: [testing]
-    steps:
+        echo "Preventing compinit to fail due to bad zsh dir permissions"
+        sudo chmod 755 /usr/share/zsh
+        sudo chmod 755 /usr/share/zsh/vendor-completions
+        echo "Running test scripts involving zsh shell"
+        script -e -c 'zsh -i -c ./workspaces.sh'
+        script -e -c 'zsh -i -c ./utils.sh'
+        script -e -c 'zsh -i -c ./cloud_clients.sh'
     - name: Send Push Notification
       uses: fjogeleit/http-request-action@master
       if: always()
       with:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
-        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Workflow &quot;${{ github.workflow }}&quot; on branch ${{ github.ref }} finished with status ${{ needs.testing.result }}.", "value3": "<br>Triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
+        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Workflow &quot;${{ github.workflow }}&quot; on branch ${{ github.ref }} finished with status ${{ job.status }}.", "value3": "<br>Triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      if: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled != 'false') || failure() }}
+      #timeout-minutes: 30
+      with:
+        sudo: true  # default
+        limit-access-to-actor: true  # allow ssh access to keys loaded in GitHub

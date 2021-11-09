@@ -6,17 +6,17 @@
 
 ### variables ###
 
-folder="${HOME}/bin2"
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 ### script body ###
 
 # init environment
 source "$SCRIPT_DIR/setup_env.sh"
+echo "BIN2_PATH=${BIN2_PATH}"
 setArchAndPlatform
 welcome
-createDir "$folder"
-cd $folder
+createDir "$BIN2_PATH"
+cd "$BIN2_PATH"
 
 # packer
 printf "\n\nInstalling packer...\n"
@@ -45,8 +45,8 @@ downloadAndInstall $url hcloud
 
 # kubectl
 printf "\n\nInstalling kubectl...\n"
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${ARCH}/${ARCH_ALT}/kubectl"
-curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${ARCH}/${ARCH_ALT}/kubectl.sha256"
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${PLATFORM}/${ARCH_ALT}/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${PLATFORM}/${ARCH_ALT}/kubectl.sha256"
 if [ $(uname -s) = 'Darwin' ]; then alias sha256sum='shasum -a 256'; fi
 if [ "$(<kubectl.sha256)" = "$(sha256sum kubectl | awk '{print $1}')" ]; then
   chmod +x kubectl
@@ -59,16 +59,16 @@ printf "\n\nInstalling krew...\n"
   set -x; cd "$(mktemp -d)" &&
   OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
   ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
-  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" &&
-  tar zxvf krew.tar.gz &&
-  KREW=./krew-"${OS}_${ARCH}" &&
-  "$KREW" install krew
+  KREW="krew-${OS}_${ARCH}" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+  tar zxvf "${KREW}.tar.gz" &&
+  ./"${KREW}" install krew
 )
 
 # helm
 printf "\n\nInstalling helm...\n"
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-HELM_INSTALL_DIR="$HOME/bin2" bash ./get_helm.sh --no-sudo
+HELM_INSTALL_DIR="$BIN2_PATH" bash ./get_helm.sh --no-sudo
 rm -f get_helm.sh
 
 # kubectx + kubens
