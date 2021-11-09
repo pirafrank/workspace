@@ -95,10 +95,6 @@ RUN set -x \
   && echo "install rvm and ruby" \
   && zsh setup_rvm.sh ${RUBYVERSION}
 
-# install jekyll
-RUN set -x \
-  && zsh setup_jekyll.sh '4.2.0'
-
 # install rust and cargo
 RUN set -x \
   && echo "install rust and cargo" \
