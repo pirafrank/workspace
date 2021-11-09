@@ -134,7 +134,8 @@ jobs:
         context: .
         file: Dockerfile
         platforms: linux/amd64 #,linux/arm64
-        push: true
+        # push only if on branch 'main'
+        push: ${{ github.ref == 'refs/heads/main' }}
         tags: pirafrank/workspace:latest
         build-args: WORKSPACE_VERSION=${{ env.WORKSPACE_VERSION }}
     - name: Build and push bundle image
@@ -145,7 +146,8 @@ jobs:
         context: ./workspaces
         file: workspaces/Dockerfile_bundle.dockerfile
         platforms: linux/amd64
-        push: true
+        # push only if on branch 'main'
+        push: ${{ github.ref == 'refs/heads/main' }}
         tags: pirafrank/workspace:bundle,pirafrank/workspace:bundle-${{ steps.today.outputs.today }}
         build-args: |
           JAVAVERSION=${{ env.JAVAVERSION }}
