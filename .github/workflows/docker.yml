@@ -44,6 +44,10 @@ on:
       rubyversion:
         description: "Which Ruby version?"
         required: false
+      reference:
+        description: 'commit SHA or ref of branch or tag (e.g. refs/heads/NAME or refs/tags/NAME)'
+        required: false
+        default: ''
 
 jobs:
   dockerImagesBuild:
@@ -53,6 +57,8 @@ jobs:
       RUN_INFO: ''
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.inputs.reference }}
     - name: Print workdir
       run: pwd
     - name: Set run info
