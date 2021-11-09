@@ -52,8 +52,12 @@ chmod +x $folder/delta
 # ipinfo cli
 printf "\n\nInstalling ipinfo cli...\n"
 del ipinfo
-url=$(curl -sL https://api.github.com/repos/ipinfo/cli/releases/latest \
-  | grep http | grep -i "$PLATFORM" | cut -d':' -f 2,3 | cut -d'"' -f2 | grep 'tar.gz' | grep $ARCH_ALT)
-curl -L $url | tar xz
-mv ipinfo*amd64 ipinfo
+url=$(curl -sL https://api.github.com/repos/ipinfo/cli/releases \
+  | grep browser_download_url | grep 'download/ipinfo' | grep -i "$PLATFORM" \
+  | cut -d':' -f 2,3 | cut -d'"' -f2 | grep 'tar.gz' | grep $ARCH_ALT | sort -rV | head -n1)
+curl -L $url -o ipinfo.tar.gz
+filename="$(tar -tf ipinfo.tar.gz | grep ipinfo | grep $PLATFORM)"
+tar -xzf ipinfo.tar.gz
+mv "$filename" ipinfo
 chmod +x ipinfo
+rm -f ipinfo.tar.gz
