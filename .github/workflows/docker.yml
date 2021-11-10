@@ -14,7 +14,7 @@ on:
       - base/*.zsh
       - setups/*.sh
       - setups/*.zsh
-      - workspaces/*.dockerfile
+      - workspaces/Dockerfile_bundle.dockerfile
       - workspaces/*.sh
       - workspaces/*.zsh
   workflow_dispatch:
@@ -85,10 +85,12 @@ jobs:
       run: |
         cat workspace_versions.sh
         source workspace_versions.sh
-        WORKSPACE_VERSION="$(echo ${{ steps.today.outputs.today }}.${{ steps.extract_branch_name.outputs.branch }})"
+        WORKSPACE_VERSION="$(echo ${{ steps.today.outputs.today }})"
         # check GH Action inputs
         if [ ! -z "${{ github.event.inputs.workspace_version }}" ]; then
           WORKSPACE_VERSION="${{ github.event.inputs.workspace_version }}"; fi
+        BASE_IMAGE_TAGS="pirafrank/workspace:latest,pirafrank/workspace:$WORKSPACE_VERSION"
+        BUNDLE_IMAGE_TAGS="pirafrank/workspace:bundle,pirafrank/workspace:${WORKSPACE_VERSION}-bundle"
         if [ ! -z "${{ github.event.inputs.javaversion }}" ]; then
           JAVAVERSION="${{ github.event.inputs.javaversion }}"; fi
         if [ ! -z "${{ github.event.inputs.javavendor }}" ]; then
@@ -104,6 +106,8 @@ jobs:
         # print versions set
         set | grep -E 'VERSION|VENDOR'
         # set values in GH Action env. context
+        echo "BASE_IMAGE_TAGS=$BASE_IMAGE_TAGS" >> $GITHUB_ENV
+        echo "BUNDLE_IMAGE_TAGS=$BUNDLE_IMAGE_TAGS" >> $GITHUB_ENV
         echo "WORKSPACE_VERSION=$WORKSPACE_VERSION" >> $GITHUB_ENV
         echo "JAVAVERSION=$JAVAVERSION" >> $GITHUB_ENV
         echo "JAVAVENDOR=$JAVAVENDOR" >> $GITHUB_ENV
@@ -130,7 +134,7 @@ jobs:
         platforms: linux/amd64 #,linux/arm64
         # push only if on branch 'main'
         push: ${{ github.ref == 'refs/heads/main' }}
-        tags: pirafrank/workspace:latest
+        tags: ${{ env.BASE_IMAGE_TAGS }}
         build-args: WORKSPACE_VERSION=${{ env.WORKSPACE_VERSION }}
     - name: Build and push bundle image
       if: ${{ (github.event.inputs.build_target != 'base') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
@@ -142,7 +146,7 @@ jobs:
         platforms: linux/amd64
         # push only if on branch 'main'
         push: ${{ github.ref == 'refs/heads/main' }}
-        tags: pirafrank/workspace:bundle,pirafrank/workspace:bundle-${{ steps.today.outputs.today }}
+        tags: ${{ env.BUNDLE_IMAGE_TAGS }}
         build-args: |
           JAVAVERSION=${{ env.JAVAVERSION }}
           JAVAVENDOR=${{ env.JAVAVENDOR }}
