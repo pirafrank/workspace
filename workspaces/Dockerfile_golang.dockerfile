@@ -1,4 +1,5 @@
-FROM pirafrank/workspace:latest
+ARG BASE_IMAGE_VERSION=latest
+FROM pirafrank/workspace:${BASE_IMAGE_VERSION}
 
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive

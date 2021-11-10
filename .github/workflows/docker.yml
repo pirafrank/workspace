@@ -147,7 +147,9 @@ jobs:
         # push only if on branch 'main'
         push: ${{ github.ref == 'refs/heads/main' }}
         tags: ${{ env.BUNDLE_IMAGE_TAGS }}
+        # lines with empty values will be skipped
         build-args: |
+          BASE_IMAGE_VERSION=${{ github.event.inputs.workspace_version }}
           JAVAVERSION=${{ env.JAVAVERSION }}
           JAVAVENDOR=${{ env.JAVAVENDOR }}
           NODEVERSION=${{ env.NODEVERSION }}
