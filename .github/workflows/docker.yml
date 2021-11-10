@@ -90,7 +90,11 @@ jobs:
         WORKSPACE_VERSION="$(echo ${{ steps.today.outputs.today }})"
         # check GH Action inputs
         if [ ! -z "${{ github.event.inputs.workspace_version }}" ]; then
-          WORKSPACE_VERSION="${{ github.event.inputs.workspace_version }}"; fi
+          WORKSPACE_VERSION="${{ github.event.inputs.workspace_version }}";
+          BASE_IMAGE_VERSION="$WORKSPACE_VERSION"
+        else
+          BASE_IMAGE_VERSION='latest'
+        fi
         if [[ ${GITHUB_REF} == refs/tags/* ]]; then
           WORKSPACE_VERSION="${GITHUB_REF##*/}"
         fi
@@ -108,9 +112,9 @@ jobs:
           PYTHON3VERSION="${{ github.event.inputs.python3version }}"; fi
         if [ ! -z "${{ github.event.inputs.rubyversion }}" ]; then
           RUBYVERSION="${{ github.event.inputs.rubyversion }}"; fi
-        # print versions set
-        set | grep -E 'VERSION|VENDOR'
         # set values in GH Action env. context
+        printf "\n\nSet values in GH Action env context\n"
+        echo "BASE_IMAGE_VERSION=$BASE_IMAGE_VERSION" >> $GITHUB_ENV
         echo "BASE_IMAGE_TAGS=$BASE_IMAGE_TAGS" >> $GITHUB_ENV
         echo "BUNDLE_IMAGE_TAGS=$BUNDLE_IMAGE_TAGS" >> $GITHUB_ENV
         echo "WORKSPACE_VERSION=$WORKSPACE_VERSION" >> $GITHUB_ENV
@@ -120,6 +124,9 @@ jobs:
         echo "GOLANGVERSION=$GOLANGVERSION" >> $GITHUB_ENV
         echo "PYTHON3VERSION=$PYTHON3VERSION" >> $GITHUB_ENV
         echo "RUBYVERSION=$RUBYVERSION" >> $GITHUB_ENV
+        # printing env added to GITHUB_ENV, hide the rest
+        printf "\n\nPrinting env added to GITHUB_ENV env file (${GITHUB_ENV})\n"
+        cat $GITHUB_ENV | tail -n10
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
     - name: Set up Docker Buildx
@@ -179,7 +186,7 @@ jobs:
         tags: ${{ env.BUNDLE_IMAGE_TAGS }}
         # lines with empty values will be skipped
         build-args: |
-          BASE_IMAGE_VERSION=${{ github.event.inputs.workspace_version }}
+          BASE_IMAGE_VERSION=${{ env.BASE_IMAGE_VERSION }}
           JAVAVERSION=${{ env.JAVAVERSION }}
           JAVAVENDOR=${{ env.JAVAVENDOR }}
           NODEVERSION=${{ env.NODEVERSION }}
