@@ -1,7 +1,5 @@
 #!/bin/bash
 
-WORKSPACE_NAME='workspace'
-
 if [[ -z "$1" ]]; then
     echo "Please specify an image version to run."
     echo "You can optionally add parameters to 'docker run' as \$2."
@@ -9,6 +7,8 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
+VERSION="$1"
+WORKSPACE_NAME="workspace-${VERSION}"
 PARAMS="$2"
 
 # add a default name if none provided
