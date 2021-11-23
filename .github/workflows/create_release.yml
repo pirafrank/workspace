@@ -1,0 +1,70 @@
+name: 'Create release'
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+
+jobs:
+  checks:
+    name: Check latest tag and release
+    runs-on: ubuntu-20.04
+    steps:
+      - name: "Get latest tag without a release"
+        id: 'last_tag_without_release'
+        shell: bash
+        run: |
+          LATEST_TAG=$(curl -sL https://api.github.com/repos/pirafrank/workspace/tags | \
+            jq -r '.[].name' | sort -V | tail -n1)
+          LATEST_RELEASE=$(curl -sL https://api.github.com/repos/pirafrank/workspace/releases | \
+            jq -r '.[].tag_name' | sort -V | tail -n1)
+          echo "Last pushed tag: ${LATEST_TAG}"
+          echo "Last release: ${LATEST_RELEASE}"
+          if [ ${LATEST_TAG} = ${LATEST_RELEASE} ]; then
+            printf "\n\nLatest pushed tag has already been released. Nothing to do\n\n"
+            echo '::set-output name=SKIP_ALL::true'
+            exit 0
+          fi
+          echo '::set-output name=SKIP_ALL::false'
+          echo "Version mismatch: creating release for $LATEST_TAG"
+          echo "TAG_NAME=${LATEST_TAG}" >> $GITHUB_ENV
+  release:
+    name: Create Release
+    runs-on: ubuntu-20.04
+    needs: [checks]
+    if: contains(env.SKIP_ALL, 'false')
+    # set additional permissions to GITHUB_TOKEN
+    permissions:
+      contents: write
+    steps:
+      # checking out to read the files to attach to release
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        id: release_creation
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            LICENSE.md
+          # fail if any of the files to attach is not found
+          fail_on_unmatched_files: true
+          tag_name: ${{ env.TAG_NAME }}
+          # set the title of the release
+          name: ${{ env.TAG_NAME }}
+          prerelease: false
+          body: ""
+  sendNotification:
+    name: Send Notification
+    runs-on: ubuntu-20.04
+    needs: [release]
+    if: contains(env.SKIP_ALL, 'false')
+    steps:
+    - name: Send Push Notification
+      uses: fjogeleit/http-request-action@master
+      if: always()
+      with:
+        url: ${{ secrets.NOTIFICATION_SOCIAL_URI }}
+        method: 'POST'
+        data: '{ "value1": "${{ steps.release_creation.outputs.url }}", "value2": "Hi, I have just published version ${{ env.TAG_NAME }} of my workspace side project.", "value3": "Check it out!" }'
