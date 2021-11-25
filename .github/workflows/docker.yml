@@ -125,6 +125,7 @@ jobs:
         # printing env added to GITHUB_ENV, hide the rest
         printf "\n\nPrinting env added to GITHUB_ENV env file (${GITHUB_ENV})\n"
         cat $GITHUB_ENV | tail -n10
+    # preparing environment for docker build
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
     - name: Set up Docker Buildx
@@ -137,11 +138,48 @@ jobs:
         key: ${{ runner.os }}-buildx-base-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-base
+    # prepare base image tags and labels
+    - name: Docker metadata for base image
+      id: meta_base_image
+      uses: docker/metadata-action@v3
+      with:
+        github-token: ${{ github.token }}
+        images: |
+          ${{ github.repository }}
+          quay.io/${{ github.repository }}
+        tags: |
+          ${{ env.WORKSPACE_VERSION }}
+          latest
+          type=match,pattern=\d.\d.\d
+        flavor: |
+          latest=false
+    # prepare bundle image tags and labels
+    - name: Docker metadata for bundle image
+      id: meta_bundle_image
+      uses: docker/metadata-action@v3
+      with:
+        github-token: ${{ github.token }}
+        images: |
+          ${{ github.repository }}
+          quay.io/${{ github.repository }}
+        tags: |
+          bundle-${{ env.WORKSPACE_VERSION }}
+          bundle
+          type=match,pattern=\d.\d.\d,prefix=bundle-
+        flavor: |
+          latest=false
+    # login to registries
     - name: Login to DockerHub
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Login to Quay.io
+      uses: docker/login-action@v1
+      with:
+        registry: quay.io
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_ENCRYPTED_PASSWORD }}
     - name: Build and push base image
       #if: ${{ (github.event.inputs.build_target == 'base') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
       id: docker_build_base_image
@@ -152,7 +190,7 @@ jobs:
         platforms: linux/amd64 #,linux/arm64
         # push only if on branch 'main'
         push: ${{ (github.ref == 'refs/heads/main') && (github.event_name != 'pull_request') }}
-        tags: ${{ env.BASE_IMAGE_TAGS }}
+        tags: ${{ steps.meta_base_image.outputs.tags }}
         build-args: WORKSPACE_VERSION=${{ env.WORKSPACE_VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache-base
         cache-to: type=local,dest=/tmp/.buildx-cache-new-base
@@ -181,7 +219,7 @@ jobs:
         platforms: linux/amd64
         # push only if on branch 'main'
         push: ${{ (github.ref == 'refs/heads/main') && (github.event_name != 'pull_request') }}
-        tags: ${{ env.BUNDLE_IMAGE_TAGS }}
+        tags: ${{ steps.meta_bundle_image.outputs.tags }}
         # lines with empty values will be skipped
         build-args: |
           BASE_IMAGE_VERSION=${{ env.BASE_IMAGE_VERSION }}
