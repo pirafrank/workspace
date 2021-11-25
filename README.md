@@ -57,7 +57,7 @@ The aim is to create a disposable development environment taking advantage of Do
 - `pirafrank/workspace`: base image on which the others are based on. It contains dotfiles, various CLI utils and shell setup
 - `pirafrank/workspace:bundle`: bundle of the ones below. Use `workspace_version` inside the container to know about what's bundled.
 
-Also available:
+Dockerfiles available to build:
 
 - `pirafrank/workspace:java`: Java + `mvn`
 - `pirafrank/workspace:node`: `nvm` + node.js
