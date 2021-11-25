@@ -151,7 +151,7 @@ jobs:
         file: Dockerfile
         platforms: linux/amd64 #,linux/arm64
         # push only if on branch 'main'
-        push: ${{ github.ref == 'refs/heads/main' }}
+        push: ${{ (github.ref == 'refs/heads/main') && (github.event_name != 'pull_request') }}
         tags: ${{ env.BASE_IMAGE_TAGS }}
         build-args: WORKSPACE_VERSION=${{ env.WORKSPACE_VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache-base
@@ -180,7 +180,7 @@ jobs:
         file: workspaces/Dockerfile_bundle.dockerfile
         platforms: linux/amd64
         # push only if on branch 'main'
-        push: ${{ github.ref == 'refs/heads/main' }}
+        push: ${{ (github.ref == 'refs/heads/main') && (github.event_name != 'pull_request') }}
         tags: ${{ env.BUNDLE_IMAGE_TAGS }}
         # lines with empty values will be skipped
         build-args: |
