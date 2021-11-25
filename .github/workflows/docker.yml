@@ -97,7 +97,7 @@ jobs:
           WORKSPACE_VERSION="${GITHUB_REF##*/}"
         fi
         BASE_IMAGE_TAGS="pirafrank/workspace:latest,pirafrank/workspace:$WORKSPACE_VERSION"
-        BUNDLE_IMAGE_TAGS="pirafrank/workspace:bundle,pirafrank/workspace:${WORKSPACE_VERSION}-bundle"
+        BUNDLE_IMAGE_TAGS="pirafrank/workspace:bundle,pirafrank/workspace:bundle-${WORKSPACE_VERSION}"
         if [ ! -z "${{ github.event.inputs.javaversion }}" ]; then
           JAVAVERSION="${{ github.event.inputs.javaversion }}"; fi
         if [ ! -z "${{ github.event.inputs.javavendor }}" ]; then
