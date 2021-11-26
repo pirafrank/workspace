@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       SKIP_ALL: ${{ steps.check_if_tag_is_latest.outputs.SKIP_ALL }}
+      SECOND_TO_LAST_TAG: ${{ steps.check_if_tag_is_latest.outputs.SECOND_TO_LAST_TAG }}
+      TAG_NAME: ${{ steps.check_if_tag_is_latest.outputs.TAG_NAME }}
     steps:
       - name: Check if tag is latest
         id: check_if_tag_is_latest
@@ -21,6 +23,8 @@ jobs:
             jq -r '.[].name' | sort -V | tail -n1)
           LATEST_RELEASE=$(curl -sL https://api.github.com/repos/pirafrank/workspace/releases | \
             jq -r '.[].tag_name' | sort -V | tail -n1)
+          SECOND_TO_LAST_TAG=$(curl -sL https://api.github.com/repos/pirafrank/workspace/tags | \
+            jq -r '.[].name' | sort -V | tail -n2 | head -n1)
 
           echo "Current pushed tag: ${GITHUB_REF##*/}"
           echo "Last pushed tag: ${LATEST_TAG}"
@@ -38,9 +42,11 @@ jobs:
             exit 0
           fi
 
-          echo '::set-output name=SKIP_ALL::false'
           echo "Version mismatch: creating release for $LATEST_TAG"
-          echo "TAG_NAME=${LATEST_TAG}" >> $GITHUB_ENV
+
+          echo '::set-output name=SKIP_ALL::false'
+          echo '::set-output name=SECOND_TO_LAST_TAG::${SECOND_TO_LAST_TAG}'
+          echo '::set-output name=TAG_NAME::${LATEST_TAG}'
   retag:
     name: Retag Docker images
     runs-on: ubuntu-20.04
@@ -108,7 +114,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-20.04
-    needs: [checks]
+    needs: [checks, retag]
     if: contains(needs.checks.outputs.SKIP_ALL, 'false')
     # set additional permissions to GITHUB_TOKEN
     permissions:
@@ -125,17 +131,17 @@ jobs:
           files: |
             LICENSE.md
           # fail if any of the files to attach is not found
-          fail_on_unmatched_files: true
-          tag_name: ${{ env.TAG_NAME }}
+          fail_on_unmatched_files: false
+          tag_name: ${{ needs.checks.outputs.TAG_NAME }}
           # set the title of the release
-          name: ${{ env.TAG_NAME }}
+          name: ${{ needs.checks.outputs.TAG_NAME }}
           prerelease: false
-          body: ""
+          body: "Full Changelog: https://github.com/${{ github.repository }}/compare/${{ needs.checks.outputs.SECOND_TO_LAST_TAG }}...${{ needs.checks.outputs.TAG_NAME }}"
   sendNotification:
     name: Send Notification
     runs-on: ubuntu-20.04
     needs: [release]
-    if: contains(env.SKIP_ALL, 'false')
+    if: contains(needs.checks.outputs.SKIP_ALL, 'false')
     steps:
     - name: Send Push Notification
       uses: fjogeleit/http-request-action@master
@@ -143,4 +149,4 @@ jobs:
       with:
         url: ${{ secrets.NOTIFICATION_SOCIAL_URI }}
         method: 'POST'
-        data: '{ "value1": "${{ steps.release_creation.outputs.url }}", "value2": "Hi, I have just published version ${{ env.TAG_NAME }} of my workspace side project.", "value3": "Check it out!" }'
+        data: '{ "value1": "${{ steps.release_creation.outputs.url }}", "value2": "Hi, I have just published version ${{ needs.checks.outputs.TAG_NAME }} of my workspace side project.", "value3": "Check it out!" }'
