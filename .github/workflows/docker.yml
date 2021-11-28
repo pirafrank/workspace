@@ -79,13 +79,17 @@ jobs:
       id: extract_branch_name
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+    - name: Extract short commit hash
+      id: extract_short_hash
+      shell: bash
+      run:  echo "##[set-output name=currentcommit;]$(git rev-parse --short HEAD)"
     - name: "Setup of docker build ARGs"
       id: 'docker_build_args_setup'
       shell: bash
       run: |
         cat workspace_versions.sh
         source workspace_versions.sh
-        WORKSPACE_VERSION="$(echo ${{ steps.today.outputs.today }})"
+        WORKSPACE_VERSION="$(echo ${{ steps.today.outputs.today }}+${{ steps.extract_short_hash.outputs.currentcommit }})"
         # check GH Action inputs
         if [ ! -z "${{ github.event.inputs.workspace_version }}" ]; then
           WORKSPACE_VERSION="${{ github.event.inputs.workspace_version }}";
@@ -93,9 +97,7 @@ jobs:
         else
           BASE_IMAGE_VERSION='latest'
         fi
-        if [[ ${GITHUB_REF} == refs/tags/* ]]; then
-          WORKSPACE_VERSION="${GITHUB_REF##*/}"
-        fi
+        #if [[ ${GITHUB_REF} == refs/tags/* ]]; then WORKSPACE_VERSION="${GITHUB_REF##*/}"; fi
         BASE_IMAGE_TAGS="pirafrank/workspace:latest,pirafrank/workspace:$WORKSPACE_VERSION"
         BUNDLE_IMAGE_TAGS="pirafrank/workspace:bundle,pirafrank/workspace:bundle-${WORKSPACE_VERSION}"
         if [ ! -z "${{ github.event.inputs.javaversion }}" ]; then
@@ -238,6 +240,26 @@ jobs:
       run: |
         rm -rf /tmp/.buildx-cache-bundle
         mv /tmp/.buildx-cache-new-bundle /tmp/.buildx-cache-bundle
+    - uses: mukunku/tag-exists-action@v1.0.0
+      name: Check if tag exists
+      id: checkTag
+      with:
+        tag: ${{ env.WORKSPACE_VERSION }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create a lightweight git tag
+      uses: actions/github-script@v3
+      # weird 'if' syntax due to issue: https://github.com/actions/runner/issues/1173
+      if: (steps.checkTag.outputs.exists != format('{0}', 'true')) && (github.ref == format('refs/heads/{0}', 'main'))
+      with:
+        github-token: ${{ github.token }}
+        script: |
+          github.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: "refs/tags/${{ env.WORKSPACE_VERSION }}",
+            sha: context.sha
+          })
   sendNotification:
     name: Send Notification
     runs-on: ubuntu-20.04
