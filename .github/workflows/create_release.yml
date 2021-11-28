@@ -1,0 +1,154 @@
+name: 'Create release'
+
+on:
+  push:
+    tags:
+      - '[1-9]+.[0-9]+.[0-9]'
+  workflow_dispatch:
+
+jobs:
+  checks:
+    name: Check latest tag and release
+    runs-on: ubuntu-20.04
+    outputs:
+      SKIP_ALL: ${{ steps.check_if_tag_is_latest.outputs.SKIP_ALL }}
+      SECOND_TO_LAST_TAG: ${{ steps.check_if_tag_is_latest.outputs.SECOND_TO_LAST_TAG }}
+      TAG_NAME: ${{ steps.check_if_tag_is_latest.outputs.TAG_NAME }}
+    steps:
+      - name: Check if tag is latest
+        id: check_if_tag_is_latest
+        shell: bash
+        run: |
+          LATEST_TAG=$(curl -sL https://api.github.com/repos/pirafrank/workspace/tags | \
+            jq -r '.[].name' | grep -E '[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n1)
+          LATEST_RELEASE=$(curl -sL https://api.github.com/repos/pirafrank/workspace/releases | \
+            jq -r '.[].tag_name' | grep -E '[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n1)
+          SECOND_TO_LAST_TAG=$(curl -sL https://api.github.com/repos/pirafrank/workspace/tags | \
+            jq -r '.[].name' | grep -E '[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n2 | head -n1)
+
+          echo "Current pushed tag: ${GITHUB_REF##*/}"
+          echo "Last pushed tag: ${LATEST_TAG}"
+          echo "Last release: ${LATEST_RELEASE}"
+
+          if [ ${LATEST_TAG} != ${GITHUB_REF##*/} ]; then
+            printf "\n\nPushed tag is not the newest in semantic versioning. Nothing to do\n\n"
+            echo "::set-output name=SKIP_ALL::true"
+            exit 0
+          fi
+
+          if [ ${LATEST_TAG} = ${LATEST_RELEASE} ]; then
+            printf "\n\nLatest pushed tag has already been released. Nothing to do\n\n"
+            echo "::set-output name=SKIP_ALL::true"
+            exit 0
+          fi
+
+          echo "Version mismatch: creating release for $LATEST_TAG"
+
+          echo "SECOND_TO_LAST_TAG: $SECOND_TO_LAST_TAG"
+
+          echo "::set-output name=SKIP_ALL::false"
+          echo "::set-output name=SECOND_TO_LAST_TAG::${SECOND_TO_LAST_TAG}"
+          echo "::set-output name=TAG_NAME::${LATEST_TAG}"
+  retag:
+    name: Retag Docker images
+    runs-on: ubuntu-20.04
+    needs: [checks]
+    if: contains(needs.checks.outputs.SKIP_ALL, 'false')
+    steps:
+    - name: Extract git tag
+      shell: bash
+      run: |
+        if [[ ${GITHUB_REF} == refs/tags/* ]]; then
+          WORKSPACE_VERSION="${GITHUB_REF##*/}"
+        fi
+        echo "WORKSPACE_VERSION=$WORKSPACE_VERSION" >> $GITHUB_ENV
+    # prepare base image tags and labels
+    - name: Docker metadata for base image
+      id: meta_base_image
+      uses: docker/metadata-action@v3
+      with:
+        github-token: ${{ github.token }}
+        images: |
+          ${{ github.repository }}
+          quay.io/${{ github.repository }}
+        tags: |
+          ${{ env.WORKSPACE_VERSION }}
+        flavor: |
+          latest=false
+    # prepare bundle image tags and labels
+    - name: Docker metadata for bundle image
+      id: meta_bundle_image
+      uses: docker/metadata-action@v3
+      with:
+        github-token: ${{ github.token }}
+        images: |
+          ${{ github.repository }}
+          quay.io/${{ github.repository }}
+        tags: |
+          bundle-${{ env.WORKSPACE_VERSION }}
+        flavor: |
+          latest=false
+    # login to registries
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Login to Quay.io
+      uses: docker/login-action@v1
+      with:
+        registry: quay.io
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_ENCRYPTED_PASSWORD }}
+    # Push images
+    - name: Push base image with git tag version
+      uses: akhilerm/tag-push-action@v2.0.0
+      with:
+        src: ${{ github.repository }}:latest
+        dst: |
+          ${{ steps.meta_base_image.outputs.tags }}
+    - name: Push bundle image with git tag version
+      uses: akhilerm/tag-push-action@v2.0.0
+      with:
+        src: ${{ github.repository }}:bundle
+        dst: |
+          ${{ steps.meta_bundle_image.outputs.tags }}
+  release:
+    name: Create Release
+    runs-on: ubuntu-20.04
+    needs: [checks, retag]
+    if: contains(needs.checks.outputs.SKIP_ALL, 'false')
+    # set additional permissions to GITHUB_TOKEN
+    permissions:
+      contents: write
+    steps:
+      # checking out to read the files to attach to release
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        id: release_creation
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            LICENSE.md
+          # fail if any of the files to attach is not found
+          fail_on_unmatched_files: false
+          tag_name: ${{ needs.checks.outputs.TAG_NAME }}
+          # set the title of the release
+          name: ${{ needs.checks.outputs.TAG_NAME }}
+          prerelease: false
+          body: "Full Changelog: https://github.com/${{ github.repository }}/compare/${{ needs.checks.outputs.SECOND_TO_LAST_TAG }}...${{ needs.checks.outputs.TAG_NAME }}"
+  sendNotification:
+    name: Send Notification
+    runs-on: ubuntu-20.04
+    needs: [release]
+    if: contains(needs.checks.outputs.SKIP_ALL, 'false')
+    steps:
+    - name: Send Push Notification
+      uses: fjogeleit/http-request-action@master
+      if: always()
+      with:
+        url: ${{ secrets.NOTIFICATION_SOCIAL_URI }}
+        method: 'POST'
+        data: '{ "value1": "${{ steps.release_creation.outputs.url }}", "value2": "Hi, I have just published version ${{ needs.checks.outputs.TAG_NAME }} of my workspace side project.", "value3": "Check it out!" }'
