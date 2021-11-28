@@ -42,6 +42,14 @@ I went this way to have the chance to further evolve the workspace project away 
 - support for different env versions
 - ...and more.
 
+## Versioning
+
+The following apply:
+
+- Docker image builds are made from `main` branch only. Builds are triggered only if changes are made to source files (e.g. it skips changes to pipeline files, README, etc.).
+- Only after a successful pipeline run, builds are pushed to docker registries and lightweight tags are added to the repository. Those tags have format: `YYYYMMDD+CommitHash`.
+- After a meaniful set of changes are added to repository, I tag one of those lightweight-tagged commits with a signed annotated one using semantic versioning format.
+
 ## Usage
 
 Choose one of the options below:
