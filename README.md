@@ -47,7 +47,7 @@ I went this way to have the chance to further evolve the workspace project away 
 The following apply:
 
 - Docker image builds are made from `main` branch only. Builds are triggered only if changes are made to source files (e.g. it skips changes to pipeline files, README, etc.).
-- Only after a successful pipeline run, builds are pushed to docker registries and lightweight tags are added to the repository. Those tags have format: `YYYYMMDD+CommitHash`.
+- Only after a successful pipeline run, builds are pushed to docker registries and lightweight tags are added to the repository. Those tags have format: `YYYYMMDD.CommitHash`.
 - After a meaniful set of changes are added to repository, I tag one of those lightweight-tagged commits with a signed annotated one using semantic versioning format.
 - By the way, although versioning plays its part in pulling a specific version, `latest` and `bundle` tags are meant to be used as the latest stable images.
 

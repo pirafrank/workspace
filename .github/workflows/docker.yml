@@ -89,7 +89,7 @@ jobs:
       run: |
         cat workspace_versions.sh
         source workspace_versions.sh
-        WORKSPACE_VERSION="$(echo ${{ steps.today.outputs.today }}+${{ steps.extract_short_hash.outputs.currentcommit }})"
+        WORKSPACE_VERSION="$(echo ${{ steps.today.outputs.today }}.${{ steps.extract_short_hash.outputs.currentcommit }})"
         # check GH Action inputs
         if [ ! -z "${{ github.event.inputs.workspace_version }}" ]; then
           WORKSPACE_VERSION="${{ github.event.inputs.workspace_version }}";

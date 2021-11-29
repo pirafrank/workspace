@@ -17,7 +17,7 @@ jobs:
       SECOND_TO_LAST_TAG: ${{ steps.check_if_tag_is_latest.outputs.SECOND_TO_LAST_TAG }}
       # TAG_NAME is the semver tag we need to create a release for
       TAG_NAME: ${{ steps.check_if_tag_is_latest.outputs.TAG_NAME }}
-      # git tag from continuous integration (e.g. YYYYMMDD+commithash)
+      # git tag from continuous integration (e.g. YYYYMMDD.commithash)
       DATE_TAG: ${{ steps.check_if_tag_is_latest.outputs.DATE_TAG }}
     steps:
       - name: Check if tag is latest
