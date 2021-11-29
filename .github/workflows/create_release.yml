@@ -11,9 +11,14 @@ jobs:
     name: Check latest tag and release
     runs-on: ubuntu-20.04
     outputs:
+      # flag to decide if we need to skip all other jobs
       SKIP_ALL: ${{ steps.check_if_tag_is_latest.outputs.SKIP_ALL }}
+      # SECOND_TO_LAST_TAG is the second to last tag pushed to repo
       SECOND_TO_LAST_TAG: ${{ steps.check_if_tag_is_latest.outputs.SECOND_TO_LAST_TAG }}
+      # TAG_NAME is the semver tag we need to create a release for
       TAG_NAME: ${{ steps.check_if_tag_is_latest.outputs.TAG_NAME }}
+      # git tag from continuous integration (e.g. YYYYMMDD+commithash)
+      DATE_TAG: ${{ steps.check_if_tag_is_latest.outputs.DATE_TAG }}
     steps:
       - name: Check if tag is latest
         id: check_if_tag_is_latest
@@ -46,9 +51,14 @@ jobs:
 
           echo "SECOND_TO_LAST_TAG: $SECOND_TO_LAST_TAG"
 
+          # get date_tag for given commit
+          DATE_TAG=$(git tag --points-at ${GITHUB_REF##*/} | grep -E '[0-9]{8}' | head -n1)
+          echo "DATE_TAG: $DATE_TAG"
+
           echo "::set-output name=SKIP_ALL::false"
           echo "::set-output name=SECOND_TO_LAST_TAG::${SECOND_TO_LAST_TAG}"
           echo "::set-output name=TAG_NAME::${LATEST_TAG}"
+          echo "::set-output name=DATE_TAG::${DATE_TAG}"
   retag:
     name: Retag Docker images
     runs-on: ubuntu-20.04
@@ -104,13 +114,13 @@ jobs:
     - name: Push base image with git tag version
       uses: akhilerm/tag-push-action@v2.0.0
       with:
-        src: ${{ github.repository }}:latest
+        src: ${{ github.repository }}:${{ needs.checks.outputs.DATE_TAG }}
         dst: |
           ${{ steps.meta_base_image.outputs.tags }}
     - name: Push bundle image with git tag version
       uses: akhilerm/tag-push-action@v2.0.0
       with:
-        src: ${{ github.repository }}:bundle
+        src: ${{ github.repository }}:bundle-${{ needs.checks.outputs.DATE_TAG }}
         dst: |
           ${{ steps.meta_bundle_image.outputs.tags }}
   release:
