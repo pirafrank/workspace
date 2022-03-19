@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20210325
+FROM ubuntu:latest
 
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
