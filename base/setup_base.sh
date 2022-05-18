@@ -57,6 +57,10 @@ echo "installing apt-utils" \
     libxml2-utils \
     fd-find
 
+# because of potential conflict on dummy files if installed after batcat
+# being both developed in Rust. This issue it's just an Ubuntu 20.04 thing.
+apt-get install -y ripgrep -o Dpkg::Options::="--force-overwrite"
+
 echo "getting newer git and clvv/fasd..." \
   && apt-key adv --recv-keys --keyserver keyserver.ubuntu.com A1715D88E1DF1F24 \
   && add-apt-repository ppa:git-core/ppa -y \
