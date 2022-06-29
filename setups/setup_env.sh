@@ -71,3 +71,11 @@ function createDir {
   # it should've been created in prev script
   if [ ! -d $folder ]; then mkdir -p $folder; fi
 }
+
+function init {
+  echo "BIN2_PATH=${BIN2_PATH}"
+  setArchAndPlatform
+  welcome
+  createDir "${BIN2_PATH}"
+  cd "${BIN2_PATH}"
+}
