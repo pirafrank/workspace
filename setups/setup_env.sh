@@ -36,7 +36,8 @@ function downloadAndInstall {
   url="$1"
   name="$2"
   if [ ! -z $url ]; then
-    del $name
+    del "${BIN2_PATH}/${name}"
+    cd /tmp
     if [ ! -z $(echo $url | grep 'tar.gz') ]; then
       # it's tar.gzipped
       curl -L $url | tar xz
@@ -50,6 +51,8 @@ function downloadAndInstall {
       curl -o ./$name -L $url
     fi
     chmod +x $name
+    mv "${name}" "${BIN2_PATH}/${name}"
+    cd -
   else
     echo "Unsupported OS. Skipping $name installation..."
   fi
