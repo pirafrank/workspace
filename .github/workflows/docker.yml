@@ -10,8 +10,6 @@ on:
       - install.sh
       - pre_start.zsh
       - workspace_versions.sh
-      - base/*.sh
-      - base/*.zsh
       - setups/*.sh
       - setups/*.zsh
       - workspaces/Dockerfile_bundle.dockerfile

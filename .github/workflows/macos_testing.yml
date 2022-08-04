@@ -5,8 +5,8 @@ on:
   #  branches:
   #    - main
   #  paths:
-  #    - base/setup_fzf.sh
-  #    - base/setup_zprezto.zsh
+  #    - setups/setup_fzf.sh
+  #    - setups/setup_zprezto.zsh
   #    - workspaces/*.sh
   #    - setups/setup_env.sh
   #    - setups/setup_cloud_clients.sh

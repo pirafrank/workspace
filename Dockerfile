@@ -8,9 +8,9 @@ ARG WORKSPACE_VERSION
 ARG UBUNTURELEASE='focal'
 
 # copy base setup scripts
-COPY base/setup_fzf.sh \
-  base/setup_zprezto.zsh \
-  base/setup_base.sh /tmp/
+COPY setups/setup_fzf.sh \
+  setups/setup_zprezto.zsh \
+  setups/setup_base.sh /tmp/
 
 # set debug mode and install dev and essentials packages
 RUN set -x \
@@ -37,8 +37,7 @@ WORKDIR /home/work
 
 # copy setup scripts for different envs
 # into WORKDIR
-COPY setups/setup_docker_cli.sh \
-  setups/setup_env.sh \
+COPY setups/setup_env.sh \
   setups/setup_utils.sh \
   workspaces/setup_nvm.sh \
   workspaces/setup_pyenv.sh \

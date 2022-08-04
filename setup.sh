@@ -45,7 +45,7 @@ cat workspace_versions.sh
 cd
 
 # base install
-sudo bash "$SCRIPT_DIR/base/setup_base.sh"
+sudo bash "$SCRIPT_DIR/setups/setup_base.sh"
 
 echo "cleaning up" \
   && sudo apt-get autoremove -y && sudo apt-get clean -y
@@ -66,9 +66,9 @@ fi
 
 echo "install fzf" \
   && cd ${WORKSPACE_DIR} \
-  && zsh base/setup_fzf.sh \
+  && zsh setups/setup_fzf.sh \
   && echo "install zprezto" \
-  && zsh base/setup_zprezto.zsh
+  && zsh setups/setup_zprezto.zsh
 
 # dotfiles setup
 echo "installing dotfiles" \
