@@ -19,10 +19,7 @@ RUN set -x \
     autoconf \
     automake \
     bison \
-    build-essential \
-    curl \
     gawk \
-    git \
     libbz2-dev \
     libffi-dev \
     libgdbm-dev \
@@ -40,9 +37,6 @@ RUN set -x \
     python-openssl \
     sqlite3 \
     tk-dev \
-    wget \
-    xz-utils \
-    zlib1g-dev \
   && apt-get autoremove -y && apt-get clean -y
 
 # switch to user
