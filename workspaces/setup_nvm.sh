@@ -15,3 +15,7 @@ export NVM_DIR="$HOME/.nvm"
 
 nvm install $NODEVERSION \
 nvm alias default $NODEVERSION
+
+# upgrading npm to latest stable
+nvm use default
+npm install -g npm
