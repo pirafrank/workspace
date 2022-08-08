@@ -82,10 +82,7 @@ echo "installing dependencies to compile python shims and rubies" \
     autoconf \
     automake \
     bison \
-    build-essential \
-    curl \
     gawk \
-    git \
     libbz2-dev \
     libffi-dev \
     libgdbm-dev \
@@ -103,9 +100,6 @@ echo "installing dependencies to compile python shims and rubies" \
     python-openssl \
     sqlite3 \
     tk-dev \
-    wget \
-    xz-utils \
-    zlib1g-dev \
   && sudo apt-get autoremove -y && sudo apt-get clean -y
 
 # back to workspace dir
