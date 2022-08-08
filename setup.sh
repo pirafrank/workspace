@@ -146,6 +146,6 @@ echo "install cloud clients" \
 # all done!
 echo "
 *************************
-    setup.sh starting
+    setup.sh finished
 *************************
 "
