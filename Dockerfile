@@ -45,14 +45,13 @@ WORKDIR /home/work
 # into WORKDIR
 COPY setups/setup_env.sh \
   setups/setup_utils.sh \
-  workspaces/setup_nvm.sh \
-  workspaces/setup_pyenv.sh \
-  workspaces/setup_rvm.sh \
-  workspaces/setup_rust.sh \
-  workspaces/setup_java.sh \
-  workspaces/setup_golang.sh \
+  setups/setup_aws_tools.sh \
+  setups/setup_cloud_clients.sh \
+  setups/setup_docker_cli.sh \
   start.sh \
   pre_start.zsh ./
+
+COPY workspaces/*.sh ./workspace_setups/
 
 # install fzf
 RUN set -x \
