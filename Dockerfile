@@ -19,8 +19,6 @@ RUN set -x \
 
 # restore manual and clean up
 RUN set -x \
-  && echo 'restore man command' \
-  && yes | unminimize 2>&1 \
   && echo "cleaning up" \
   && apt-get autoremove -y && apt-get clean -y
 
