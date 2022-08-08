@@ -18,6 +18,7 @@ if [[ $PARAMS != *"--name "* ]]; then
 fi
 
 # if $3 is present, add value to DOCKERCLI
+# this allows Docker CLI inside the container to control Docker daemon on the host.
 DOCKERCLI="" && [[ $3 != "" ]] && DOCKERCLI="-v /var/run/docker.sock:/var/run/docker.sock"
 
 mkdir -p $HOME/work_temp/Code
