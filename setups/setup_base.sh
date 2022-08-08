@@ -34,6 +34,7 @@ echo "installing apt-utils" \
     tzdata \
     locales \
     sudo \
+    openssh-server \
     wget \
     vim \
     zsh \

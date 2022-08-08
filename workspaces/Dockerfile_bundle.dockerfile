@@ -129,4 +129,6 @@ ENV GITUSEREMAIL=''
 # set default terminal
 ENV TERM=xterm-256color
 
-CMD ["sh", "-c", "zsh pre_start.zsh ; zsh"]
+EXPOSE 2222
+
+CMD ["sh", "-c", "zsh pre_start.zsh ; zsh start.sh"]

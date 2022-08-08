@@ -32,6 +32,8 @@ ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 # Set up timezone (tzdata required)
 ENV TZ=Europe/Rome
 
+COPY configs/sshd.conf /etc/ssh/sshd_config.d/sshd.conf
+
 USER work
 WORKDIR /home/work
 
@@ -45,6 +47,7 @@ COPY setups/setup_env.sh \
   workspaces/setup_rust.sh \
   workspaces/setup_java.sh \
   workspaces/setup_golang.sh \
+  start.sh \
   pre_start.zsh ./
 
 # install fzf
@@ -91,4 +94,6 @@ ENV GITUSEREMAIL=''
 # set default terminal
 ENV TERM=xterm-256color
 
-CMD ["sh", "-c", "zsh pre_start.zsh ; zsh"]
+EXPOSE 2222
+
+CMD ["sh", "-c", "zsh pre_start.zsh ; zsh start.sh"]
