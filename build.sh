@@ -111,6 +111,11 @@ case $STEP in
     build_bundle
     ;;
 
+  bb)
+    build_base
+    build_bundle
+    ;;
+
   all)
     build_base
     build_bundle
