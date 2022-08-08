@@ -15,13 +15,17 @@ COPY setups/setup_fzf.sh \
 # set debug mode and install dev and essentials packages
 RUN set -x \
   && chmod +rx /tmp/setup_*sh \
-  && bash /tmp/setup_base.sh \
+  && bash /tmp/setup_base.sh
+
+# restore manual and clean up
+RUN set -x \
   && echo 'restore man command' \
   && yes | unminimize 2>&1 \
   && echo "cleaning up" \
-  && apt-get autoremove -y && apt-get clean -y \
-  && rm -f /tmp/setup_base.sh \
-  && echo 'add user and change default shell' \
+  && apt-get autoremove -y && apt-get clean -y
+
+# add user and change default shell
+RUN echo 'add user and change default shell' \
   && useradd -Um -d /home/work -G sudo -s /bin/bash --uid $USER_UID work \
   && chsh -s $(which zsh) work \
   && echo work ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/work
