@@ -53,6 +53,8 @@ jobs:
       RUN_INFO: ''
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - name: Print workdir
       run: pwd
     - name: Set run info

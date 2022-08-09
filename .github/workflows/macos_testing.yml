@@ -19,6 +19,8 @@ jobs:
     runs-on: macos-10.15
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - name: "workspaces install"
       id: 'workspaces_scripts_install_macos1015'
       shell: bash
@@ -61,6 +63,8 @@ jobs:
     runs-on: macos-11
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - name: "workspaces install"
       id: 'workspaces_scripts_install_macos11'
       shell: bash

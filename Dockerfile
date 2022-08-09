@@ -61,10 +61,10 @@ RUN set -x \
   && echo "install zprezto" \
   && zsh /tmp/setup_zprezto.zsh
 
-# clone dotfiles
+# dotfiles
+COPY dotfiles ./dotfiles
 RUN set -x \
   && echo "installing dotfiles" \
-  && git clone https://github.com/pirafrank/dotfiles.git ${HOME}/dotfiles \
   && cd ${HOME}/dotfiles \
   && zsh install.sh all
 
