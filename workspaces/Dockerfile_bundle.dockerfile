@@ -1,6 +1,10 @@
 ARG BASE_IMAGE_VERSION=latest
 FROM pirafrank/workspace:${BASE_IMAGE_VERSION}
 
+LABEL AUTHOR="pirafrank" MAINTAINER="pirafrank"
+LABEL DESCRIPTION="pirafrank/workspace bundle image. It ships with \
+  all workspaces and utilities installed."
+
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
 

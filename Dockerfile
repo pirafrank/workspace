@@ -1,5 +1,9 @@
 FROM ubuntu:focal-20220801
 
+LABEL AUTHOR="pirafrank" MAINTAINER="pirafrank"
+LABEL DESCRIPTION="pirafrank/workspace base image. It ships with \
+  workspace setups, but those are not executed upon build"
+
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
 

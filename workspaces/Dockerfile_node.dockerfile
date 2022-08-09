@@ -1,6 +1,8 @@
 ARG BASE_IMAGE_VERSION=latest
 FROM pirafrank/workspace:${BASE_IMAGE_VERSION}
 
+LABEL AUTHOR="pirafrank" MAINTAINER="pirafrank"
+
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
 
