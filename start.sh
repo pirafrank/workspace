@@ -6,7 +6,7 @@ if [[ ! -z ${SSH_SERVER} ]]; then
   #       or you won't be able to connect to the container!
   sudo service ssh start
   sudo /usr/sbin/sshd -D
-  sleep 100000
+  sleep infinity
 else
   # start an interactive shell
   zsh
