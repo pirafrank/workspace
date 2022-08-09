@@ -1,0 +1,12 @@
+Include /etc/ssh/sshd_config.d/*.conf
+
+Port 2222
+ListenAddress 0.0.0.0
+PermitRootLogin no
+PubkeyAuthentication yes
+AuthorizedKeysFile    .ssh/authorized_keys
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+
+# override default of no subsystems
+Subsystem	sftp	/usr/lib/openssh/sftp-server
