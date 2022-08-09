@@ -1,0 +1,17 @@
+- name: install software
+  host: $(hostname)
+  remote_user: root
+
+  tasks:
+  - name: install vim on debian
+    shell: apt-get update && apt-get install -y vim
+  - name: download file
+    fetch:
+      src: $(url)
+      dest: /tmp/ansible.yml
+  - name: unpack file
+    unarchive:
+      src: /tmp/ansible.yml
+      dest: /tmp/ansible
+
+
