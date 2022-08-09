@@ -5,15 +5,15 @@ on:
     branches:
       - main
     paths:
-      - build.sh
       - Dockerfile
-      - install.sh
       - pre_start.zsh
+      - start.sh
       - workspace_versions.sh
-      - base/*.sh
-      - base/*.zsh
-      - setups/*.sh
-      - setups/*.zsh
+      - setups/setup_base.sh
+      - setups/setup_env.sh
+      - setups/setup_fzf.sh
+      - setups/setup_utils.sh
+      - setups/setup_zprezto.zsh
       - workspaces/Dockerfile_bundle.dockerfile
       - workspaces/*.sh
       - workspaces/*.zsh
@@ -53,6 +53,8 @@ jobs:
       RUN_INFO: ''
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - name: Print workdir
       run: pwd
     - name: Set run info

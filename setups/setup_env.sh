@@ -36,7 +36,8 @@ function downloadAndInstall {
   url="$1"
   name="$2"
   if [ ! -z $url ]; then
-    del $name
+    del "${BIN2_PATH}/${name}"
+    cd /tmp
     if [ ! -z $(echo $url | grep 'tar.gz') ]; then
       # it's tar.gzipped
       curl -L $url | tar xz
@@ -50,6 +51,8 @@ function downloadAndInstall {
       curl -o ./$name -L $url
     fi
     chmod +x $name
+    mv "${name}" "${BIN2_PATH}/${name}"
+    cd -
   else
     echo "Unsupported OS. Skipping $name installation..."
   fi
@@ -70,4 +73,12 @@ function createDir {
   # creating target dir if it doesn't exist
   # it should've been created in prev script
   if [ ! -d $folder ]; then mkdir -p $folder; fi
+}
+
+function init {
+  echo "BIN2_PATH=${BIN2_PATH}"
+  setArchAndPlatform
+  welcome
+  createDir "${BIN2_PATH}"
+  cd "${BIN2_PATH}"
 }

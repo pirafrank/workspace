@@ -45,7 +45,7 @@ cat workspace_versions.sh
 cd
 
 # base install
-sudo bash "$SCRIPT_DIR/base/setup_base.sh"
+sudo bash "$SCRIPT_DIR/setups/setup_base.sh"
 
 echo "cleaning up" \
   && sudo apt-get autoremove -y && sudo apt-get clean -y
@@ -66,9 +66,9 @@ fi
 
 echo "install fzf" \
   && cd ${WORKSPACE_DIR} \
-  && zsh base/setup_fzf.sh \
+  && zsh setups/setup_fzf.sh \
   && echo "install zprezto" \
-  && zsh base/setup_zprezto.zsh
+  && zsh setups/setup_zprezto.zsh
 
 # dotfiles setup
 echo "installing dotfiles" \
@@ -82,10 +82,7 @@ echo "installing dependencies to compile python shims and rubies" \
     autoconf \
     automake \
     bison \
-    build-essential \
-    curl \
     gawk \
-    git \
     libbz2-dev \
     libffi-dev \
     libgdbm-dev \
@@ -103,9 +100,6 @@ echo "installing dependencies to compile python shims and rubies" \
     python-openssl \
     sqlite3 \
     tk-dev \
-    wget \
-    xz-utils \
-    zlib1g-dev \
   && sudo apt-get autoremove -y && sudo apt-get clean -y
 
 # back to workspace dir
@@ -152,6 +146,6 @@ echo "install cloud clients" \
 # all done!
 echo "
 *************************
-    setup.sh starting
+    setup.sh finished
 *************************
 "

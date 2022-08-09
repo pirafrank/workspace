@@ -77,14 +77,17 @@ url=$(curl -sL https://api.github.com/repos/ahmetb/kubectx/releases/latest \
   | grep http | grep -i "$PLATFORM" | grep -i "$ARCH" | cut -d':' -f 2,3 \
   | cut -d'"' -f2 | grep -i kubectx_)
 downloadAndInstall $url kubectx
-rm -f LICENSE
 
 printf "\n\nInstalling kubens...\n"
 url=$(curl -sL https://api.github.com/repos/ahmetb/kubectx/releases/latest \
   | grep http | grep -i "$PLATFORM" | grep -i "$ARCH" | cut -d':' -f 2,3 \
   | cut -d'"' -f2 | grep -i kubens)
 downloadAndInstall $url kubens
-rm -f LICENSE
+
+# kubectl-argo-rollouts
+printf "\n\nInstalling kubectl-argo-rollouts...\n"
+url="https://github.com/argoproj/argo-rollouts/releases/latest/download/kubectl-argo-rollouts-${PLATFORM}-${ARCH_ALT}"
+downloadAndInstall $url 'kubectl-argo-rollouts'
 
 # stern
 printf "\n\nInstalling stern...\n"

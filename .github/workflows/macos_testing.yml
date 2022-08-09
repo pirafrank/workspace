@@ -5,8 +5,8 @@ on:
   #  branches:
   #    - main
   #  paths:
-  #    - base/setup_fzf.sh
-  #    - base/setup_zprezto.zsh
+  #    - setups/setup_fzf.sh
+  #    - setups/setup_zprezto.zsh
   #    - workspaces/*.sh
   #    - setups/setup_env.sh
   #    - setups/setup_cloud_clients.sh
@@ -19,6 +19,8 @@ jobs:
     runs-on: macos-10.15
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - name: "workspaces install"
       id: 'workspaces_scripts_install_macos1015'
       shell: bash
@@ -61,6 +63,8 @@ jobs:
     runs-on: macos-11
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
     - name: "workspaces install"
       id: 'workspaces_scripts_install_macos11'
       shell: bash

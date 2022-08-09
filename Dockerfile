@@ -8,20 +8,22 @@ ARG WORKSPACE_VERSION
 ARG UBUNTURELEASE='focal'
 
 # copy base setup scripts
-COPY base/setup_fzf.sh \
-  base/setup_zprezto.zsh \
-  base/setup_base.sh /tmp/
+COPY setups/setup_fzf.sh \
+  setups/setup_zprezto.zsh \
+  setups/setup_base.sh /tmp/
 
 # set debug mode and install dev and essentials packages
 RUN set -x \
   && chmod +rx /tmp/setup_*sh \
-  && bash /tmp/setup_base.sh \
-  && echo 'restore man command' \
-  && yes | unminimize 2>&1 \
+  && bash /tmp/setup_base.sh
+
+# restore manual and clean up
+RUN set -x \
   && echo "cleaning up" \
-  && apt-get autoremove -y && apt-get clean -y \
-  && rm -f /tmp/setup_base.sh \
-  && echo 'add user and change default shell' \
+  && apt-get autoremove -y && apt-get clean -y
+
+# add user and change default shell
+RUN echo 'add user and change default shell' \
   && useradd -Um -d /home/work -G sudo -s /bin/bash --uid $USER_UID work \
   && chsh -s $(which zsh) work \
   && echo work ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/work
@@ -32,21 +34,22 @@ ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 # Set up timezone (tzdata required)
 ENV TZ=Europe/Rome
 
+COPY configs/sshd.conf /etc/ssh/sshd_config.d/sshd.conf
+
 USER work
 WORKDIR /home/work
 
 # copy setup scripts for different envs
 # into WORKDIR
-COPY setups/setup_docker_cli.sh \
-  setups/setup_env.sh \
+COPY setups/setup_env.sh \
   setups/setup_utils.sh \
-  workspaces/setup_nvm.sh \
-  workspaces/setup_pyenv.sh \
-  workspaces/setup_rvm.sh \
-  workspaces/setup_rust.sh \
-  workspaces/setup_java.sh \
-  workspaces/setup_golang.sh \
+  setups/setup_aws_tools.sh \
+  setups/setup_cloud_clients.sh \
+  setups/setup_docker_cli.sh \
+  start.sh \
   pre_start.zsh ./
+
+COPY workspaces/*.sh ./workspace_setups/
 
 # install fzf
 RUN set -x \
@@ -58,10 +61,10 @@ RUN set -x \
   && echo "install zprezto" \
   && zsh /tmp/setup_zprezto.zsh
 
-# clone dotfiles
+# dotfiles
+COPY dotfiles ./dotfiles
 RUN set -x \
   && echo "installing dotfiles" \
-  && git clone https://github.com/pirafrank/dotfiles.git ${HOME}/dotfiles \
   && cd ${HOME}/dotfiles \
   && zsh install.sh all
 
@@ -92,4 +95,6 @@ ENV GITUSEREMAIL=''
 # set default terminal
 ENV TERM=xterm-256color
 
-CMD ["sh", "-c", "zsh pre_start.zsh ; zsh"]
+EXPOSE 2222
+
+CMD ["sh", "-c", "zsh pre_start.zsh ; zsh start.sh"]

@@ -29,37 +29,78 @@ I went this way to have the chance to further evolve the workspace project away 
 - Ubuntu 20.04-based
 - `zsh` + zprezto as default shell
 - [dotfiles](https://github.com/pirafrank/dotfiles)
-- vim
-- cloud tools
+- vim as IDE
+- cloud clients and tools
 - Java + mvn
 - node.js
 - Python 3
 - Golang
 - Rust
 - Ruby
-- optional Docker CLI client
 - various utils
+- optional Docker CLI client
 - support for different env versions
 - ...and more.
 
-## Versioning
+## Supported platforms
 
-The following apply:
+Docker images work anywhere Docker images run, from your PC to Kubernetes, to CaaS services.
 
-- Docker image builds are made from `main` branch only. Builds are triggered only if changes are made to source files (e.g. it skips changes to pipeline files, README, etc.).
-- Only after a successful pipeline run, builds are pushed to docker registries and lightweight tags are added to the repository. Those tags have format: `YYYYMMDD.CommitHash`.
-- After a meaniful set of changes are added to repository, I tag one of those lightweight-tagged commits with a signed annotated one using semantic versioning format.
-- By the way, although versioning plays its part in pulling a specific version, `latest` and `bundle` tags are meant to be used as the latest stable images.
+While almost all scripts and configurations in this repo will also work on non-Debian distros, `setup.sh` script in root is designed for the Debian-based ones. That said, the only differences shoud rely only on a few package and binary names.
+
+macOS + macports is partially supported. I try to make `workspaces` and `setups` scripts work there too, yet macOS is not my daily driver anymore and the Apple Silicon transition adds spice to the receipe.
 
 ## Usage
 
 Choose one of the options below:
 
-- run the containerized workspace (Docker required)
-- run the full `setup.sh` script on a vanilla environment (e.g. a new VPS install)
-- setup specific features (Java+mvn, node.js, etc.) using the scripts in `setups` and `workspaces` dirs. Those scripts are also used to build the workspace Docker images.
+1. run the containerized workspace (Docker required)
+2. run the full `setup.sh` script on a vanilla environment (e.g. a new VPS install)
+3. setup specific features (Java+mvn, node.js, etc.) using the scripts in `setups` and `workspaces` dirs. Those scripts are also used to build the workspace Docker images.
 
-### Docker images
+### 1. Workspace-in-a-container
+
+You can run the workspace-in-a-container in many occasions.
+
+- easy and fast setup of CLI environment e.g. in a VPS
+- Works in CaaS services like Azure Container Instances and [Blink Build](https://beta.blink.build/)
+- great for already-configure, fast, ephimeral dev environment
+- you name it...
+
+Please check the *workspace-in-a-container* section for further info.
+
+### 2. Full setup
+
+*Debian-based distros only.*
+
+A full setup involves programs installation of programs, their dependencies, download of dotfiles and creation of symlinks. It is meant to setup a vanilla environment. I keep `setup.sh` aligned with the `Dockerfile` used to build the Docker workspace baseimage. The setup comes in two flavors, with and without user creation:
+
+```sh
+curl -sSL https://github.com/pirafrank/workspace/raw/main/create_user.sh -o create_user.sh && chmod +x create_user.sh
+curl -sSL https://github.com/pirafrank/workspace/raw/main/setup.sh -o setup.sh && chmod +x setup.sh
+./create_user.sh
+./setup.sh
+```
+
+Run the one that best fits your needs. Remember to always check the content of scripts you're about to execute before running them!
+
+### 3. Partial setup
+
+Setup scripts in `setups` and `workspaces` dirs are meant to be executed manually on Linux or macOS, or to build Docker Image workspaces (read below). They assume `~/dotfiles` exists. If you have dotfiles in another dir, please symlink it to `~/dotfiles`.
+
+Core setup uses zsh and zprezto. Files for oh-my-zsh config are available, but I don't use/update them anymore.
+
+### Further notes
+
+`~/.zsh_custom` is automatically sourced if it exists, and `~/bin2` is automatically added to `$PATH`. Both are not part of the repo and can be used to add your-own or machine-specific customizations and other executables.
+
+That's all, there is no real how-to actually. For more info just look at the code.
+
+## A workspace-in-a-container
+
+The main focus is to make Workspace a great workspace-in-a-container setup.
+
+### Available Docker images
 
 The aim is to create a disposable development environment taking advantage of Docker. Images are publicly available on [Docker Hub](https://hub.docker.com/r/pirafrank/workspace) in various flavors. They are:
 
@@ -77,47 +118,39 @@ Dockerfiles available to build:
 
 All workspaces setups are in userspace.
 
-### Full setup
+### Versioning
 
-*Debian-based distros only.*
+The following apply:
 
-A full setup involves programs installation of programs, their dependencies, download of dotfiles and creation of symlinks. It is meant to setup a vanilla environment. I keep `setup.sh` aligned with the `Dockerfile` used to build the Docker workspace baseimage. The setup comes in two flavors, with and without user creation:
+- Docker image builds are made from `main` branch only. Builds are triggered only if changes are made to source files (e.g. it skips changes to pipeline files, README, etc.).
+- Only after a successful pipeline run, builds are pushed to docker registries and lightweight tags are added to the repository. Those tags have format: `YYYYMMDD.CommitHash`.
+- After a meaniful set of changes are added to repository, I tag one of those lightweight-tagged commits with a signed annotated one using semantic versioning format.
+- By the way, although versioning plays its part in pulling a specific version, `latest` and `bundle` tags are meant to be used as the latest stable images.
 
-```sh
-curl -sSL https://github.com/pirafrank/workspace/raw/main/create_user.sh -o create_user.sh && chmod +x create_user.sh
-curl -sSL https://github.com/pirafrank/workspace/raw/main/setup.sh -o setup.sh && chmod +x setup.sh
-./create_user.sh
-./setup.sh
-```
+### OpenSSH Server
 
-Run the one that best fits your needs. Remember to always check the content of scripts you're about to execute before running them!
+Workspace now ships with openssh-server, so you can deploy your workspace on a CaaS provider and SSH to it.
 
-### Partial setup
+By default the openssh-server won't start and an interactive shell will launch, this means that if you won't start the workspace from an interactive shell it will exit immediately!
 
-Setup scripts in `setups` and `workspaces` dirs are meant to be executed manually on Linux or macOS, or to build Docker Image workspaces (read below). They assume `~/dotfiles` exists. If you have dotfiles in another dir, please symlink it to `~/dotfiles`.
+If you deploy on a CaaS and want to leverage openssh-server, just pass these two ENV VARs upon container start:
 
-Core setup uses zsh and zprezto. Files for oh-my-zsh config are available, but I don't use/update them anymore.
+- `SSH_SERVER`, any value is ok (e.g. 'true'), just don't leave it null;
+- `SSH_PUBKEYS`, it holds the pubkey you want to use to connect via SSH (only one pubkey supported atm).
 
-### Further notes
+Check `pre_start.zsh` and `start.sh` scripts for further info.
 
-`~/.zsh_custom` is automatically sourced if it exists, and `~/bin2` is automatically added to `$PATH`. Both are not part of the repo and can be used to add your-own or machine-specific customizations and other executables.
+### Usage in Azure Container Instances
 
-That's all, there is no real how-to actually. For more info just look at the code.
+*Coming soon...*
 
-## Supported platforms
+### Usage in AWS Fargate
 
-While almost all files in this repo will also work on non-Debian distros, setup scripts in root are designed for the Debian-based ones. That said, the only differences shoud rely only on a few package and binary names.
+*Coming soon...*
 
-Some setup scripts may also work on macOS + macports.
+### Usage in you own Kubernetes
 
-## Use cases
-
-You can run the workspace-in-a-container in many occasions.
-
-- easy and fast setup of CLI environment e.g. in a VPS
-- [Blink Build](https://beta.blink.build/)
-- interactive CaaS
-- more...
+*Coming soon...*
 
 ### Usage in Blink Build
 
@@ -145,13 +178,15 @@ build ssh bundle
 
 For more information, run the commands with the `--help` flag.
 
-## Build an image
+### Build an image
 
-Use `./build-all.sh` to build all images.
+Run `./build.sh all` to build all images.
 
-Add anything you want to exec at Docker image launch to `pre_start.zsh`.
+Add anything you want to exec right before container launch to `pre_start.zsh`.
 
-## Run an image
+You can also change the commands executed at startup by editing the `start.sh` script.
+
+### Run an image
 
 Use `run_workspace.sh` to do so. Clone the repo or just download the script.
 

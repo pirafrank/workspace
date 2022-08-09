@@ -4,6 +4,7 @@ if [[ -z "$1" ]]; then
     echo "Please specify an image version to run."
     echo "You can optionally add parameters to 'docker run' as \$2."
     echo "\$3 is to enable DOCKERCLI socket, optional. It can be anything, just not blank."
+    printf "\nAvailable images are:\n$(docker images | grep 'pirafrank/workspace')\n"
     exit 1
 fi
 
@@ -17,6 +18,7 @@ if [[ $PARAMS != *"--name "* ]]; then
 fi
 
 # if $3 is present, add value to DOCKERCLI
+# this allows Docker CLI inside the container to control Docker daemon on the host.
 DOCKERCLI="" && [[ $3 != "" ]] && DOCKERCLI="-v /var/run/docker.sock:/var/run/docker.sock"
 
 mkdir -p $HOME/work_temp/Code
@@ -30,7 +32,7 @@ if [ -z "$(docker ps -a -q | xargs -I {} docker inspect {} | jq '.[].Name' | gre
     -p "8380-8390:8080-8090" \
     -p "4300-4310:4000-4010" \
     -p "3300-3310:3000-3010" \
-    pirafrank/workspace:"$1"
+    pirafrank/workspace:"$VERSION"
 else
     # container exists
     if [ -z "$(docker ps -q | xargs -I {} docker inspect {} | jq '.[].Name' | grep $WORKSPACE_NAME)" ]; then

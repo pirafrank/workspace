@@ -19,10 +19,7 @@ RUN set -x \
     autoconf \
     automake \
     bison \
-    build-essential \
-    curl \
     gawk \
-    git \
     libbz2-dev \
     libffi-dev \
     libgdbm-dev \
@@ -40,9 +37,6 @@ RUN set -x \
     python-openssl \
     sqlite3 \
     tk-dev \
-    wget \
-    xz-utils \
-    zlib1g-dev \
   && apt-get autoremove -y && apt-get clean -y
 
 # switch to user
@@ -56,34 +50,27 @@ ARG GOLANGVERSION
 ARG PYTHON3VERSION=3.9
 ARG RUBYVERSION=2.7
 
-COPY setup_java.sh \
-  setup_mvn.sh \
-  setup_nvm.sh \
-  setup_golang.sh \
-  setup_pyenv.sh \
-  setup_rvm.sh \
-  setup_jekyll.sh \
-  setup_rust.sh ./
+COPY *.sh ./workspace_setups/
 
 # installing java and mvn
 RUN echo "installing java" \
-  && zsh setup_java.sh ${JAVAVERSION} ${JAVAVENDOR} \
-  && zsh setup_mvn.sh
+  && zsh workspace_setups/setup_java.sh ${JAVAVERSION} ${JAVAVENDOR} \
+  && zsh workspace_setups/setup_mvn.sh
 
 # installing nvm and node
 RUN echo "installing nvm and node" \
-  && zsh setup_nvm.sh ${NODEVERSION}
+  && zsh workspace_setups/setup_nvm.sh ${NODEVERSION}
 
 # installing golang
 RUN echo "installing Go" \
-  && zsh setup_golang.sh ${GOLANGVERSION}
+  && zsh workspace_setups/setup_golang.sh ${GOLANGVERSION}
 
 # install pyenv and python
 RUN set -x \
   && echo "install pyenv and python" \
   && choice=$(curl -sSL https://api.github.com/repos/pyenv/pyenv/contents/plugins/python-build/share/python-build | \
   grep name | cut -d'"' -f4 | grep -v '-' | tail -n +2 | grep "${PYTHON3VERSION}" | tail -1) \
-  && zsh setup_pyenv.sh ${choice}
+  && zsh workspace_setups/setup_pyenv.sh ${choice}
 
 # install deoplete python deps
 RUN set -x \
@@ -94,12 +81,12 @@ RUN set -x \
 # install rvm
 RUN set -x \
   && echo "install rvm and ruby" \
-  && zsh setup_rvm.sh ${RUBYVERSION}
+  && zsh workspace_setups/setup_rvm.sh ${RUBYVERSION}
 
 # install rust and cargo
 RUN set -x \
   && echo "install rust and cargo" \
-  && zsh setup_rust.sh
+  && zsh workspace_setups/setup_rust.sh
 
 # add workspace versions to file
 RUN set -x \
@@ -135,4 +122,6 @@ ENV GITUSEREMAIL=''
 # set default terminal
 ENV TERM=xterm-256color
 
-CMD ["sh", "-c", "zsh pre_start.zsh ; zsh"]
+EXPOSE 2222
+
+CMD ["sh", "-c", "zsh pre_start.zsh ; zsh start.sh"]
