@@ -34,7 +34,7 @@ ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 # Set up timezone (tzdata required)
 ENV TZ=Europe/Rome
 
-COPY configs/sshd.conf /etc/ssh/sshd_config.d/sshd.conf
+COPY configs/sshd_config /etc/ssh/sshd_config
 
 USER work
 WORKDIR /home/work
