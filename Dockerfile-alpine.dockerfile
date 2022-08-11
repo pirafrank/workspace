@@ -18,7 +18,9 @@ COPY configs/sshd_config /etc/ssh/sshd_config
 RUN addgroup -S work \
   && adduser -S work -G work -h /home/work -u $USER_UID -s /bin/zsh \
   && addgroup work wheel \
-  && echo work ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/work
+  && echo work ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/work \
+  && echo "root:root" | chpasswd \
+  && echo "work:work" | chpasswd
 
 # generate SSH host keys
 RUN ssh-keygen -A
