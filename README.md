@@ -129,7 +129,7 @@ The following apply:
 
 ### OpenSSH Server
 
-Workspace now ships with openssh-server, so you can deploy your workspace on a CaaS provider and SSH to it.
+Workspace images now ship with openssh-server, so you can deploy your workspace on a CaaS provider and SSH to it.
 
 By default the openssh-server won't start and an interactive shell will launch, this means that if you won't start the workspace from an interactive shell it will exit immediately!
 
@@ -138,7 +138,48 @@ If you deploy on a CaaS and want to leverage openssh-server, just pass these two
 - `SSH_SERVER`, any value is ok (e.g. 'true'), just don't leave it null;
 - `SSH_PUBKEYS`, it holds the pubkey you want to use to connect via SSH (only one pubkey supported atm).
 
+It listens to `0.0.0.0:2222`.
+
+For example:
+
+```sh
+docker run -it --rm \
+    -p "2222:2222" \
+    -e SSH_SERVER=true -e SSH_PUBKEYS="ssh-ed25519 AAAA... francesco@work" \
+    pirafrank/workspace:latest
+```
+
+or via run script:
+
+```sh
+bash run-workspace.sh latest '--rm -e SSH_SERVER=true -e SSH_PUBKEYS="ssh-ed25519 AAAA... francesco@work"'
+```
+
 Check `pre_start.zsh` and `start.sh` scripts for further info.
+
+### Mosh support
+
+Workspace images now ship with Mosh, too. By default it uses port range `60000-61000`. Remember to expose those!
+
+You can change the range and/or add an offset. **Just keep host and container ranges the same**.
+
+The command below, for examples, uses a range of 100 ports, offset by 1000.
+
+`2222` is OpenSSH server port.
+
+```sh
+docker run -it --rm \
+    -p "2222:2222" \
+    -p 61000-61100:61000-61100/udp \
+    -e SSH_SERVER=true -e SSH_PUBKEYS="ssh-ed25519 AAAA... francesco@work" \
+    pirafrank/workspace:latest
+```
+
+Then on client:
+
+```sh
+mosh work@127.0.0.1 --ssh="ssh -p 2222" --port='61000:61100'
+```
 
 ### Usage in Azure Container Instances
 

@@ -3,14 +3,17 @@ FROM alpine:latest
 LABEL MANTAINER="pirafrank"
 
 ARG USER_UID=1000
-ARG WORKSPACE_VERSION
 
 RUN apk update \
   && apk --no-cache add tzdata sudo less zsh \
-    openssh openssh-server-pam \
+    openssh openssh-server-pam mosh \
     vim curl wget git python3 py3-pip \
     openssl ca-certificates
 
+# setting locale
+ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
+
+# Set up timezone (tzdata required)
 ENV TZ=Europe/Rome
 
 COPY configs/sshd_config /etc/ssh/sshd_config
@@ -42,7 +45,6 @@ RUN set -x \
 RUN set -x \
   && mkdir ${HOME}/bin2 \
   && echo '#!/bin/bash' > bin2/workspace_version \
-  && echo "echo Current version: ${WORKSPACE_VERSION}" >> bin2/workspace_version \
   && echo "echo Build on       : $(date '+%Y/%m/%d %H:%M:%S')" >> bin2/workspace_version \
   && chmod +x bin2/workspace_version
 
