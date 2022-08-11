@@ -5,9 +5,9 @@ LABEL MANTAINER="pirafrank"
 ARG USER_UID=1000
 
 RUN apk update \
-  && apk --no-cache add tzdata sudo less zsh \
+  && apk --no-cache add tzdata sudo less bash zsh \
     openssh openssh-server-pam mosh \
-    vim curl wget git python3 py3-pip \
+    tmux vim curl wget git python3 py3-pip \
     openssl ca-certificates
 
 # setting locale
@@ -39,11 +39,15 @@ COPY --chown=work:work dotfiles ./dotfiles
 RUN set -x \
   && echo "installing dotfiles" \
   && cd ${HOME}/dotfiles \
-  && zsh install.sh vim-minimal
+  && zsh install.sh makedirs \
+  && zsh install.sh git \
+  && zsh install.sh tmux \
+  && zsh install.sh vim-minimal \
+  && zsh install.sh zsh
 
 # last but not least, write current version inside image
 RUN set -x \
-  && mkdir ${HOME}/bin2 \
+  && mkdir -p ${HOME}/bin2 \
   && echo '#!/bin/bash' > bin2/workspace_version \
   && echo "echo Build on       : $(date '+%Y/%m/%d %H:%M:%S')" >> bin2/workspace_version \
   && chmod +x bin2/workspace_version
