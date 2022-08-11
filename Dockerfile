@@ -64,7 +64,7 @@ RUN set -x \
   && zsh /tmp/setup_zprezto.zsh
 
 # dotfiles
-COPY dotfiles ./dotfiles
+COPY --chown=work:work dotfiles ./dotfiles
 RUN set -x \
   && echo "installing dotfiles" \
   && cd ${HOME}/dotfiles \

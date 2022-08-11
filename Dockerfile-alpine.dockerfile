@@ -35,7 +35,7 @@ COPY pre_start.zsh ./
 COPY start_alpine.sh ./start.sh
 
 # dotfiles
-COPY dotfiles ./dotfiles
+COPY --chown=work:work dotfiles ./dotfiles
 RUN set -x \
   && echo "installing dotfiles" \
   && cd ${HOME}/dotfiles \
