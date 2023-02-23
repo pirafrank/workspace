@@ -138,21 +138,77 @@ If you deploy on a CaaS and want to leverage openssh-server, just pass these two
 - `SSH_SERVER`, any value is ok (e.g. 'true'), just don't leave it null;
 - `SSH_PUBKEYS`, it holds the pubkey you want to use to connect via SSH (only one pubkey supported atm).
 
+It listens to `0.0.0.0:2222`.
+
+For example:
+
+```sh
+docker run -it --rm \
+    -p "2222:2222" \
+    -e SSH_SERVER=true -e SSH_PUBKEYS="ssh-ed25519 AAAA... francesco@work" \
+    pirafrank/workspace:latest
+```
+
+if you have multiple SSH pub keys:
+
+```sh
+# from file
+export SSHKEYS=`cat file_with_many_keys`
+# from URL
+export SSHKEYS=`curl -sSL some.url/with/keys/sshkeys`
+# then in command above
+... -e SSH_SERVER=true -e SSH_PUBKEYS="${SSHKEYS}" ...
+```
+
+or via run script:
+
+```sh
+bash run-workspace.sh latest '--rm -e SSH_SERVER=true -e SSH_PUBKEYS="ssh-ed25519 AAAA... francesco@work"'
+```
+
 Check `pre_start.zsh` and `start.sh` scripts for further info.
 
-### Usage in Azure Container Instances
+## Usage scenarios
+
+You can run your workspace in many ways.
+
+### Azure Container Instances
+
+Below an example script to run a workspace in Azure Cloud Shell.
+
+```sh
+export SSHKEYS=`curl -sSL gist.github.com/some/secret/gist`
+nohup az container create \
+  --resource-group YOUR_RESOURCE_GROUP \
+  --name SOME_CONTAINER_INSTANCE_NAME \
+  --image pirafrank/workspace:bundle \
+  --location westeurope \
+  --os-type Linux \
+  --cpu 1 \
+  --memory 2.0 \
+  --dns-name-label SOME_CONTAINER_INSTANCE_NAME \
+  -e SSH_SERVER='true' SSH_PUBKEYS="${SSHKEYS}" \
+    GITUSERNAME='John Doe' GITUSEREMAIL='john@doe.net' \
+  --ports 2222 &
+```
+
+And because the Container Instance has a name, you can easily stop it:
+
+```sh
+az container delete --resource-group YOUR_RESOURCE_GROUP --name SOME_CONTAINER_INSTANCE_NAME
+```
+
+Tip: You can save those scripts in your Cloud Shell home dir for easy recovery, e.g. to launch them on-the-go from Cloud Shell in Azure mobile apps.
+
+### AWS Fargate
 
 *Coming soon...*
 
-### Usage in AWS Fargate
+### You own Kubernetes
 
 *Coming soon...*
 
-### Usage in you own Kubernetes
-
-*Coming soon...*
-
-### Usage in Blink Build
+### Blink Build
 
 *Build* is a new service being built by the guys behind [Blink Shell](https://twitter.com/BlinkShell/), the best SSH and mosh client for iOS and iPadOS. It's currently in beta and allows you to SSH into any container publicly available without taking care of the underlying infrastructure, network or firewall. And it's fully integrated in Blink Shell. [I have started tinkering](https://twitter.com/pirafrank/status/1423633599459471361) with it and I have to say it's a great match with my *workspace* for a portable dev environment!
 
@@ -177,6 +233,8 @@ build ssh bundle
 *Build* is currently available in the [community edition](https://community.blink.sh/).
 
 For more information, run the commands with the `--help` flag.
+
+## Build and run your own
 
 ### Build an image
 
