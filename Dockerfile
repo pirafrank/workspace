@@ -30,7 +30,9 @@ RUN set -x \
 RUN echo 'add user and change default shell' \
   && useradd -Um -d /home/work -G sudo -s /bin/bash --uid $USER_UID work \
   && chsh -s $(which zsh) work \
-  && echo work ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/work
+  && echo work ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/work \
+  && echo "root:root" | chpasswd \
+  && echo "work:work" | chpasswd
 
 # setting locale
 ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
@@ -38,7 +40,7 @@ ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
 # Set up timezone (tzdata required)
 ENV TZ=Europe/Rome
 
-COPY configs/sshd.conf /etc/ssh/sshd_config.d/sshd.conf
+COPY configs/sshd_config /etc/ssh/sshd_config
 
 USER work
 WORKDIR /home/work
@@ -66,7 +68,7 @@ RUN set -x \
   && zsh /tmp/setup_zprezto.zsh
 
 # dotfiles
-COPY dotfiles ./dotfiles
+COPY --chown=work:work dotfiles ./dotfiles
 RUN set -x \
   && echo "installing dotfiles" \
   && cd ${HOME}/dotfiles \

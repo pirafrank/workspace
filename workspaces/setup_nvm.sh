@@ -7,7 +7,7 @@ fi
 
 NODEVERSION="$1"
 
-curl -sSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 
 # load nvm in current session
 export NVM_DIR="$HOME/.nvm"
