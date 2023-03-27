@@ -86,6 +86,11 @@ function build_alpine {
     checkrun $? 'Something went wrong...'
 }
 
+function build_nettools {
+    docker build $PARAMS -t pirafrank/net-tools:latest -f Dockerfile-net-tools.dockerfile .
+    checkrun $? 'Something went wrong...'
+}
+
 ### main script ###
 
 echo "
