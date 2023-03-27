@@ -9,5 +9,10 @@ if [[ ! -z ${SSH_SERVER} ]]; then
   sleep infinity
 else
   # start an interactive shell
-  zsh
+  if [[ $(command -v zsh) ]]; then
+    zsh
+  elif [[ $(command -v bash) ]]; then
+    bash
+  else
+    sh
 fi
