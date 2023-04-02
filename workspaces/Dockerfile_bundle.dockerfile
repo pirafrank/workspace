@@ -1,6 +1,10 @@
 ARG BASE_IMAGE_VERSION=latest
 FROM pirafrank/workspace:${BASE_IMAGE_VERSION}
 
+LABEL AUTHOR="pirafrank" MAINTAINER="pirafrank"
+LABEL DESCRIPTION="pirafrank/workspace bundle image. It ships with \
+  all workspaces and utilities installed."
+
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -45,9 +49,9 @@ WORKDIR /home/work
 
 ARG JAVAVERSION=11
 ARG JAVAVENDOR=openjdk
-ARG NODEVERSION=14
+ARG NODEVERSION=18
 ARG GOLANGVERSION
-ARG PYTHON3VERSION=3.9
+ARG PYTHON3VERSION=3.11
 ARG RUBYVERSION=2.7
 
 COPY *.sh ./workspace_setups/

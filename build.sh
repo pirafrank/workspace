@@ -81,6 +81,16 @@ function build_workspaces {
     cd ..
 }
 
+function build_alpine {
+    docker build $PARAMS -t pirafrank/workspace:alpine -f Dockerfile-alpine.dockerfile .
+    checkrun $? 'Something went wrong...'
+}
+
+function build_nettools {
+    docker build $PARAMS -t pirafrank/net-tools:latest -f Dockerfile-net-tools.dockerfile .
+    checkrun $? 'Something went wrong...'
+}
+
 ### main script ###
 
 echo "
@@ -114,6 +124,10 @@ case $STEP in
   bb)
     build_base
     build_bundle
+    ;;
+
+  alpine)
+    build_alpine
     ;;
 
   all)

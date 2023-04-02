@@ -55,6 +55,7 @@ echo "installing apt-utils" \
     htop \
     ncdu \
     libxml2-utils \
+    libncurses5 \
     fd-find \
     bat
 

@@ -1,0 +1,25 @@
+Include /etc/ssh/sshd_config.d/*.conf
+
+Port 2222
+ListenAddress 0.0.0.0
+
+AllowUsers work
+MaxAuthTries 6
+MaxSessions 20
+
+PermitRootLogin no
+PubkeyAuthentication yes
+AuthorizedKeysFile    .ssh/authorized_keys
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+PermitEmptyPasswords no
+
+AllowAgentForwarding yes
+TCPKeepAlive yes
+PrintMotd no
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG LC_*
+
+# override default of no subsystems
+Subsystem	sftp	/usr/lib/openssh/sftp-server

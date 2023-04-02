@@ -1,31 +1,20 @@
-name: 'Docker build'
+name: 'Build Docker bundle image'
 
 on:
   push:
     branches:
       - main
     paths:
-      - Dockerfile
       - pre_start.zsh
       - start.sh
       - workspace_versions.sh
-      - setups/setup_base.sh
       - setups/setup_env.sh
-      - setups/setup_fzf.sh
       - setups/setup_utils.sh
-      - setups/setup_zprezto.zsh
       - workspaces/Dockerfile_bundle.dockerfile
       - workspaces/*.sh
       - workspaces/*.zsh
   workflow_dispatch:
     inputs:
-      build_target:
-        description: 'Build what? [base|bundle]'
-        required: true
-        default: 'base'
-      workspace_version:
-        description: "Version"
-        required: false
       javaversion:
         description: "Which Java version?"
         required: false
@@ -52,7 +41,7 @@ jobs:
     env:
       RUN_INFO: ''
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         submodules: true
     - name: Print workdir
@@ -76,7 +65,7 @@ jobs:
     - name: Set date of today
       id: today
       shell: bash
-      run: echo "::set-output name=today::$(date '+%Y%m%d')"
+      run: echo "today=$(date '+%Y%m%d')" >> $GITHUB_OUTPUT
     - name: Extract branch name
       id: extract_branch_name
       shell: bash
@@ -95,13 +84,8 @@ jobs:
         # check GH Action inputs
         if [ ! -z "${{ github.event.inputs.workspace_version }}" ]; then
           WORKSPACE_VERSION="${{ github.event.inputs.workspace_version }}";
-          BASE_IMAGE_VERSION="$WORKSPACE_VERSION"
-        else
-          BASE_IMAGE_VERSION='latest'
         fi
         #if [[ ${GITHUB_REF} == refs/tags/* ]]; then WORKSPACE_VERSION="${GITHUB_REF##*/}"; fi
-        BASE_IMAGE_TAGS="pirafrank/workspace:latest,pirafrank/workspace:$WORKSPACE_VERSION"
-        BUNDLE_IMAGE_TAGS="pirafrank/workspace:bundle,pirafrank/workspace:bundle-${WORKSPACE_VERSION}"
         if [ ! -z "${{ github.event.inputs.javaversion }}" ]; then
           JAVAVERSION="${{ github.event.inputs.javaversion }}"; fi
         if [ ! -z "${{ github.event.inputs.javavendor }}" ]; then
@@ -116,9 +100,6 @@ jobs:
           RUBYVERSION="${{ github.event.inputs.rubyversion }}"; fi
         # set values in GH Action env. context
         printf "\n\nSet values in GH Action env context\n"
-        echo "BASE_IMAGE_VERSION=$BASE_IMAGE_VERSION" >> $GITHUB_ENV
-        echo "BASE_IMAGE_TAGS=$BASE_IMAGE_TAGS" >> $GITHUB_ENV
-        echo "BUNDLE_IMAGE_TAGS=$BUNDLE_IMAGE_TAGS" >> $GITHUB_ENV
         echo "WORKSPACE_VERSION=$WORKSPACE_VERSION" >> $GITHUB_ENV
         echo "JAVAVERSION=$JAVAVERSION" >> $GITHUB_ENV
         echo "JAVAVENDOR=$JAVAVENDOR" >> $GITHUB_ENV
@@ -131,21 +112,28 @@ jobs:
         cat $GITHUB_ENV | tail -n10
     # preparing environment for docker build
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v2
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-    # So now you can use Actions' own caching!
-    - name: Cache Docker layers for base image
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache-base
-        key: ${{ runner.os }}-buildx-base-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-base
+      uses: docker/setup-buildx-action@v2
     # prepare base image tags and labels
     - name: Docker metadata for base image
       id: meta_base_image
-      uses: docker/metadata-action@v3
+      uses: docker/metadata-action@v4
+      with:
+        github-token: ${{ github.token }}
+        images: |
+          ${{ github.repository }}
+          quay.io/${{ github.repository }}
+        tags: |
+          base-${{ env.WORKSPACE_VERSION }}
+          base
+          type=match,pattern=\d.\d.\d,prefix=base-
+        flavor: |
+          latest=false
+    # prepare workspace image tags and labels
+    - name: Docker metadata for workspace image
+      id: meta_workspace_image
+      uses: docker/metadata-action@v4
       with:
         github-token: ${{ github.token }}
         images: |
@@ -160,7 +148,7 @@ jobs:
     # prepare bundle image tags and labels
     - name: Docker metadata for bundle image
       id: meta_bundle_image
-      uses: docker/metadata-action@v3
+      uses: docker/metadata-action@v4
       with:
         github-token: ${{ github.token }}
         images: |
@@ -174,49 +162,32 @@ jobs:
           latest=false
     # login to registries
     - name: Login to DockerHub
-      uses: docker/login-action@v1
+      uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Login to Quay.io
-      uses: docker/login-action@v1
+      uses: docker/login-action@v2
       with:
         registry: quay.io
         username: ${{ secrets.QUAY_USERNAME }}
         password: ${{ secrets.QUAY_ENCRYPTED_PASSWORD }}
-    - name: Build and push base image
-      #if: ${{ (github.event.inputs.build_target == 'base') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
-      id: docker_build_base_image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: Dockerfile
-        platforms: linux/amd64 #,linux/arm64
-        # push only if on branch 'main'
-        push: ${{ (github.ref == 'refs/heads/main') && (github.event_name != 'pull_request') }}
-        tags: ${{ steps.meta_base_image.outputs.tags }}
-        build-args: WORKSPACE_VERSION=${{ env.WORKSPACE_VERSION }}
-        cache-from: type=local,src=/tmp/.buildx-cache-base
-        cache-to: type=local,dest=/tmp/.buildx-cache-new-base
-      # if you don't want your cache to grow forever (GH has 5GB limit)
-      # https://github.com/docker/build-push-action/issues/252
-      # https://github.com/moby/buildkit/issues/1896
-    - name: Move cache for base image
-      run: |
-        rm -rf /tmp/.buildx-cache-base
-        mv /tmp/.buildx-cache-new-base /tmp/.buildx-cache-base
+    # ***
+    # restore cache, build, push and put to cache bundle image
+    # ***
     # So now you can use Actions' own caching!
     - name: Cache Docker layers for bundle image
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: /tmp/.buildx-cache-bundle
         key: ${{ runner.os }}-buildx-bundle-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-bundle
+    # build, push and cache bundle image 
     - name: Build and push bundle image
-      if: ${{ (github.event.inputs.build_target != 'base') || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+      if: ${{ ((github.event.inputs.build_target != 'base') && (github.event.inputs.build_target != 'workspace')) || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
       id: docker_build_bundle_image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v4
       with:
         context: ./workspaces
         file: workspaces/Dockerfile_bundle.dockerfile
@@ -226,7 +197,6 @@ jobs:
         tags: ${{ steps.meta_bundle_image.outputs.tags }}
         # lines with empty values will be skipped
         build-args: |
-          BASE_IMAGE_VERSION=${{ env.BASE_IMAGE_VERSION }}
           JAVAVERSION=${{ env.JAVAVERSION }}
           JAVAVENDOR=${{ env.JAVAVENDOR }}
           NODEVERSION=${{ env.NODEVERSION }}
@@ -242,6 +212,9 @@ jobs:
       run: |
         rm -rf /tmp/.buildx-cache-bundle
         mv /tmp/.buildx-cache-new-bundle /tmp/.buildx-cache-bundle
+    # *** 
+    # final steps
+    # *** 
     - uses: mukunku/tag-exists-action@v1.0.0
       name: Check if tag exists
       id: checkTag
@@ -259,7 +232,7 @@ jobs:
           github.git.createRef({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: "refs/tags/${{ env.WORKSPACE_VERSION }}",
+            ref: "refs/tags/${{ env.WORKSPACE_VERSION }}-bundle",
             sha: context.sha
           })
   sendNotification:
@@ -274,6 +247,6 @@ jobs:
       with:
         url: ${{ secrets.NOTIFICATION_WEBHOOK_URI }}
         method: 'POST'
-        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Build of Docker images on branch ${{ steps.extract_branch_name.outputs.branch }} with target &quot;${{ github.event.inputs.build_target }}&quot; finished with status ${{ needs.dockerImagesBuild.result }}.", "value3": "<br>Workflow &quot;${{ github.workflow }}&quot; triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
+        data: '{ "value1": "[GitHub] ${{ github.repository }}", "value2": "Build of Docker bundle image on branch ${{ steps.extract_branch_name.outputs.branch }} with target &quot;${{ github.event.inputs.build_target }}&quot; finished with status ${{ needs.dockerImagesBuild.result }}.", "value3": "<br>Workflow &quot;${{ github.workflow }}&quot; triggered by &quot;${{ github.event_name }}&quot;.<br>Action run on ${{ runner.os }} by ${{ runner.name }}.<br>Commit ${{ github.sha }} on ${{ github.ref }}.<br>https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" }'
 
 

@@ -129,7 +129,7 @@ The following apply:
 
 ### OpenSSH Server
 
-Workspace now ships with openssh-server, so you can deploy your workspace on a CaaS provider and SSH to it.
+Workspace images now ship with openssh-server, so you can deploy your workspace on a CaaS provider and SSH to it.
 
 By default the openssh-server won't start and an interactive shell will launch, this means that if you won't start the workspace from an interactive shell it will exit immediately!
 
