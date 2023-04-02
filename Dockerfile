@@ -25,6 +25,13 @@ COPY setups/setup_fzf.sh \
 USER work
 WORKDIR /home/work
 
+# copy setup scripts to WORKDIR
+COPY setups/setup_env.sh \
+  setups/setup_utils.sh \
+  setups/setup_aws_tools.sh \
+  setups/setup_cloud_clients.sh \
+  setups/setup_docker_cli.sh ./setups/
+
 # install fzf
 RUN set -x \
   && echo "install fzf" \
@@ -45,7 +52,7 @@ RUN set -x \
 # installing additional utils
 RUN set -x \
   && echo "installing additional utilities" \
-  && zsh setup_utils.sh
+  && zsh ./setups/setup_utils.sh
 
 # last but not least, write current version inside image
 RUN set -x \

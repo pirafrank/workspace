@@ -46,17 +46,9 @@ COPY configs/sshd_config /etc/ssh/sshd_config
 USER work
 WORKDIR /home/work
 
-# copy setup scripts to WORKDIR
-COPY setups/setup_env.sh \
-  setups/setup_utils.sh \
-  setups/setup_aws_tools.sh \
-  setups/setup_cloud_clients.sh \
-  setups/setup_docker_cli.sh \
-  start.sh \
+# copy startup scripts to WORKDIR
+COPY start.sh \
   pre_start.zsh ./
-
-# copy workspace setup scripts to WORKDIR
-COPY workspaces/*.sh ./workspace_setups/
 
 # last but not least, write current version inside image
 RUN set -x \

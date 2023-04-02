@@ -8,6 +8,8 @@ on:
       - Dockerfile
       - setups/setup_fzf.sh
       - setups/setup_zprezto.zsh
+      - setups/setup_env.sh
+      - setups/setup_utils.sh
   workflow_dispatch:
   #workflow_run:
   #  workflows: [Build Docker base image]
@@ -50,11 +52,11 @@ jobs:
     - name: Extract branch name
       id: extract_branch_name
       shell: bash
-      run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})"
+      run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> "$GITHUB_OUTPUT"
     - name: Extract short commit hash
       id: extract_short_hash
       shell: bash
-      run:  echo "currentcommit=$(git rev-parse --short HEAD)"
+      run:  echo "currentcommit=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
     - name: "Setup of docker build ARGs"
       id: 'docker_build_args_setup'
       shell: bash
@@ -69,6 +71,7 @@ jobs:
         #if [[ ${GITHUB_REF} == refs/tags/* ]]; then WORKSPACE_VERSION="${GITHUB_REF##*/}"; fi
         # set values in GH Action env. context
         printf "\n\nSet values in GH Action env context\n"
+        echo "WORKSPACE_VERSION=$WORKSPACE_VERSION" >> $GITHUB_ENV
         # printing env added to GITHUB_ENV, hide the rest
         printf "\n\nPrinting env added to GITHUB_ENV env file (${GITHUB_ENV})\n"
         cat $GITHUB_ENV | tail -n10
