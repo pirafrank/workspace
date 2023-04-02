@@ -21,9 +21,6 @@ ARG BIN2_PATH='~/bin2'
 # copy shell setup scripts
 COPY setups/setup_fzf.sh \
   setups/setup_zprezto.zsh /tmp/
-RUN set -x \
-  && chmod +rx /tmp/setup_fzf.sh \
-  && chmod +rx /tmp/setup_zprezto.sh
 
 USER work
 WORKDIR /home/work

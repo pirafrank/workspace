@@ -19,7 +19,6 @@ COPY setups/setup_base.sh /tmp/
 
 # set debug mode and install dev and essentials packages
 RUN set -x \
-  && chmod +rx /tmp/setup_*sh \
   && bash /tmp/setup_base.sh
 
 # restore manual and clean up
