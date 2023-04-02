@@ -11,8 +11,8 @@ cd $folder
 
 # installing maven
 echo "Downloading latest maven"
-url=$(curl https://maven.apache.org/download.cgi | \
-  grep -oE '"https:(.*?).tar.gz"' | grep binaries | tr -d '"')
+url=$(curl -sSL https://maven.apache.org/download.cgi | \
+  grep -oE '"https:(.*?).tar.gz"' | grep binaries | tr -d '"' | head -n1)
 echo $url
 wget -c -O mvn.tar.gz $url
 # sometimes url may be broken
