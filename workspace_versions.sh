@@ -1,7 +1,7 @@
-export JAVAVERSION=11
+export JAVAVERSION=17
 export JAVAVENDOR=openjdk
-export NODEVERSION=14
-export PYTHON3VERSION='3.9.7'
+export NODEVERSION=18
+export PYTHON3VERSION='3.11'
 export RUBYVERSION='2.7'
 
 # no version will download latest
