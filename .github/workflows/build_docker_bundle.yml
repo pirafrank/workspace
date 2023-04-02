@@ -118,36 +118,6 @@ jobs:
       uses: docker/setup-qemu-action@v2
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
-    # prepare base image tags and labels
-    - name: Docker metadata for base image
-      id: meta_base_image
-      uses: docker/metadata-action@v4
-      with:
-        github-token: ${{ github.token }}
-        images: |
-          ${{ github.repository }}
-          quay.io/${{ github.repository }}
-        tags: |
-          base-${{ env.WORKSPACE_VERSION }}
-          base
-          type=match,pattern=\d.\d.\d,prefix=base-
-        flavor: |
-          latest=false
-    # prepare workspace image tags and labels
-    - name: Docker metadata for workspace image
-      id: meta_workspace_image
-      uses: docker/metadata-action@v4
-      with:
-        github-token: ${{ github.token }}
-        images: |
-          ${{ github.repository }}
-          quay.io/${{ github.repository }}
-        tags: |
-          ${{ env.WORKSPACE_VERSION }}
-          latest
-          type=match,pattern=\d.\d.\d
-        flavor: |
-          latest=false
     # prepare bundle image tags and labels
     - name: Docker metadata for bundle image
       id: meta_bundle_image
