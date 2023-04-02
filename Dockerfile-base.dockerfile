@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20220801
+FROM ubuntu:focal-20230308
 
 LABEL AUTHOR="pirafrank" MAINTAINER="pirafrank"
 LABEL DESCRIPTION="pirafrank/workspace:base image. It ships with \
