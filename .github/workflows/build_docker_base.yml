@@ -141,7 +141,8 @@ jobs:
   sendNotification:
     name: Send Notification
     runs-on: ubuntu-20.04
-    if: ${{ always() }}
+    #if: ${{ always() }}
+    if: ${{ false }}
     needs: [dockerImagesBuild]
     steps:
     - name: Send Push Notification
