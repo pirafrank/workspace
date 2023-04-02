@@ -18,24 +18,25 @@ ARG UBUNTURELEASE='focal'
 # alternative BIN2 path
 ARG BIN2_PATH='~/bin2'
 
-# copy shell setup scripts
-COPY setups/setup_fzf.sh \
-  setups/setup_zprezto.zsh /tmp/
-RUN set -x \
-  && chmod +rx /tmp/setup_*sh
-
 USER work
 WORKDIR /home/work
+
+# copy shell setup scripts
+COPY setups/setup_fzf.sh \
+  setups/setup_zprezto.zsh ./setups/
+RUN set -x \
+  && chmod +rx ./setups/setup_fzf.sh \
+  && chmod +rx ./setups/setup_zprezto.sh
 
 # install fzf
 RUN set -x \
   && echo "install fzf" \
-  && zsh /tmp/setup_fzf.sh
+  && zsh ${HOME}/setups/setup_fzf.sh
 
 # zprezto has many submodules, going with a dedicated layer
 RUN set -x \
   && echo "install zprezto" \
-  && zsh /tmp/setup_zprezto.zsh
+  && zsh ${HOME}/setups/setup_zprezto.zsh
 
 # dotfiles
 COPY --chown=work:work dotfiles ./dotfiles
