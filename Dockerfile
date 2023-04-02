@@ -1,61 +1,28 @@
-FROM ubuntu:focal-20220801
+ARG BASE_IMAGE_VERSION=base
+FROM pirafrank/workspace:${BASE_IMAGE_VERSION}
 
 LABEL AUTHOR="pirafrank" MAINTAINER="pirafrank"
-LABEL DESCRIPTION="pirafrank/workspace base image. It ships with \
+LABEL DESCRIPTION="pirafrank/workspace:base image. It ships with \
   workspace setups, but those are not executed upon build"
 
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
 
+# explicitly set lang and workdir
+ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
+
 ARG USER_UID=1000
 ARG WORKSPACE_VERSION
 ARG UBUNTURELEASE='focal'
 
-# copy base setup scripts
+# copy shell setup scripts
 COPY setups/setup_fzf.sh \
-  setups/setup_zprezto.zsh \
-  setups/setup_base.sh /tmp/
-
-# set debug mode and install dev and essentials packages
+  setups/setup_zprezto.zsh /tmp/
 RUN set -x \
-  && chmod +rx /tmp/setup_*sh \
-  && bash /tmp/setup_base.sh
-
-# restore manual and clean up
-RUN set -x \
-  && echo "cleaning up" \
-  && apt-get autoremove -y && apt-get clean -y
-
-# add user and change default shell
-RUN echo 'add user and change default shell' \
-  && useradd -Um -d /home/work -G sudo -s /bin/bash --uid $USER_UID work \
-  && chsh -s $(which zsh) work \
-  && echo work ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/work \
-  && echo "root:root" | chpasswd \
-  && echo "work:work" | chpasswd
-
-# setting locale
-ENV LANG="en_US.UTF-8" LC_ALL="C" LANGUAGE="en_US.UTF-8"
-
-# Set up timezone (tzdata required)
-ENV TZ=Europe/Rome
-
-COPY configs/sshd_config /etc/ssh/sshd_config
+  && chmod +rx /tmp/setup_*sh
 
 USER work
 WORKDIR /home/work
-
-# copy setup scripts for different envs
-# into WORKDIR
-COPY setups/setup_env.sh \
-  setups/setup_utils.sh \
-  setups/setup_aws_tools.sh \
-  setups/setup_cloud_clients.sh \
-  setups/setup_docker_cli.sh \
-  start.sh \
-  pre_start.zsh ./
-
-COPY workspaces/*.sh ./workspace_setups/
 
 # install fzf
 RUN set -x \
