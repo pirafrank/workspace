@@ -11,6 +11,9 @@ ARG USER_UID=1000
 ARG WORKSPACE_VERSION
 ARG UBUNTURELEASE='focal'
 
+# alternative BIN2 path
+ARG BIN2_PATH='~/bin2'
+
 # copy base setup script
 COPY setups/setup_base.sh /tmp/
 
@@ -58,10 +61,12 @@ COPY workspaces/*.sh ./workspace_setups/
 
 # last but not least, write current version inside image
 RUN set -x \
-  && echo '#!/bin/bash' > bin2/workspace_version \
-  && echo "echo Current version: ${WORKSPACE_VERSION}" >> bin2/workspace_version \
-  && echo "echo Build on       : $(date '+%Y/%m/%d %H:%M:%S')" >> bin2/workspace_version \
-  && chmod +x bin2/workspace_version
+  && mkdir -p "${BIN2_PATH}" \
+  && rm -f "${BIN2_PATH}/workspace_version" \
+  && echo '#!/bin/bash' > "${BIN2_PATH}/workspace_version" \
+  && echo "echo Current version: ${WORKSPACE_VERSION}" >> "${BIN2_PATH}/workspace_version" \
+  && echo "echo Build on       : $(date '+%Y/%m/%d %H:%M:%S')" >> "${BIN2_PATH}/workspace_version" \
+  && chmod +x "${BIN2_PATH}/workspace_version"
 
 # optional gitglobal config
 # these are set at startup, if non-empty. you can set them with docker run

@@ -15,6 +15,9 @@ ARG USER_UID=1000
 ARG WORKSPACE_VERSION
 ARG UBUNTURELEASE='focal'
 
+# alternative BIN2 path
+ARG BIN2_PATH='~/bin2'
+
 # copy shell setup scripts
 COPY setups/setup_fzf.sh \
   setups/setup_zprezto.zsh /tmp/
@@ -48,10 +51,12 @@ RUN set -x \
 
 # last but not least, write current version inside image
 RUN set -x \
-  && echo '#!/bin/bash' > bin2/workspace_version \
-  && echo "echo Current version: ${WORKSPACE_VERSION}" >> bin2/workspace_version \
-  && echo "echo Build on       : $(date '+%Y/%m/%d %H:%M:%S')" >> bin2/workspace_version \
-  && chmod +x bin2/workspace_version
+  && mkdir -p "${BIN2_PATH}" \
+  && rm -f "${BIN2_PATH}/workspace_version" \
+  && echo '#!/bin/bash' > "${BIN2_PATH}/workspace_version" \
+  && echo "echo Current version: ${WORKSPACE_VERSION}" >> "${BIN2_PATH}/workspace_version" \
+  && echo "echo Build on       : $(date '+%Y/%m/%d %H:%M:%S')" >> "${BIN2_PATH}/workspace_version" \
+  && chmod +x "${BIN2_PATH}/workspace_version"
 
 # external mountpoints
 VOLUME /home/work/Code
