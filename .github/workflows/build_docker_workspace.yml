@@ -9,10 +9,10 @@ on:
       - setups/setup_fzf.sh
       - setups/setup_zprezto.zsh
   workflow_dispatch:
-  workflow_run:
-    workflows: [Build Docker base image]
-    types:
-      - completed
+  #workflow_run:
+  #  workflows: [Build Docker base image]
+  #  types:
+  #    - completed
 
 jobs:
   dockerImagesBuild:

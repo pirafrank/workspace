@@ -31,10 +31,10 @@ on:
       rubyversion:
         description: "Which Ruby version?"
         required: false
-  workflow_run:
-    workflows: [Build Docker workspace image]
-    types:
-      - completed
+  #workflow_run:
+  #  workflows: [Build Docker workspace image]
+  #  types:
+  #    - completed
 
 jobs:
   dockerImagesBuild:
