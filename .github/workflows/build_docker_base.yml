@@ -46,11 +46,11 @@ jobs:
     - name: Extract branch name
       id: extract_branch_name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})"
     - name: Extract short commit hash
       id: extract_short_hash
       shell: bash
-      run:  echo "##[set-output name=currentcommit;]$(git rev-parse --short HEAD)"
+      run:  echo "currentcommit=$(git rev-parse --short HEAD)"
     - name: "Setup of docker build ARGs"
       id: 'docker_build_args_setup'
       shell: bash
