@@ -6,17 +6,19 @@ on:
       - main
     paths:
       - Dockerfile
-      - pre_start.zsh
-      - start.sh
-      - workspace_versions.sh
       - setups/setup_fzf.sh
       - setups/setup_zprezto.zsh
   workflow_dispatch:
+  workflow_run:
+    workflows: [Build Docker base image]
+    types:
+      - completed
 
 jobs:
   dockerImagesBuild:
     name: Docker Images build
     runs-on: ubuntu-20.04
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
       RUN_INFO: ''
     steps:
