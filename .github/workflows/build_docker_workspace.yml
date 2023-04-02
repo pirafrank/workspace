@@ -142,7 +142,7 @@ jobs:
     # *** 
     # final steps
     # *** 
-    - uses: mukunku/tag-exists-action@v1.0.0
+    - uses: mukunku/tag-exists-action@v1.2.0
       name: Check if tag exists
       id: checkTag
       with:
