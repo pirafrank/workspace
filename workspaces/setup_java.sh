@@ -45,47 +45,7 @@ JAVAVERSION="$1"
 folder="${HOME}/bin2"
 
 case $VENDOR in
-openjdk)
-  case $JAVAVERSION in
-  8)
-    url='https://api.adoptopenjdk.net/v3/binary/latest/8/ga/linux/x64/jdk/hotspot/normal/openjdk?project=jdk'
-    ;;
-  9)
-    url='https://download.java.net/java/GA/jdk9/9.0.4/binaries/openjdk-9.0.4_linux-x64_bin.tar.gz'
-    ;;
-  10)
-    url='https://download.java.net/java/GA/jdk10/10.0.2/19aef61b38124481863b1413dce1855f/13/openjdk-10.0.2_linux-x64_bin.tar.gz'
-    ;;
-  11)
-    url='https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_linux-x64_bin.tar.gz'
-    ;;
-  12)
-    url='https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz'
-    ;;
-  13)
-    url='https://download.java.net/java/GA/jdk13.0.2/d4173c853231432d94f001e99d882ca7/8/GPL/openjdk-13.0.2_linux-x64_bin.tar.gz'
-    ;;
-  14)
-    url='https://download.java.net/java/GA/jdk14.0.2/205943a0976c4ed48cb16f1043c5c647/12/GPL/openjdk-14.0.2_linux-x64_bin.tar.gz'
-    ;;
-  15)
-    url='https://download.java.net/java/GA/jdk15.0.1/51f4f36ad4ef43e39d0dfdbaf6549e32/9/GPL/openjdk-15.0.1_linux-x64_bin.tar.gz'
-    ;;
-  16)
-    url='https://download.java.net/java/GA/jdk16.0.1/7147401fd7354114ac51ef3e1328291f/9/GPL/openjdk-16.0.1_linux-x64_bin.tar.gz'
-    ;;
-  17)
-    url='https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz'
-    ;;
-  18)
-    url='https://download.java.net/java/GA/jdk18.0.1.1/65ae32619e2f40f3a9af3af1851d6e19/2/GPL/openjdk-18.0.1.1_linux-x64_bin.tar.gz'
-    ;;
-  *)
-    echo "Unsupported version. Exiting..."
-    exit 1
-  esac
-  ;;
-adoptopenjdk)
+openjdk|adoptopenjdk|adoptium|temurin)
   # API supported platforms: linux|mac
   # API supported arch: x64|aarch64
   url="https://api.adoptopenjdk.net/v3/binary/latest/${JAVAVERSION}/ga/${PLATFORM_ALT}/${ARCH_ALT}/jdk/hotspot/normal/adoptopenjdk?project=jdk"
@@ -95,6 +55,9 @@ azul)
   # API supported arch: x86|arm
   metaurl="https://api.azul.com/zulu/download/community/v1.0/bundles/latest/?java_version=${JAVAVERSION}&os=${PLATFORM_ALT2}&arch=${ARCH_ALT2}&hw_bitness=${HW_BITS}&ext=tar.gz&bundle_type=jdk"
   url=$(curl -sSL "$metaurl" | jq -r '.url')
+  ;;
+amazon|corretto)
+  url="https://corretto.aws/downloads/latest/amazon-corretto-${JAVAVERSION}-${ARCH_ALT}-${PLATFORM_ALT2}-jdk.tar.gz"
   ;;
 *)
   echo "Unsupported vendor. Exiting..."
