@@ -125,6 +125,13 @@ jobs:
         build-args: WORKSPACE_VERSION=${{ env.WORKSPACE_VERSION }}
         cache-from: type=local,src=/tmp/.buildx-cache-base
         cache-to: type=local,dest=/tmp/.buildx-cache-new-base
+        # fixes azure container instance a
+        # revert change introduced since v4 of docker/build-push-action
+        # sources:
+        #   https://github.com/hyperledger/firefly/pull/1174
+        #   https://learn.microsoft.com/en-us/answers/questions/204946/deploying-docker-container-instance-fails-to-acces
+        #   https://docs.docker.com/build/attestations/slsa-provenance/
+        provenance: false
       # if you don't want your cache to grow forever (GH has 5GB limit)
       # https://github.com/docker/build-push-action/issues/252
       # https://github.com/moby/buildkit/issues/1896
