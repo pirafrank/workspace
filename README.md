@@ -63,11 +63,11 @@ Choose one of the options below:
 You can run the workspace-in-a-container in many occasions.
 
 - easy and fast setup of CLI environment e.g. in a VPS
-- Works in CaaS services like Azure Container Instances and [Blink Build](https://beta.blink.build/)
+- Works in CaaS services like Azure Container Instances and [Blink Build](scenarios/Blink%20Build/README.md)
 - great for already-configure, fast, ephimeral dev environment
 - you name it...
 
-Please check the *workspace-in-a-container* section for further info.
+Please check the workspace-in-a-container '[Usage scenarios](#usage-scenarios)' section for further info.
 
 ### 2. Full setup
 
@@ -170,71 +170,43 @@ Check `pre_start.zsh` and `start.sh` scripts for further info.
 
 ## Usage scenarios
 
-You can run your workspace in many ways. Check the examples in `scenarios` dir.
+You can run your workspace in many ways. Check the examples in `scenarios` [dir](scenarios/).
+
+### Docker Compose
+
+Simple use case start to run it locally, e.g. you need tools and don't want to install them on your PC.
+
+Pleas check the readme [here](scenarios/docker-compose/README.md).
+
+### You own Kubernetes
+
+General purpose, openssh-server is a great helper here.
+
+For the sake of brevity, please check files in the `scenarios/k8s` [dir](scenarios/k8s/).
 
 ### Azure Container Instances
 
-Below an example script to run a workspace in Azure Cloud Shell.
+Azure Container Instances provide a great environment to run workspace on-the-go and start/stop when you need it.
 
-```sh
-export SSHKEYS=`curl -sSL gist.github.com/some/secret/gist`
-nohup az container create \
-  --resource-group YOUR_RESOURCE_GROUP \
-  --name SOME_CONTAINER_INSTANCE_NAME \
-  --image pirafrank/workspace:bundle \
-  --location westeurope \
-  --os-type Linux \
-  --cpu 1 \
-  --memory 2.0 \
-  --dns-name-label SOME_CONTAINER_INSTANCE_NAME \
-  -e SSH_SERVER='true' SSH_PUBKEYS="${SSHKEYS}" \
-    GITUSERNAME='John Doe' GITUSEREMAIL='john@doe.net' \
-  --ports 2222 &
-```
-
-And because the Container Instance has a name, you can easily stop it:
-
-```sh
-az container delete --resource-group YOUR_RESOURCE_GROUP --name SOME_CONTAINER_INSTANCE_NAME
-```
-
-Tip: You can save those scripts in your Cloud Shell home dir for easy recovery, e.g. to launch them on-the-go from Cloud Shell in Azure mobile apps.
+Please check the full readme [here](scenarios/azure_container_instances/README.md).
 
 ### AWS Fargate
 
 *Coming soon...*
 
-### You own Kubernetes
-
-For the sake of brevity, please check files in the `scenarios/k8s` dir.
-
 ### Blink Build
 
-*Build* is a new service being built by the guys behind [Blink Shell](https://twitter.com/BlinkShell/), the best SSH and mosh client for iOS and iPadOS. It's currently in beta and allows you to SSH into any container publicly available without taking care of the underlying infrastructure, network or firewall. And it's fully integrated in Blink Shell. [I have started tinkering](https://twitter.com/pirafrank/status/1423633599459471361) with it and I have to say it's a great match with my *workspace* for a portable dev environment!
+*Build* is a new service being built by the guys behind [Blink Shell](https://twitter.com/BlinkShell/), the best SSH and mosh client for iOS and iPadOS. It's [currently in beta](https://github.com/blinksh/blink/discussions/1698) and allows you to SSH into any container publicly available without taking care of the underlying infrastructure, network or firewall. And it's fully integrated in Blink Shell. [I have started tinkering](https://twitter.com/pirafrank/status/1423633599459471361) with it and I have to say it's a great match with my *workspace* for a portable dev environment!
 
-First setup: authenticate and turn on the VM (aka the *machine*)
+Please check the full readme [here](scenarios/Blink%20Build/README.md).
 
-```sh
-build device authenticate
-build status
-build machine start
-build machine status
-build ssh-key add
-build ssh-key list
-```
+### devcontainer.json
 
-then bring the workspace up and enter it
-
-```sh
-build up --image pirafrank/workspace:bundle bundle
-build ssh bundle
-```
-
-*Build* is currently available in the [community edition](https://community.blink.sh/).
-
-For more information, run the commands with the `--help` flag.
+*Coming soon...*
 
 ## Build and run your own
+
+Build and run images on Docker locally.
 
 ### Build an image
 

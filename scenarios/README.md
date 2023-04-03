@@ -2,4 +2,4 @@
 
 Files in this folder are just quick-starters and need to be customized.
 
-Check their content BEFORE you run them!
+Please, always check code before you run it!
