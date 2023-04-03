@@ -170,7 +170,7 @@ Check `pre_start.zsh` and `start.sh` scripts for further info.
 
 ## Usage scenarios
 
-You can run your workspace in many ways.
+You can run your workspace in many ways. Check the examples in `scenarios` dir.
 
 ### Azure Container Instances
 
@@ -206,7 +206,7 @@ Tip: You can save those scripts in your Cloud Shell home dir for easy recovery, 
 
 ### You own Kubernetes
 
-*Coming soon...*
+For the sake of brevity, please check files in the `scenarios/k8s` dir.
 
 ### Blink Build
 

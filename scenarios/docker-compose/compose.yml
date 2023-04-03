@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+    workspace:
+        image: pirafrank/workspace:${IMAGE_TAG}
+        ports:
+          - 2222:2222
+          - "5000-5005:4000-4005"
+        environment:
+            SSH_PUBKEYS: "${SSH_PUBKEYS}"
+            SSH_SERVER: 'true'
+            GITUSERNAME: "${GITUSERNAME}"
+            GITUSEREMAIL: "${GITUSEREMAIL}"

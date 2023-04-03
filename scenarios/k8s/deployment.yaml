@@ -1,0 +1,79 @@
+# pvc
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pirafrank-workspace-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard
+---
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pirafrank-workspace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pirafrank-workspace
+  template:
+    metadata:
+      labels:
+        app: pirafrank-workspace
+    spec:
+      containers:
+        - name: pirafrank-workspace
+          image: pirafrank/workspace:${IMAGE_TAG}
+          env:
+          - name: SSH_PUBKEYS
+            value: "${SSH_PUBKEYS}"
+          - name: SSH_SERVER
+            value: "true"
+          - name: GITUSERNAME
+            value: "${GITUSERNAME}"
+          - name: GITUSEREMAIL
+            value: "${GITUSEREMAIL}"
+          volumeMounts:
+            - name: pirafrank-workspace-storage
+              mountPath: /home/work/Code
+      volumes:
+        - name: pirafrank-workspace-storage
+          persistentVolumeClaim:
+            claimName: pirafrank-workspace-pvc
+---
+# service
+apiVersion: v1
+kind: Service
+metadata:
+  name: pirafrank-workspace-service
+spec:
+  selector:
+    app: pirafrank-workspace
+  ports:
+    - name: ssh
+      port: 2222
+      targetPort: 2222
+    - name: http0
+      port: 4000
+      targetPort: 4000
+    - name: http1
+      port: 4001
+      targetPort: 4001
+    - name: http2
+      port: 4002
+      targetPort: 4002
+    - name: http3
+      port: 4003
+      targetPort: 4003
+    - name: http4
+      port: 4004
+      targetPort: 4004
+    - name: http5
+      port: 4005
+      targetPort: 4005
+  type: ClusterIP
