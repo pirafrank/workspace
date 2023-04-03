@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20220801
+FROM ubuntu:focal-20230308
 
 # going headless
 ENV DEBIAN_FRONTEND=noninteractive
@@ -38,10 +38,7 @@ ENV TZ=Europe/Rome
 USER work
 WORKDIR /home/work
 
-# copy scripts into WORKDIR
-COPY start.sh ./
-
 # set default terminal
 ENV TERM=xterm-256color
 
-CMD ["sh", "-c", "bash start.sh"]
+CMD ["sh", "-c", "sleep infinity"]
