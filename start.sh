@@ -15,4 +15,5 @@ else
     bash
   else
     sh
+  fi
 fi
