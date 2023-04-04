@@ -49,7 +49,7 @@ if [ -z "$(docker ps -a -q | xargs -I {} docker inspect {} | jq '.[].Name' | gre
     docker run -it $PARAMS $DOCKERCLI \
     -v $HOME/work_temp/Code:/home/work/Code \
     -v $HOME/work_temp/secrets:/home/work/secrets \
-    -p "8280-8380:8080-8180" \
+    -p "5000-5005:4000-4005" \
     pirafrank/workspace:"$IMAGE_TAG"
 else
     # container exists
