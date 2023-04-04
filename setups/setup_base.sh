@@ -21,7 +21,7 @@ fi
 echo "installing apt-utils" \
   && apt-get install -y --no-install-recommends apt-utils \
   && echo 'remove unneeded packages' \
-  && apt-get remove vim-runtime gvim vim-tiny \
+  && apt-get remove -y vim-runtime gvim vim-tiny \
     vim-common vim-gui-common \
   && echo 'install dev and other essential packages' \
   && apt-get install -y \
@@ -36,7 +36,6 @@ echo "installing apt-utils" \
     sudo \
     openssh-server \
     wget \
-    vim \
     zsh \
     tmux \
     mosh \
@@ -71,6 +70,11 @@ echo "getting newer git and clvv/fasd..." \
   && apt-get install -y git fasd \
   && echo "installing python3 (focal ships with 3.8)" \
   && apt-get install -y python3 python3-pip
+
+echo "installing vim from jonathonf's PPA" \
+  && add-apt-repository ppa:jonathonf/vim -y \
+  && apt-get update \
+  && apt-get install -y vim
 
 # setting up locale
 echo "setting up locale"
