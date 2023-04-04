@@ -28,6 +28,11 @@ url=$(curl -sL https://api.github.com/repos/mikefarah/yq/releases/latest \
   | grep http | grep -i "$PLATFORM" | cut -d':' -f 2,3 | cut -d'"' -f2 | grep -E "*($ARCH_ALT)$")
 downloadAndInstall $url yq
 
+# xq
+url=$(curl -sL https://api.github.com/repos/sibprogrammer/xq/releases/latest \
+  | grep http | grep -i "$PLATFORM" | cut -d':' -f 2,3 |  cut -d'"' -f2 |  grep 'tar.gz' | grep $ARCH_ALT)
+downloadAndInstall $url xq
+
 # dive - to inspect docker images layers
 printf "\n\nInstalling dive...\n"
 url=$(curl -sL https://api.github.com/repos/wagoodman/dive/releases/latest \
