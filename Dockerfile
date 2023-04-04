@@ -2,7 +2,7 @@ ARG BASE_IMAGE_VERSION=base
 FROM pirafrank/workspace:${BASE_IMAGE_VERSION}
 
 LABEL AUTHOR="pirafrank" MAINTAINER="pirafrank"
-LABEL DESCRIPTION="pirafrank/workspace:base image. It ships with \
+LABEL DESCRIPTION="pirafrank/workspace image. It ships with \
   workspace setups, but those are not executed upon build"
 
 # going headless
