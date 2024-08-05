@@ -26,6 +26,8 @@ echo "installing apt-utils" \
   && echo 'install dev and other essential packages' \
   && apt-get install -y \
     build-essential \
+    make \
+    colormake \
     apt-transport-https \
     ca-certificates \
     curl \
