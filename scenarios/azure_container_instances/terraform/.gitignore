@@ -1,0 +1,14 @@
+# Compiled files
+*.tfstate
+*.tfstate.backup
+
+# variable secrets
+**/*secrets*
+
+# Module directory
+.terraform/
+
+# terraform plans
+# usually not, but avoid to commit mine here by mistake
+*.tfplan
+
