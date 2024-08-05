@@ -7,10 +7,10 @@ if [ ! -f /etc/debian_version ]; then
 fi
 
 # going script mode...
-DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive
 
 # ubuntu or debian ?
-DISTRONAME=$(echo $(lsb_release -is) | tr '[:upper:]' '[:lower:]')
+DISTRONAME=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
 
 # let's go!
 apt-get clean
@@ -43,7 +43,7 @@ if [[ ! -z "$1" ]]; then
   echo "Adding user $username to 'docker' group.
 You'll need to logout and login again.
 "
-  usermod -aG docker $username
+  usermod -aG docker "$username"
   if [[ $? -ne 0 ]]; then
     echo "Error: cannot add $username to 'docker' group"
     exit 1
@@ -60,4 +60,3 @@ else
   echo "Error: cannot install docker-compose"
   exit 1
 fi
-

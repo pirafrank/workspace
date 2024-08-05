@@ -16,7 +16,7 @@ init
 ###
 
 # check if supported platform
-if [ ${PLATFORM} != 'linux' ]; then
+if [ "${PLATFORM}" != 'linux' ]; then
   echo "Sorry, unsupported platform"
   exit 1
 fi
@@ -25,7 +25,7 @@ fi
 cdir="${BIN2_PATH}/tmp"
 rm -rf "${cdir}"
 mkdir -p "${cdir}"
-cd "${cdir}"
+cd "${cdir}" || exit 1
 curl "https://awscli.amazonaws.com/awscli-exe-${PLATFORM}-${ARCH}.zip" -o "awscliv2.zip"
 unzip ./awscliv2.zip
 
@@ -37,7 +37,7 @@ else
   mkdir -p "${BIN2_PATH}/aws-cli"
   UPDATE_FLAG=""
 fi
-./aws/install -i "${BIN2_PATH}/aws-cli" -b "${BIN2_PATH}" $UPDATE_FLAG
+./aws/install -i "${BIN2_PATH}/aws-cli" -b "${BIN2_PATH}" "$UPDATE_FLAG"
 
 # cleanup
 rm -rf "${cdir}"
